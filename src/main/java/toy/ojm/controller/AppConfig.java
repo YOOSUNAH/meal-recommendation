@@ -12,4 +12,17 @@ public class AppConfig {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
+
 }
+
+// @Component
+    // @Configuration
+    // @Controller
+    // @Service
+    // @Repository
+// @Bean
+
+// Dependency Injection - 의존성 주입
+// 'DI Container' - 의존성 주입을 도와주는 컨테이너
+//
+

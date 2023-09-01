@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestTemplate;
 import toy.ojm.domain.Restaurant;
+import toy.ojm.domain.RestaurantRepository;
 import toy.ojm.domain.RestaurantRequest;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/posts")
 public class RestaurantController {
+
     private List<Restaurant> recommendedRestaurants = new ArrayList<>(); // 추천된 음식점 목록 저장
     private int recommendationCount = 0; // 추천 요청 횟수 저장
     private String previousMenu; // 이전에 선택한 메뉴를 저장하는 변수
@@ -44,7 +46,6 @@ public class RestaurantController {
 
         return ResponseEntity.ok(recommendedRestaurants);
     }
-
 
 
     private List<Restaurant> processRequest(RestaurantRequest request) {

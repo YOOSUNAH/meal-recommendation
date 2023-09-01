@@ -4,8 +4,12 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
-    List<Restaurant> findByMenu(String menu);
+public class RestaurantRepository {
+
+
+    public List<Restaurant> findByMenu(String menu){
+        return null;
+    }
 }
 
 

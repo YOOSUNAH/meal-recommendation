@@ -29,10 +29,6 @@ dependencies {
 	implementation 'org.projectlombok:lombok:1.18.22'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// Slf4j 및 Logback 추가
-	implementation 'org.slf4j:slf4j-api:1.7.32'
-	implementation 'ch.qos.logback:logback-classic:1.2.6'
-
 	// 기존 의존성 유지
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
 
