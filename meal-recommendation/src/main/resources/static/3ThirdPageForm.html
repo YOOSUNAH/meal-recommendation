@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link th:href="@{/css/bootstrap.min.css}"
           href="../css/bootstrap.min.css" rel="stylesheet">
-       <title>오점머 추천 페이지 3</title>
+    <title>오점머 추천 페이지 3</title>
     <style>
         .my-4{
             background-image: url('https://pin.it/5WbqG8P');
@@ -17,20 +17,20 @@
 </head>
 <body>
 <div class="container" style="max-width:600px"></div>
-    <h1>
-        <div style="text-align:center">오늘의 점심 메뉴</div>
-    </h1>
-    <h3>
-        <div style="text-align:center">현재 위치를 확인해 주세요</div>
-    </h3>
+<h1>
+    <div style="text-align:center">오늘의 점심 메뉴</div>
+</h1>
+<h3>
+    <div style="text-align:center">현재 위치를 확인해 주세요</div>
+</h3>
 
-    <hr class="my-4">
-    <div style="text-align:center">
-        <button type="button" class="btn btn-primary btn-lg"
-                th:inclick="|location.href='@{/list}'|">
-            위치 선택 완료!
-        </button>
+<hr class="my-4">
+<div style="text-align:center">
+    <button type="button" class="btn btn-primary btn-lg"
+            th:inclick="|location.href='@{/list}'|">
+        위치 선택 완료!
+    </button>
 
-    </div>
+</div>
 </body>
 </html>
