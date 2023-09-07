@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchLocalRes {
     // 지역 검색 출력 결과를 변수화
-
     private String lastBuildDate; // 검색 결과를 생성한 시간
     private int total; // 검색 결과 문서의 총 개수
     private int start; // 검색 결과 문서 중, 문서의 시작점
@@ -22,10 +21,8 @@ public class SearchLocalRes {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SearchLocalItem{}
+    public static class SearchLocalItem {
         private String name;
         private String link;
-
-
-
+    }
 }
