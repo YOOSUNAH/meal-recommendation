@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <title>오점머 추천 페이지 1</title>
+
+</head>
+<body>
+<div class="container" style="max-width:600px"></div>
+<h1>
+    <div style="text-align:center">오늘의 점심 메뉴</div>
+</h1>
+<h3>
+    <div style="text-align:center">오늘 뭐 먹지?</div>
+</h3>
+
+<hr class="my-4">
+<div style="text-align:center">
+    <button type="button" class="btn btn-primary btn-lg"
+            th:onclick="|location.href='@{/checkCategory}'|">
+        추천 받기!
+    </button>
+</div>
+</body>
+</html>

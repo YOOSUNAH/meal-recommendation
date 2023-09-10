@@ -75,7 +75,7 @@ public class NaverAPI {
         InputStreamReader streamReader = new InputStreamReader(body, StandardCharsets.UTF_8);
 
         try (
-                BufferedReader lineReader = new BufferedReader(streamReader)
+            BufferedReader lineReader = new BufferedReader(streamReader)
         ) {
             StringBuilder responseBody = new StringBuilder();
 
