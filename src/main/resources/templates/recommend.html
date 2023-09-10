@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{defaultLayout}"
+      layout:fragment="Content"
+>
+<body>
+<div>
+    <div>
+        <h1>오늘의 점심 뭐먹지?</h1>
+    </div>
+    <div class="container swiper-container">
+        <div class="content swiper-wrapper">
+            <div class="swiper-slide">
+                <div th:replace="~{fragments/page-form-1 :: block}"></div>
+            </div>
+            <div class="swiper-slide">
+                <div th:replace="~{fragments/page-form-2.html :: block}"></div>
+            </div>
+            <div class="swiper-slide">
+                <div th:replace="~{fragments/page-form-3 :: block}"></div>
+            </div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</div>
+
+
+</body>
+</html>

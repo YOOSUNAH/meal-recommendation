@@ -1,14 +1,17 @@
 package toy.ojm.domain;
 
-import java.io.UnsupportedEncodingException;
+import org.springframework.stereotype.Component;
+
+import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import static sun.nio.ch.Net.connect;
-import static sun.nio.ch.UnixDomainSockets.connect;
-
+@Component
 public class NaverAPI {
     public static void main(String[] args) {
         String id = "gIwF8rSJfflcUcAcR8gh";
@@ -34,7 +37,7 @@ public class NaverAPI {
         System.out.println("네이버에서 받은 결과 = " + responseBody);
         System.out.println("-----------------------------------------");
 
-        return convertData(responseBody);
+//        return convertData(responseBody);
     }
     //get과 connect 함수에서는 말 그대로 요청을 받아오고 받아오는 역할을 한다.
     private String get(String apiUrl, Map<String, String> requestHeaders){
