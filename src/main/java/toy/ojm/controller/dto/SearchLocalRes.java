@@ -1,4 +1,4 @@
-package toy.ojm;
+package toy.ojm.controller.dto;
 
 
 import lombok.AllArgsConstructor;
