@@ -25,9 +25,7 @@ public class NaverAPI {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("encoding fail!",e);
         }
-
         String apiURL = "https://openapi.naver.com/v1/search/local.json?query="+keyword+"&display=20&start=1&sort=random";    // json 결과
-        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
 
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("X-Naver-Client-Id", "gIwF8rSJfflcUcAcR8gh");
@@ -36,8 +34,6 @@ public class NaverAPI {
 
         System.out.println("네이버에서 받은 결과 = " + responseBody);
         System.out.println("-----------------------------------------");
-
-//        return convertData(responseBody);
     }
     //get과 connect 함수에서는 말 그대로 요청을 받아오고 받아오는 역할을 한다.
     private String get(String apiUrl, Map<String, String> requestHeaders){

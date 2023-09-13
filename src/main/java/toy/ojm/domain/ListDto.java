@@ -11,7 +11,7 @@ public class ListDto {
     private int index;
     private String category;
     private String name;
-//    private String longitude;
-//    private String latitude;
+   private String longitude;
+   private String latitude;
     private String signatureMenu;
 }
