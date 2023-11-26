@@ -28,7 +28,7 @@ public class RecommendService {
 
     public MealRecommendationResponse recommend(MealRecommendationRequest request) throws IOException {
         String query = request.getQuery();
-        String selectedCategory = request.getCategory();
+        String selectedCategory =   request.getCategory();
 
         // Naver API를 통해 음식점 목록을 가져옴
         List<ListDto> ListDtoList = naverClient.search(query);
