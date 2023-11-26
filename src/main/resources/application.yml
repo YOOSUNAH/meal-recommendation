@@ -4,3 +4,11 @@ spring:
 server:
   port: 8081
 
+naver:
+  url:
+    search:
+      local: https://openapi.naver.com/v1/search/local.json
+  client:
+    id: gIwF8rSJfflcUcAcR8gh
+    secret: _dGEL57Tf8
+

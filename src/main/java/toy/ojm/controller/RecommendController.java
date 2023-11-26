@@ -19,7 +19,7 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/recommend")
+    @GetMapping("/api/recommend")
     public String getRecommendation(Model model) {
         // 추천된 음식점 목록을 서비스에서 가져옴
         MealRecommendationResponse recommendation = recommendService.getRecommendation();
@@ -28,13 +28,5 @@ public class RecommendController {
         model.addAttribute("result", recommendation);
 
         return "result"; // result.html 템플릿을 렌더링
-    }
-    @PostMapping("/recommend")
-    public ResponseEntity<MealRecommendationResponse> recommend(
-        @RequestBody MealRecommendationRequest request
-    ) throws IOException {
-        return ResponseEntity.ok(
-            recommendService.recommend(request)
-        );
     }
 }

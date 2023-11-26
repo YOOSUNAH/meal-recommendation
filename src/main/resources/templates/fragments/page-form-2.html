@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
+        .container {
+            text-align: center;
+        }
+
         .form-check {
             margin-bottom: 0.5rem;
             font-size: 1.25rem;
+            text-align: center;
         }
     </style>
 </head>
 <body>
 <div th:fragment="block">
-    <div style="text-align:left;">
+    <div class="container">
+        <h2>오늘의 점심 메뉴</h2>
+        <h4>오늘은 뭐 먹지?</h4>
         <div class="form-check">
             <input type="checkbox" value="" id="Korean" checked>
             <label for="Korean">
@@ -18,19 +28,19 @@
             </label>
         </div>
         <div class="form-check">
-            <input type="checkbox" value="" id="Japanese">
+            <input type="checkbox" value="" id="Japanese" checked>
             <label for="Japanese">
                 일식
             </label>
         </div>
         <div class="form-check">
-            <input type="checkbox" value="" id="Chinese">
+            <input type="checkbox" value="" id="Chinese" checked>
             <label for="Chinese">
                 중식
             </label>
         </div>
         <div class="form-check">
-            <input type="checkbox" value="" id="Western">
+            <input type="checkbox" value="" id="Western" checked>
             <label for="Western">
                 양식
             </label>
@@ -41,11 +51,10 @@
                 전체 선택하기
             </label>
         </div>
-        <div style="text-align:center">
-            <button type="button" class="button swiper-button-next-custom">
-                다음!
-            </button>
-        </div>
+
+        <button type="submit">
+            추천받기!
+        </button>
     </div>
 </div>
 

@@ -27,7 +27,6 @@ public class NaverClient {
     @Value("${naver.url.search.local}")
     private String naverLocalSearchUrl;
 
-
     public List<ListDto> search(String query) throws IOException {
         // Naver API 호출을 위한 코드를 구현
         // query를 이용하여 Naver API를 호출하고 결과를 List<ListDto> 형태로 변환하여 반환
