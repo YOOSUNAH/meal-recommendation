@@ -19,10 +19,13 @@ public class RecommendController {
 
     private final RecommendService recommendService;
 
-    @GetMapping("/api/recommend")
-    public String getRecommendation(Model model) {
+    @PostMapping("/api/recommend")
+    public String getRecommendation(
+        MealRecommendationRequest request,
+        Model model
+    ) throws IOException {
         // 추천된 음식점 목록을 서비스에서 가져옴
-        MealRecommendationResponse recommendation = recommendService.getRecommendation();
+        MealRecommendationResponse recommendation = recommendService.recommend(request);
 
         // 모델에 음식점 목록을 추가하여 Thymeleaf 템플릿에 전달
         model.addAttribute("result", recommendation);

@@ -26,9 +26,11 @@ import java.util.stream.Collectors;
 public class RecommendService {
     private final NaverClient naverClient;
 
-    public MealRecommendationResponse recommend(MealRecommendationRequest request) throws IOException {
+    public MealRecommendationResponse recommend(
+        MealRecommendationRequest request
+    ) throws IOException {
         String query = request.getQuery();
-        String selectedCategory =   request.getCategory();
+        String selectedCategory = request.getCategory();
 
         // Naver API를 통해 음식점 목록을 가져옴
         List<ListDto> ListDtoList = naverClient.search(query);
@@ -45,6 +47,7 @@ public class RecommendService {
         response.setItemCount(randomListDtos.size());
         return response;
     }
+
     private List<ListDto> getRandomListDtos(List<ListDto> ListDtos, int count){
         List<ListDto> randomListDtos = new ArrayList<>();
         Random random = new Random();
@@ -56,9 +59,6 @@ public class RecommendService {
         return randomListDtos;
     }
 
-    public MealRecommendationResponse getRecommendation() {
-        return null;
-    }
 }
 
 
