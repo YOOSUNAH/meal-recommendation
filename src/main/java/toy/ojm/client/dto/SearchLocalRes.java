@@ -1,4 +1,4 @@
-package toy.ojm.controller.dto;
+package toy.ojm.client.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -22,7 +22,14 @@ public class SearchLocalRes {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class SearchLocalItem {
-        private String name;
-        private String link;
+        private String title; //  조선옥
+        private String link; // ??
+        private String category; //  한식&gt;육류,고기요리
+        private String description; //  연탄불 한우갈비 전문점.
+        private String telephone; // ??
+        private String address; //  서울특별시 중구 을지로3가 229-1
+        private String roadAddress; //  서울특별시 중구 을지로15길 6-5
+        private String mapx; //  311277
+        private String mapy; //  552097
     }
 }

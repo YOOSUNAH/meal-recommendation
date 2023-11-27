@@ -2,9 +2,10 @@ package toy.ojm.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import toy.ojm.client.NaverClient;
+import toy.ojm.client.dto.SearchLocalRes;
 import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.controller.dto.MealRecommendationResponse;
-import toy.ojm.controller.dto.NaverClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,35 +25,49 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RecommendService {
+    public static final int LIST_LIMIT_COUNT = 10;
     private final NaverClient naverClient;
 
     public MealRecommendationResponse recommend(
         MealRecommendationRequest request
-    ) throws IOException {
-        String query = request.getQuery();
-        String selectedCategory = request.getCategory();
+    ) {
+        SearchLocalRes searchResult = naverClient.search(request.getQuery());
 
-        // Naver API를 통해 음식점 목록을 가져옴
-        List<ListDto> ListDtoList = naverClient.search(query);
-        // 사용자가 선택한 카테고리 필터링
-        List<ListDto> filteredListDtos = ListDtoList.stream()
-                .filter(ListDto -> ListDto.getCategory().equalsIgnoreCase(selectedCategory))
-                .collect(Collectors.toList());
-
-        // 랜덤으로 10개 음식점 선택
-        List<ListDto> randomListDtos = getRandomListDtos(filteredListDtos, 10);
-
-        MealRecommendationResponse response = new MealRecommendationResponse();
-        response.setList(randomListDtos);
-        response.setItemCount(randomListDtos.size());
-        return response;
+        return MealRecommendationResponse.of(
+            randomize(
+                filterCategoryAndConvertResponseDto(
+                    searchResult,
+                    request.getCategoryList()
+                )
+            )
+        );
     }
 
-    private List<ListDto> getRandomListDtos(List<ListDto> ListDtos, int count){
-        List<ListDto> randomListDtos = new ArrayList<>();
+    // 사용자가 선택한 카테고리 필터링
+    private List<MealRecommendationResponse.Item> filterCategoryAndConvertResponseDto(
+        SearchLocalRes searchResult,
+        List<String> categories
+    ) {
+        return searchResult.getItems()
+            .stream()
+            .filter(item -> categories.contains(item.getCategory()))
+            .map(item -> MealRecommendationResponse.Item.builder()
+                .name(item.getTitle())
+                .category(item.getCategory())
+                .address(item.getAddress())
+                .address(item.getRoadAddress())
+                .build())
+            .collect(Collectors.toList());
+    }
+
+    // 랜덤으로 10개 음식점 선택
+    private List<MealRecommendationResponse.Item> randomize(
+        List<MealRecommendationResponse.Item> ListDtos
+    ) {
+        List<MealRecommendationResponse.Item> randomListDtos = new ArrayList<>();
         Random random = new Random();
 
-        while(randomListDtos.size() < count && !ListDtos.isEmpty()){
+        while (randomListDtos.size() < LIST_LIMIT_COUNT && !ListDtos.isEmpty()) {
             int randomIndex = random.nextInt(ListDtos.size());
             randomListDtos.add(ListDtos.remove(randomIndex));
         }

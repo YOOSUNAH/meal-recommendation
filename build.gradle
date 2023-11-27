@@ -18,26 +18,20 @@ bootJar {
 	// mainClassName 설정 제거
 }
 
-application {
-	// 메인 클래스 설정
-	mainClassName = 'toy.ojm.controller.MySpringBootApplication'
-}
+//application {
+//	// 메인 클래스 설정
+//	mainClassName = 'toy.ojm.controller.MySpringBootApplication'
+//}
 
 dependencies {
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.projectlombok:lombok:1.18.22'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	// 기존 의존성 유지
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
-
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-
-
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
