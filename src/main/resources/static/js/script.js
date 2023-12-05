@@ -89,11 +89,7 @@ function recommend() {
                 }
             }
         };
-
         // JSON 데이터 전송
         xhr.send(jsonData);
-
-
     })
-
 }

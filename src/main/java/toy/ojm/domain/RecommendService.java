@@ -2,12 +2,12 @@ package toy.ojm.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toy.ojm.client.NaverClient;
+
+import toy.ojm.client.Client;
 import toy.ojm.client.dto.SearchLocalRes;
 import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.controller.dto.MealRecommendationResponse;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RecommendService {
     public static final int LIST_LIMIT_COUNT = 10;
-    private final NaverClient naverClient;
+    private final toy.ojm.client.Client client;
 
     public MealRecommendationResponse recommend(
         MealRecommendationRequest request
     ) {
-        SearchLocalRes searchResult = naverClient.search(request.getQuery());
+        SearchLocalRes searchResult = client.search(request.getQuery());
 
         return MealRecommendationResponse.of(
             randomize(
@@ -75,12 +75,3 @@ public class RecommendService {
     }
 
 }
-
-
-
-
-
-
-
-
-

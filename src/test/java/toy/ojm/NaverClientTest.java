@@ -8,7 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import toy.ojm.client.NaverClient;
+import toy.ojm.client.Client;
 import toy.ojm.client.dto.SearchLocalRes;
 
 
@@ -17,7 +17,7 @@ import toy.ojm.client.dto.SearchLocalRes;
 class NaverClientTest {
 
     @Autowired
-    NaverClient sut;
+    Client sut;
     @Autowired
     ObjectMapper objectMapper;
 

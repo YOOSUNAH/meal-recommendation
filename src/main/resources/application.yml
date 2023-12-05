@@ -3,12 +3,5 @@ spring:
     cache: false
 server:
   port: 8081
-
-naver:
-  url:
-    search:
-      local: https://openapi.naver.com/v1/search/local.json
-  client:
-    id: gIwF8rSJfflcUcAcR8gh
-    secret: _dGEL57Tf8
-
+openapi:
+  url: http://openapi.seoul.go.kr:8088/6f524d4876746a73383056664d6843/xml/LOCALDATA_072404/1/5/
