@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+            text-align: center;
+        }
+
+        /* 각 요소를 블록 요소로 설정하여 줄바꿈을 적용합니다. */
+        h4, .btn {
+            display: block;
+            margin-bottom: 20px; /* 간격 조절 */
+        }
+    </style>
+</head>
+<body>
+<div th:fragment="block">
+    <div class="container">
+        <h4 class="mb-3">현재 위치를 확인해 주세요</h4><br>
+    </div> <!-- /container -->
+    <hr class="my-2">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="recommend()">
+                위치 선택 완료
+            </button>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

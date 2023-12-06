@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{defaultLayout}" layout:fragment="Content">
+<head>
+    <!-- head 내용 (생략) -->
+</head>
+<body>
+<div>
+    <div>
+        <h1>오늘 점심 뭐먹지?</h1>
+    </div>
+    <div class="container">
+        <!-- 모든 페이지를 동시에 표시하고, 버튼 선택에 따라 해당 페이지가 보이도록 함 -->
+        <div class="content">
+            <div id="pageForm1">
+                <div th:replace="~{fragments/page-form-1 :: block}"></div>
+            </div>
+            <div id="pageForm2" style="display: none;"> <!-- 초기에는 page-form-2를 숨김 -->
+                <div th:replace="~{fragments/page-form-2.html :: block}"></div>
+            </div>
+            <div id="pageForm3" style="display: none;"> <!-- 초기에는 page-form-3을 숨김 -->
+                <div th:replace="~{fragments/page-form-3 :: block}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // pageForm1을 보이고 나머지를 숨김
+    document.getElementById('pageForm1').style.display = 'block';
+    document.getElementById('pageForm2').style.display = 'none';
+    document.getElementById('pageForm3').style.display = 'none';
+
+    function showPageForm(pageNumber) {
+        // 버튼 선택에 따라 해당 페이지를 보이게 함
+        if (pageNumber === 1) {
+            document.getElementById('pageForm1').style.display = 'block';
+            document.getElementById('pageForm2').style.display = 'none';
+            document.getElementById('pageForm3').style.display = 'none';
+        } else if (pageNumber === 2) {
+            document.getElementById('pageForm1').style.display = 'none';
+            document.getElementById('pageForm2').style.display = 'block';
+            document.getElementById('pageForm3').style.display = 'none';
+        } else if (pageNumber === 3) {
+            document.getElementById('pageForm1').style.display = 'none';
+            document.getElementById('pageForm2').style.display = 'none';
+            document.getElementById('pageForm3').style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>

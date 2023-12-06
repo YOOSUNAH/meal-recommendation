@@ -1,0 +1,21 @@
+server:
+  address: localhost
+  port: 8081
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/OJMDB
+    username: ojm
+    password: 4027
+  thymeleaf:
+    cache: false
+  jpa:
+    database: mysql
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+openapi:
+  url: http://openapi.seoul.go.kr:8088/6f524d4876746a73383056664d6843/xml/LOCALDATA_072404/1/5/

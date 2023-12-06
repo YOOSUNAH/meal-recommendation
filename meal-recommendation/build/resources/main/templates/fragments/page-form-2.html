@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-check {
+            font-size: 1.25rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div th:fragment="block">
+    <div class="form-check">
+        <h2>메뉴 선택하기</h2>
+    </div>
+    <div class="form-check">
+        <input type="checkbox" value="" id="All" onclick="selectAllCategory()">
+        <label for="All">
+            전체 선택
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Korean" checked>
+        <label for="Korean">
+            한식
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Japanese">
+        <label for="Japanese">
+            일식
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Chinese">
+        <label for="Chinese">
+            중식
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Western">
+        <label for="Western">
+            양식
+        </label>
+    </div>
+    <br>
+
+
+    <button onclick="showPageForm(3)">
+        현재 위치 선택하러 가기
+    </button>
+</div>
+
+
+<script>
+    function showPageForm(pageNumber) {
+        if (pageNumber === 3) {
+            document.getElementById('pageForm1').style.display = 'none';
+            document.getElementById('pageForm2').style.display = 'none';
+            document.getElementById('pageForm3').style.display = 'block';
+        }
+    }
+</script>
+</body>
+</html>
