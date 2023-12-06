@@ -27,11 +27,11 @@ public class SearchLocalRes {
         private String title;
         private String link;
         private String category;
-        private String description;
+        private String description; //설명
         private String telephone;
-        private String address;
+        private String address; //주소
         private String roadAddress;
-        private String mapx;
+        private String mapx; // 위치
         private String mapy;
     }
 }
