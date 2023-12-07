@@ -48,16 +48,24 @@ public class RecommendService {
         SearchLocalRes searchResult,
         List<String> categories
     ) {
-        return searchResult.getItems()
-            .stream()
-            .filter(item -> categories.contains(item.getCategory()))
-            .map(item -> MealRecommendationResponse.Item.builder()
-                .name(item.getTitle())
-                .category(item.getCategory())
-                .address(item.getAddress())
-                .address(item.getRoadAddress())
-                .build())
-            .collect(Collectors.toList());
+        List<MealRecommendationResponse.Item> filteredItems = new ArrayList<>();
+
+        if (searchResult != null && searchResult.getItems() != null) {
+            filteredItems = searchResult.getItems()
+                .stream()
+                .filter(item -> categories.contains(item.getCategory()))
+                .map(item -> MealRecommendationResponse.Item.builder()
+                    .title(item.getTitle())
+                    .category(item.getCategory())
+                    .address(item.getAddress())
+                    .roadAddress(item.getRoadAddress())
+                    .build())
+                .collect(Collectors.toList());
+        } else {
+            System.out.println("SearchLocalRes 객체나 items가 null입니다.");
+        }
+
+        return filteredItems;
     }
 
     // 랜덤으로 10개 음식점 선택

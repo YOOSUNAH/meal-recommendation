@@ -26,10 +26,16 @@ public class MealRecommendationResponse {
     @Getter
     @Builder
     public static class Item {
+        private String title;
+        private String link;
         private String category;
-        private String name;
-        private Double distance;
+        private String description;
+        private String telephone;
         private String address;
+        private String roadAddress;
+        private String mapx;
+        private String mapy;
+
 //        private String signatureMenu;
     }
 }

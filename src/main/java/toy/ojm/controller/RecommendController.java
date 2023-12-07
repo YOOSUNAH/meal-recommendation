@@ -32,4 +32,7 @@ public class RecommendController {
 
         return "result"; // result.html 템플릿을 렌더링
     }
+
+
+
 }

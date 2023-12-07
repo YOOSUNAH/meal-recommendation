@@ -27,13 +27,15 @@ dependencies {
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0' // jackson-databind 버전을 2.13.0으로 변경
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
-	implementation 'mysql:mysql-connector-java:8.0.26' // MySQL 버전에 따라 버전을 변경할 수 있습니다.
+	implementation 'mysql:mysql-connector-java:8.0.26'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0'
+
 }
 
 tasks.named('test') {

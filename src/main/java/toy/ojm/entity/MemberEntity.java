@@ -6,12 +6,12 @@ import jakarta.persistence.*;
 @Table(name = "MemberEntity")
 
 public class MemberEntity {
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        private String username;
-        private String email;
+    private String username;
+    private String email;
 
-        // getter, setter, 기타 생성자 등
-    }
+    // getter, setter, 기타 생성자 등
+}
