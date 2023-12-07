@@ -51,6 +51,9 @@ function recommend() {
         lat = position.coords.latitude;
         long = position.coords.longitude;
 
+        console.log(position);
+
+
         // 요청할 JSON 데이터
         var requestData = {
             categoryList: [

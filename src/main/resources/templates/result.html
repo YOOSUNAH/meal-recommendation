@@ -6,32 +6,32 @@
       layout:fragment="Content"
 >
 <body>
-    <div>
-        <h1>
-            <div style="text-align:center">오늘의 점심 메뉴</div>
-        </h1>
-        <h3>
-            <div style="text-align:center">오늘 뭐 먹지?</div>
-        </h3>
-        <hr class="my-4">
-        <ol class="list-group list-group-numbered">
-            <li class="list-group-item d-flex justify-content-between align-items-start">
-                <div class="ms-2 me-auto">
-                    <div class="fw-bold">recommendeMenu</div>
-                    title
-                    link
-                    category
-                    description
-                    telephone
-                    address
-                    roadAddress
-                </div>
-                <span class="badge bg-primary rounded-pill">사진</span>
-            </li>
+<div>
+    <h1>
+        <div style="text-align:center">오늘의 점심 메뉴</div>
+    </h1>
+    <h3>
+        <div style="text-align:center">오늘 뭐 먹지?</div>
+    </h3>
+    <hr class="my-4">
+    <ol class="list-group list-group-numbered">
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+                <div class="fw-bold">recommendeMenu</div>
+                TRDSTATENM; //영업상태명 (폐업, 영업)
+                SITEWHLADDR;  //지번주소
+                RDNWHLADDR;   //도로명 주소
+                BPLCNM;  //사업장명
+                UPTAENM;  //업태구분명
+                X; //좌표정보(X) 경도
+                Y; //좌표정보(Y) 위도
+            </div>
+            <span class="badge bg-primary rounded-pill">사진</span>
+        </li>
         <div style="text-align:center">
             <button type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
         </div>
-    </div>
+</div>
 
 </body>
 </html>

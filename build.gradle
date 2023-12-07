@@ -35,8 +35,10 @@ dependencies {
 	implementation 'mysql:mysql-connector-java:8.0.26'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0'
-
+	implementation group: 'org.apache.poi', name: 'poi', version: '5.2.4'
+	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.4'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
