@@ -1,26 +1,18 @@
 package toy.ojm.client.dto;
 
+import java.util.ArrayList;
+
 public class Locationprintx {
-    public static void main(String[] args) {
-        try {
-
-            new Locationprintx().printx();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void printx(ArrayList<RestaurantDTO> list) {
+        for (RestaurantDTO dto : list) {
+            System.out.println("DTLSTATENM: " + dto.getDTLSTATENM());
+            System.out.println("SITEWHLADDR: " + dto.getSITEWHLADDR());
+            System.out.println("RDNWHLADDR: " + dto.getRDNWHLADDR());
+            System.out.println("BPLCNM: " + dto.getBPLCNM());
+            System.out.println("UPTAENM: " + dto.getUPTAENM());
+            System.out.println("X: " + dto.getX());
+            System.out.println("Y: " + dto.getY());
+            System.out.println("-----------------------");
         }
-
-    }
-
-    public String printx() {
-        String x = null;
-
-        RestaurantDTO rdto = new RestaurantDTO();
-
-        x = rdto.getX(x);
-
-        System.out.println(x);
-        return x;
-
     }
 }
