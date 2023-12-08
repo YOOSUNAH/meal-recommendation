@@ -24,7 +24,7 @@ public class SearchLocalRes {
     @AllArgsConstructor
     public static class SearchLocalItem {
 
-        private String TRDSTATENM; //영업상태명 (폐업, 영업)
+        private String DTLSTATENM; //상세영업상태명 (폐업, 영업)
         private String SITEWHLADDR;  //지번주소
         private String RDNWHLADDR;   //도로명 주소
         private String BPLCNM;  //사업장명

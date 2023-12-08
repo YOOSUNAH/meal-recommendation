@@ -5,7 +5,7 @@ public class RestaurantDTO {
     private String X;
     private String Y;
 
-    public String getX() {
+    public String getX(String x) {
         return X;
     }
 
