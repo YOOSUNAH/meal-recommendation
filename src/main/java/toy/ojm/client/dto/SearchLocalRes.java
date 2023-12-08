@@ -32,5 +32,9 @@ public class SearchLocalRes {
         private String X; //좌표정보(X) 경도
         private String Y; //좌표정보(Y) 위도
 
+
+        public String getCategory() {
+            return null;
+        }
     }
 }

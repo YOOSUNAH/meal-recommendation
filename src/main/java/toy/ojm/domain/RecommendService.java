@@ -28,50 +28,40 @@ public class RecommendService {
     public static final int LIST_LIMIT_COUNT = 10;
     private final toy.ojm.client.Client client;
 
-    public MealRecommendationResponse recommend(
-        MealRecommendationRequest request
-    ) {
+    public MealRecommendationResponse recommend(MealRecommendationRequest request) {
         SearchLocalRes searchResult = client.search(request.getQuery());
 
-        return MealRecommendationResponse.of(
-            randomize(
-                filterCategoryAndConvertResponseDto(
-                    searchResult,
-                    request.getCategoryList()
-                )
-            )
-        );
+        if (searchResult != null && searchResult.getItems() != null) {
+            List<MealRecommendationResponse.Item> filteredItems = filterByCategoryAndConvertResponseDto(searchResult, request.getCategoryList());
+
+            return MealRecommendationResponse.of(randomize(filteredItems));
+        } else {
+            System.out.println("SearchLocalRes 객체나 items가 null입니다.");
+            // 예외 처리 또는 기본값 반환 등으로 대체 필요
+            return MealRecommendationResponse.empty(); // 예시로 empty 메소드를 호출하여 빈 응답 반환
+        }
+
     }
 
     // 사용자가 선택한 카테고리 필터링
-    private List<MealRecommendationResponse.Item> filterCategoryAndConvertResponseDto(
-        SearchLocalRes searchResult,
-        List<String> categories
+    private List<MealRecommendationResponse.Item> filterByCategoryAndConvertResponseDto(SearchLocalRes searchResult, List<String> categories
     ) {
-        List<MealRecommendationResponse.Item> filteredItems = new ArrayList<>();
-
-        if (searchResult != null && searchResult.getItems() != null) {
-            filteredItems = searchResult.getItems()
-                .stream()
-                .filter(item -> categories.contains(item.getCategory()))
-                .map(item -> MealRecommendationResponse.Item.builder()
-                    .title(item.getTitle())
-                    .category(item.getCategory())
-                    .address(item.getAddress())
-                    .roadAddress(item.getRoadAddress())
-                    .build())
-                .collect(Collectors.toList());
-        } else {
-            System.out.println("SearchLocalRes 객체나 items가 null입니다.");
-        }
-
-        return filteredItems;
+        return searchResult.getItems()
+            .stream()
+            .filter(item -> categories.contains(item.getCategory()))
+            .map(item -> MealRecommendationResponse.Item.builder()
+                .DTLSTATENM(item.getDTLSTATENM())
+                .SITEWHLADDR(item.getSITEWHLADDR())
+                .RDNWHLADDR(item.getRDNWHLADDR())
+                .BPLCNM(item.getBPLCNM())
+                .X(item.getX())
+                .Y(item.getY())
+                .build())
+            .collect(Collectors.toList());
     }
 
     // 랜덤으로 10개 음식점 선택
-    private List<MealRecommendationResponse.Item> randomize(
-        List<MealRecommendationResponse.Item> ListDtos
-    ) {
+    private List<MealRecommendationResponse.Item> randomize(List<MealRecommendationResponse.Item> ListDtos) {
         List<MealRecommendationResponse.Item> randomListDtos = new ArrayList<>();
         Random random = new Random();
 
@@ -81,5 +71,4 @@ public class RecommendService {
         }
         return randomListDtos;
     }
-
 }

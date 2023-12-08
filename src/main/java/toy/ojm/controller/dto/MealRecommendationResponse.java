@@ -19,6 +19,10 @@ public class MealRecommendationResponse {
         return response;
     }
 
+    public static MealRecommendationResponse empty() {
+        return null;
+    }
+
     public void setItemCount(Integer itemCount) {
         this.itemCount = itemCount;
     }
