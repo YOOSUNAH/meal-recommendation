@@ -5,6 +5,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import toy.ojm.entity.RestaurantEntity;
+import toy.ojm.repository.JdbcTemplateMemberRepository;
 import toy.ojm.repository.RestaurantRepository;
 
 import java.io.FileInputStream;
@@ -15,10 +16,10 @@ import java.util.List;
 @Service
 public class ExcelToDatabaseService {
 
-    private final RestaurantRepository restaurantRepository;
+    private final JdbcTemplateMemberRepository jdbcTemplateMemberRepository;
 
-    public ExcelToDatabaseService(RestaurantRepository restaurantRepository) {
-        this.restaurantRepository = restaurantRepository;
+    public ExcelToDatabaseService(JdbcTemplateMemberRepository jdbcTemplateMemberRepository) {
+        this.jdbcTemplateMemberRepository = jdbcTemplateMemberRepository;
     }
 
     public void saveDataToDatabase(String filePath) {
@@ -41,7 +42,7 @@ public class ExcelToDatabaseService {
                 }
             }
 
-            restaurantRepository.saveAll(restaurantEntities);
+            jdbcTemplateMemberRepository.saveAll(restaurantEntities);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,11 +53,11 @@ public class ExcelToDatabaseService {
     private RestaurantEntity createRestaurantEntity(Row row) {
         try {
             RestaurantEntity entity = new RestaurantEntity();
-            entity.setDTLSTATENM(row.getCell(0).getStringCellValue());
-            entity.setSITEWHLADDR(row.getCell(1).getStringCellValue());
-            entity.setRDNWHLADDR(row.getCell(2).getStringCellValue());
-            entity.setBPLCNM(row.getCell(3).getStringCellValue());
-            entity.setUPTAENM(row.getCell(4).getStringCellValue());
+            entity.setDtlStateNm(row.getCell(0).getStringCellValue());
+            entity.setSiteWhLaDdr(row.getCell(1).getStringCellValue());
+            entity.setRdNWhLaDdr(row.getCell(2).getStringCellValue());
+            entity.setBpLcNm(row.getCell(3).getStringCellValue());
+            entity.setUpTadNm(row.getCell(4).getStringCellValue());
             entity.setX(row.getCell(5).getStringCellValue());
             entity.setY(row.getCell(6).getStringCellValue());
             return entity;

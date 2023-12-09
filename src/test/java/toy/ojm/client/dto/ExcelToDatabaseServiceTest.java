@@ -17,7 +17,7 @@ class ExcelToDatabaseServiceTest {
         // given
 
         // when
-        sut.saveDataToDatabase("선아 로컬에 엑셀 파일 위치 경로 추가");
+        sut.saveDataToDatabase("/Users/yuseon-a/Downloads/서울시일반음식점.xlsx");
 
         // then
 

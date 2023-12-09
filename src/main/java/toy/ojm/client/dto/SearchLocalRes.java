@@ -24,13 +24,13 @@ public class SearchLocalRes {
     @AllArgsConstructor
     public static class SearchLocalItem {
 
-        private String DTLSTATENM; //상세영업상태명 (폐업, 영업)
-        private String SITEWHLADDR;  //지번주소
-        private String RDNWHLADDR;   //도로명 주소
-        private String BPLCNM;  //사업장명
-        private String UPTAENM;  //업태구분명
-        private String X; //좌표정보(X) 경도
-        private String Y; //좌표정보(Y) 위도
+        private String dtlStateNm; //상세영업상태명 (폐업, 영업)
+        private String siteWhLaDdr;  //지번주소
+        private String rdNWhLaDdr;   //도로명 주소
+        private String bpLcNm;  //사업장명
+        private String upTadNm;  //업태구분명
+        private String x; //좌표정보(X) 경도
+        private String y; //좌표정보(Y) 위도
 
 
         public String getCategory() {
