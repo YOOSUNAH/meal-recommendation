@@ -1,6 +1,6 @@
 package toy.ojm.client.dto;
 
-import com.mysql.cj.xdevapi.Row;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class ExcelToDatabaseService {
 
             List<RestaurantEntity> restaurantEntities = new ArrayList<>();
 
-            for (org.apache.poi.ss.usermodel.Row row : sheet) {
+            for (Row row : sheet) {
                 if (row.getRowNum() == 0) {
                     continue; // Skip header row
                 }
