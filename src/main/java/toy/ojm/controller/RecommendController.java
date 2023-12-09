@@ -1,6 +1,7 @@
 package toy.ojm.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import toy.ojm.domain.RecommendService;
 
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class RecommendController {
@@ -23,16 +25,14 @@ public class RecommendController {
     public String getRecommendation(
         MealRecommendationRequest request,
         Model model
-    ) throws IOException {
+    ) {
         // 추천된 음식점 목록을 서비스에서 가져옴
         MealRecommendationResponse recommendation = recommendService.recommend(request);
+        log.info("요청 들어옴");
 
         // 모델에 음식점 목록을 추가하여 Thymeleaf 템플릿에 전달
         model.addAttribute("result", recommendation);
 
         return "result"; // result.html 템플릿을 렌더링
     }
-
-
-
 }

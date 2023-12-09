@@ -1,4 +1,6 @@
-package toy.ojm.client.dto;
+package toy.ojm.excel;
+
+import toy.ojm.excel.RestaurantDTO;
 
 import java.util.ArrayList;
 

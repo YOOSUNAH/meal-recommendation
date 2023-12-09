@@ -1,11 +1,10 @@
-package toy.ojm.client.dto;
+package toy.ojm.excel;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-
 public class RestaurantDTO {
     private String dtlStateNm;
     private String siteWhLaDdr;

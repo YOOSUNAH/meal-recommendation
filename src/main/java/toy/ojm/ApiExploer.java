@@ -1,7 +1,5 @@
 package toy.ojm;
 
-import toy.ojm.client.dto.SearchLocalRes;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,22 +22,22 @@ public class ApiExploer {
         conn.setRequestProperty("Content-type", "application/json");
         System.out.println("Response code: " + conn.getResponseCode()); // 연결 자체에 대한 확인
         BufferedReader rd;
-        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300){
+        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
             rd = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-        }else {
+        } else {
             rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
         }
         StringBuilder sb = new StringBuilder();
         String line;
-        while((line = rd.readLine()) != null){
+        while ((line = rd.readLine()) != null) {
             sb.append("\r\n");
             sb.append(line);
         }
 
         rd.close();
         conn.disconnect();
-        System.out.println("out:" +sb.toString());
-        String result =  sb.toString();
+        System.out.println("out:" + sb.toString());
+        String result = sb.toString();
 
 
         /*
@@ -52,9 +50,5 @@ public class ApiExploer {
 	// 4. model에 담아준다.
         model.addAttribute("data",dataArr);
          */
-    }
-
-    public static SearchLocalRes search(String query) {
-        return null;
     }
 }

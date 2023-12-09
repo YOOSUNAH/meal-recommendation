@@ -53,7 +53,6 @@ function recommend() {
 
         console.log(position);
 
-
         // 요청할 JSON 데이터
         var requestData = {
             categoryList: [

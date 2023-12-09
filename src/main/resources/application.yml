@@ -19,3 +19,8 @@ spring:
 
 openapi:
   url: http://openapi.seoul.go.kr:8088/6f524d4876746a73383056664d6843/xml/LOCALDATA_072404/1/5/
+
+logging:
+  level:
+    toy.ojm: DEBUG
+    org.springframework.web: DEBUG

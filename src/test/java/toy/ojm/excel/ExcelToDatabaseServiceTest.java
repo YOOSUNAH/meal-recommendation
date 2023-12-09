@@ -1,4 +1,4 @@
-package toy.ojm.client.dto;
+package toy.ojm.excel;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ExcelToDatabaseServiceTest {
 
     @Autowired
-    private ExcelToDatabaseService sut;
+    private ExcelToDatabaseService excelToDatabaseService;
 
     @Test
     @Disabled
@@ -17,7 +17,7 @@ class ExcelToDatabaseServiceTest {
         // given
 
         // when
-        sut.saveDataToDatabase("/Users/yuseon-a/Downloads/서울시일반음식점.xlsx");
+        excelToDatabaseService.saveDataToDatabase("/Users/yuseon-a/Downloads/서울시일반음식점.xlsx");
 
         // then
 
