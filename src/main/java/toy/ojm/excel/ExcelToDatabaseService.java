@@ -39,10 +39,10 @@ public class ExcelToDatabaseService {
             entity.setDtlStateNm(excelRestaurant.getDtlStateNm());
             entity.setSiteWhLaDdr(excelRestaurant.getSiteWhLaDdr());
             entity.setRdNWhLaDdr(excelRestaurant.getRdNWhLaDdr());
-            entity.setBpLcNm(row.getCell(3).getStringCellValue());
-            entity.setUpTadNm(row.getCell(4).getStringCellValue());
-            entity.setX(row.getCell(5).getStringCellValue());
-            entity.setY(row.getCell(6).getStringCellValue());
+            entity.setBpLcNm(excelRestaurant.getBpLcNm());
+            entity.setUpTadNm(excelRestaurant.getUpTadNm());
+            entity.setX(excelRestaurant.getX());
+            entity.setY(excelRestaurant.getY());
             return entity;
         } catch (Exception e) {
             // 처리되지 않은 예외 발생 시 로그 출력

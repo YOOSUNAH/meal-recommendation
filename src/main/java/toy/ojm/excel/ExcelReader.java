@@ -42,13 +42,13 @@ public class ExcelReader {
                 }
                 RestaurantDTO rdto = new RestaurantDTO();
                 // 각 열의 데이터를 RestaurantDTO에 저장
-                rdto.setDtlStateNm(row.getCell(0).getStringCellValue());
-                rdto.setSiteWhLaDdr(row.getCell(1).getStringCellValue());
-                rdto.setRdNWhLaDdr(row.getCell(2).getStringCellValue());
-                rdto.setBpLcNm(row.getCell(3).getStringCellValue());
-                rdto.setUpTadNm(row.getCell(4).getStringCellValue());
-                rdto.setX(row.getCell(5).getStringCellValue()); // X, Y 데이터가 문자열 형태인 경우
-                rdto.setY(row.getCell(6).getStringCellValue());
+                rdto.setDtlStateNm(row.getCell(7).getStringCellValue());
+                rdto.setSiteWhLaDdr(row.getCell(15).getStringCellValue());
+                rdto.setRdNWhLaDdr(row.getCell(16).getStringCellValue());
+                rdto.setBpLcNm(row.getCell(18).getStringCellValue());
+                rdto.setUpTadNm(row.getCell(22).getStringCellValue());
+                rdto.setX(row.getCell(23).getStringCellValue()); // X, Y 데이터가 문자열 형태인 경우
+                rdto.setY(row.getCell(24).getStringCellValue());
 
                 list.add(rdto);
             }
