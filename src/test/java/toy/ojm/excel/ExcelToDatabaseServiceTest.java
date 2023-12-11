@@ -17,8 +17,12 @@ class ExcelToDatabaseServiceTest {
         // given
 
         // when
-        excelToDatabaseService.saveDataToDatabase("/Users/yuseon-a/Downloads/서울시일반음식점.xlsx");
-
+        try {
+            excelToDatabaseService.saveDataToDatabase("/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx");
+        } catch (Exception e) {
+            e.printStackTrace(); // 테스트 실패 시 오류 메시지 출력
+            throw e; // 테스트를 실패 상태로 변경
+        }
         // then
 
     }

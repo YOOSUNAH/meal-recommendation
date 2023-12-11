@@ -36,13 +36,13 @@ public class ExcelToDatabaseService {
     private RestaurantEntity createRestaurantEntity(RestaurantDTO excelRestaurant) {
         try {
             RestaurantEntity entity = new RestaurantEntity();
-            entity.setDtlStateNm(excelRestaurant.getDtlStateNm());
-            entity.setSiteWhLaDdr(excelRestaurant.getSiteWhLaDdr());
-            entity.setRdNWhLaDdr(excelRestaurant.getRdNWhLaDdr());
-            entity.setBpLcNm(excelRestaurant.getBpLcNm());
-            entity.setUpTadNm(excelRestaurant.getUpTadNm());
-            entity.setX(excelRestaurant.getX());
-            entity.setY(excelRestaurant.getY());
+            entity.setBusinessStatus(excelRestaurant.getBusinessStatus());
+            entity.setStreetNumberAddress(excelRestaurant.getStreetNumberAddress());
+            entity.setStreetNameAddress(excelRestaurant.getStreetNameAddress());
+            entity.setRestaurantName(excelRestaurant.getRestaurantName());
+            entity.setCategory (excelRestaurant.getCategory ());
+            entity.setLongitude(excelRestaurant.getLongitude());
+            entity.setLatitude(excelRestaurant.getLatitude());
             return entity;
         } catch (Exception e) {
             // 처리되지 않은 예외 발생 시 로그 출력

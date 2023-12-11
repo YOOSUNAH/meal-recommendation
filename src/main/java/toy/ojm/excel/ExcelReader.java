@@ -1,5 +1,6 @@
 package toy.ojm.excel;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,7 +26,7 @@ public class ExcelReader {
         FileInputStream inputStream = null;
         XSSFWorkbook workbook = null;
         try {
-            inputStream = new FileInputStream("/Users/yuseon-a/Downloads/서울시일반음식점.xlsx");
+            inputStream = new FileInputStream("/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx");
             workbook = new XSSFWorkbook(inputStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -42,14 +43,25 @@ public class ExcelReader {
                 }
                 RestaurantDTO rdto = new RestaurantDTO();
                 // 각 열의 데이터를 RestaurantDTO에 저장
-                rdto.setDtlStateNm(row.getCell(7).getStringCellValue());
-                rdto.setSiteWhLaDdr(row.getCell(15).getStringCellValue());
-                rdto.setRdNWhLaDdr(row.getCell(16).getStringCellValue());
-                rdto.setBpLcNm(row.getCell(18).getStringCellValue());
-                rdto.setUpTadNm(row.getCell(22).getStringCellValue());
-                rdto.setX(row.getCell(23).getStringCellValue()); // X, Y 데이터가 문자열 형태인 경우
-                rdto.setY(row.getCell(24).getStringCellValue());
+                rdto.setBusinessStatus(row.getCell(0).getStringCellValue());
+                rdto.setStreetNumberAddress(row.getCell(1).getStringCellValue());
+                rdto.setStreetNameAddress(row.getCell(2).getStringCellValue());
+                rdto.setRestaurantName(row.getCell(3).getStringCellValue());
+                rdto.setCategory(row.getCell(4).getStringCellValue());
+                // Longitude 및 Latitude 셀의 데이터를 NUMERIC 타입으로 가져오기
+                if (row.getCell(5).getCellType() == CellType.NUMERIC) {
+                    rdto.setLongitude(String.valueOf(row.getCell(5).getNumericCellValue()));
+                } else {
+                    // NUMERIC 타입이 아닐 경우
+                    System.out.println("Cell 5 in row " + r + " is not a numeric type.");
+                }
 
+                if (row.getCell(6).getCellType() == CellType.NUMERIC) {
+                    rdto.setLatitude(String.valueOf(row.getCell(6).getNumericCellValue()));
+                } else {
+                    // NUMERIC 타입이 아닐 경우
+                    System.out.println("Cell 6 in row " + r + " is not a numeric type.");
+                }
                 list.add(rdto);
             }
         } catch (Exception e) {

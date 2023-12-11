@@ -6,11 +6,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RestaurantDTO {
-    private String dtlStateNm;
-    private String siteWhLaDdr;
-    private String rdNWhLaDdr;
-    private String bpLcNm;
-    private String upTadNm;
-    private String x;
-    private String y;
+    private String businessStatus;
+    private String streetNumberAddress;
+    private String streetNameAddress;
+    private String restaurantName;
+    private String category;
+    private String longitude;
+    private String latitude;
 }

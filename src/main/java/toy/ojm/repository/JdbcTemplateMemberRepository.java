@@ -27,10 +27,10 @@ public class JdbcTemplateMemberRepository {
 
     public RestaurantEntity save(RestaurantEntity RestaurantEntity) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("RestaurantEntity").usingGeneratedKeyColumns("bpLcNm");
+        jdbcInsert.withTableName("RestaurantEntity").usingGeneratedKeyColumns("restaurantName");
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("bpLcNm", RestaurantEntity.getBpLcNm());
+        parameters.put("restaurantName", RestaurantEntity.getRestaurantName());
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
 //        RestaurantEntity.setBpLcNm(key.longValue());
@@ -108,15 +108,13 @@ public class JdbcTemplateMemberRepository {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     RestaurantEntity restaurantEntity = restaurants.get(i);
-                    ps.setString(1, restaurantEntity.getDtlStateNm());
-                    ps.setString(2, restaurantEntity.getSiteWhLaDdr());
-                    ps.setString(3, restaurantEntity.getRdNWhLaDdr());
-                    ps.setString(4, restaurantEntity.getBpLcNm());
-                    ps.setString(5, restaurantEntity.getUpTadNm());
-                    ps.setString(6, restaurantEntity.getX());
-                    ps.setString(7, restaurantEntity.getY());
-
-
+                    ps.setString(1, restaurantEntity.getBusinessStatus());
+                    ps.setString(2, restaurantEntity.getStreetNumberAddress());
+                    ps.setString(3, restaurantEntity.getStreetNameAddress());
+                    ps.setString(4, restaurantEntity.getRestaurantName());
+                    ps.setString(5, restaurantEntity.getCategory());
+                    ps.setString(6, restaurantEntity.getLongitude());
+                    ps.setString(7, restaurantEntity.getLatitude());
                 }
 
                 @Override
