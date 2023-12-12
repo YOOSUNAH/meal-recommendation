@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.controller.dto.MealRecommendationResponse;
 import toy.ojm.domain.RecommendService;
+import toy.ojm.excel.ExcelToDatabaseService;
 
 import java.io.IOException;
 
@@ -20,10 +21,12 @@ import java.io.IOException;
 public class RecommendController {
 
     private final RecommendService recommendService;
+    private final ExcelToDatabaseService excelToDatabaseService;
+
 
     @PostMapping("/api/recommend")
     public String getRecommendation(
-        MealRecommendationRequest request,
+        @RequestBody MealRecommendationRequest request,
         Model model
     ) {
         // 추천된 음식점 목록을 서비스에서 가져옴
@@ -35,4 +38,16 @@ public class RecommendController {
 
         return "result"; // result.html 템플릿을 렌더링
     }
+
+    @PostMapping("/api/saveExcelToDatabase")
+    public String saveExcelToDatabase() {
+        try {
+            excelToDatabaseService.saveDataToDatabase("/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx");
+            return "데이터 저장 성공";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "데이터 저장 실패";
+        }
+    }
 }
+

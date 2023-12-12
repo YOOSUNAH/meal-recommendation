@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class RestaurantEntity {
 
-    private Long id;
+//   private Long id;
     private String businessStatus; //상세영업상태명 (폐업, 영업)
     private String streetNumberAddress;  //지번주소
     private String streetNameAddress;   //도로명 주소

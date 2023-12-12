@@ -38,63 +38,27 @@ public class JdbcTemplateMemberRepository {
     }
 
 //    @Override
-//    public Optional<RestaurantEntity> findByDtlStateNm(String dtlStateNm) {
-//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where dtlStateNm = ? ", RestaurantRowMapper(), dtlStateNm);
+//    public Optional<RestaurantEntity> findByBusinessStatus(String businessStatus) {
+//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where businessStatus = ? ", RestaurantRowMapper(), dtlStateNm);
 //        return result.stream().findAny();
 //    }
 //
 //    @Override
-//    public Optional<RestaurantEntity> findBySiteWhLaDdr(String siteWhLaDdr) {
-//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where siteWhLaDdr = ? ", RestaurantRowMapper(), siteWhLaDdr);
+//    public Optional<RestaurantEntity> findByStreetNumberAddress(String streetNumberAddress) {
+//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where streetNumberAddress = ? ", RestaurantRowMapper(), siteWhLaDdr);
 //        return result.stream().findAny();
 //    }
-//
-//    @Override
-//    public Optional<RestaurantEntity> findByRdNWhLaDdr(String rdNWhLaDdr) {
-//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where rdNWhLaDdr = ? ", RestaurantRowMapper(), rdNWhLaDdr);
-//        return result.stream().findAny();
-//    }
-//    @Override
-//    public Optional<RestaurantEntity> findByBpLcNm(String bpLcNm) {
-//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where bpLcNm = ? ", RestaurantRowMapper(), bpLcNm);
-//        return result.stream().findAny();
-//    }
-//    @Override
-//    public Optional<RestaurantEntity> findByUpTadNm(String upTadNm) {
-//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where upTadNm = ? ", RestaurantRowMapper(), upTadNm);
-//        return result.stream().findAny();
-//    }
-//    @Override
-//    public Optional<RestaurantEntity> findByX(String x) {
-//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where x = ? ", RestaurantRowMapper(), x);
-//        return result.stream().findAny();
-//    }
-//    @Override
-//    public Optional<RestaurantEntity> findByY(String y) {
-//        List<RestaurantEntity> result = jdbcTemplate.query("select * from RestaurantEntity where y = ? ", RestaurantRowMapper(), y);
-//        return result.stream().findAny();
-//    }
-//
-//    @Override
-//    public List<RestaurantEntity> findAll()){
-//        return jdbcTemplate.query("select * from RestaurantEntity", RestaurantRowMapper());;
-//    }
-
-//    public List<String> findAllNames() {
-//        return jdbcTemplate.query("SELECT name FROM RestaurantEntity",
-//            (rs, rowNum) -> rs.getString("name"));
-//    }
-//
 //
 //    private RowMapper<RestaurantEntity> RestaurantRowMapper() {
 //        return (rs, rowNum) -> {
 //            RestaurantEntity restaurantEntity = new RestaurantEntity();
-//            restaurantEntity.setDtlStateNm(rs.getString("dtlStateNm"));
-//            restaurantEntity.setSiteWhLaDdr(rs.getString("siteWhLaDdr"));
-//            restaurantEntity.setSiteWhLaDdr(rs.getString("siteWhLaDdr"));
-//            restaurantEntity.setSiteWhLaDdr(rs.getString("siteWhLaDdr"));
-//            restaurantEntity.setSiteWhLaDdr(rs.getString("siteWhLaDdr"));
-//            restaurantEntity.setSiteWhLaDdr(rs.getString("siteWhLaDdr"));
+//            restaurantEntity.setBusinessStatus(rs.getString("businessStatus"));
+//            restaurantEntity.setStreetNumberAddress(rs.getString("streetNumberAddress"));
+//            restaurantEntity.setStreetNameAddress(rs.getString("streetNameAddress"));
+//            restaurantEntity.setRestaurantName(rs.getString("restaurantName"));
+//            restaurantEntity.setCategory(rs.getString("category"));
+//            restaurantEntity.setLongitude(rs.getString("longitude"));
+//            restaurantEntity.setLatitude(rs.getString("latitude"));
 //
 //            return restaurantEntity;
 //        }
