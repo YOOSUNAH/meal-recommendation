@@ -2,10 +2,12 @@ package toy.ojm.excel;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import toy.ojm.entity.RestaurantEntity;
 import toy.ojm.repository.JdbcTemplateMemberRepository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,6 +22,25 @@ public class ExcelToDatabaseService {
 
     private final JdbcTemplateMemberRepository jdbcTemplateMemberRepository;
     private final ExcelReader excelReader;
+    private final JdbcTemplate jdbcTemplate;
+    public ExcelToDatabaseService(
+        JdbcTemplateMemberRepository jdbcTemplateMemberRepository,
+        ExcelReader excelReader,
+        JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplateMemberRepository = jdbcTemplateMemberRepository;
+        this.excelReader = excelReader;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public static void main(String[] args) {
+        String filePath = "/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx"; // 파일 경로 설정
+        JdbcTemplateMemberRepository jdbcTemplateMemberRepository = null;
+        ExcelReader excelReader = null;
+        jdbcTemplateMemberRepository = new JdbcTemplateMemberRepository();
+        DataSource dataSource = null;
+        ExcelToDatabaseService excelToDatabaseService = new ExcelToDatabaseService(jdbcTemplateMemberRepository, excelReader, dataSource);
+        excelToDatabaseService.saveDataToDatabase(filePath);
+    }
 
     public void saveDataToDatabase(String filePath) {
         try {
