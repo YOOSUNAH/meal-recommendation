@@ -25,12 +25,12 @@ public class ExcelReader {
 //        }
 //    }
 
-    public List<RestaurantDTO> read() {
+    public List<RestaurantDTO> read(String filePath) {
         List<RestaurantDTO> list = new ArrayList<>();
         FileInputStream inputStream = null;
         XSSFWorkbook workbook = null;
         try {
-            inputStream = new FileInputStream("/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx");
+            inputStream = new FileInputStream(filePath);
             workbook = new XSSFWorkbook(inputStream);
 
             XSSFSheet sheet = workbook.getSheetAt(0);

@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+//@Repository
 public class JdbcTemplateMemberRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -34,8 +34,6 @@ public class JdbcTemplateMemberRepository {
 //        RestaurantEntity.setBpLcNm(key.longValue());
         return RestaurantEntity;
     }
-
-
 
     public int[] batchInsert(List<RestaurantEntity> restaurants) {
         return jdbcTemplate.batchUpdate(

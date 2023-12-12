@@ -7,11 +7,6 @@ import org.springframework.stereotype.Service;
 import toy.ojm.entity.RestaurantEntity;
 import toy.ojm.repository.JdbcTemplateMemberRepository;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,68 +14,47 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ExcelToDatabaseService {
-
-    private final JdbcTemplateMemberRepository jdbcTemplateMemberRepository;
+ /*
+ 난 데이터 베이스에 서울특별시 음식점 데이터가 있어. 음식점 데이터는 좌표값을 가지고 있어. 크롬 브라우저를 이용하여 사용자로부터  현재 위치를 받아와서,
+ 해당 위치 100M 이내의 음식점들을 찾는 MySQL 8 쿼리를 작성하고 싶어!
+  */
+//    private final JdbcTemplateMemberRepository jdbcTemplateMemberRepository;
     private final ExcelReader excelReader;
     private final JdbcTemplate jdbcTemplate;
-    public ExcelToDatabaseService(
-        JdbcTemplateMemberRepository jdbcTemplateMemberRepository,
-        ExcelReader excelReader,
-        JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplateMemberRepository = jdbcTemplateMemberRepository;
-        this.excelReader = excelReader;
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
-    public static void main(String[] args) {
-        String filePath = "/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx"; // 파일 경로 설정
-        JdbcTemplateMemberRepository jdbcTemplateMemberRepository = null;
-        ExcelReader excelReader = null;
-        jdbcTemplateMemberRepository = new JdbcTemplateMemberRepository();
-        DataSource dataSource = null;
-        ExcelToDatabaseService excelToDatabaseService = new ExcelToDatabaseService(jdbcTemplateMemberRepository, excelReader, dataSource);
-        excelToDatabaseService.saveDataToDatabase(filePath);
-    }
+    public void readFromExcelAndSave(String filePath) {
+        List<RestaurantDTO> excelRestaurants = excelReader.read(filePath);
+        List<RestaurantEntity> restaurantEntities = convertRestaurantEntities(excelRestaurants);
+//        jdbcTemplateMemberRepository.batchInsert(restaurantEntities);
 
-    public void saveDataToDatabase(String filePath) {
-        try {
-            List<RestaurantDTO> excelRestaurants = excelReader.read();
-            List<RestaurantEntity> restaurantEntities = convertRestaurantEntities(excelRestaurants);
-            jdbcTemplateMemberRepository.batchInsert(restaurantEntities);
-
-            try (
-                // MySQL 데이터베이스 연결
-                Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/OJMDB", "ojm", "4027")) {
-
-                // 데이터베이스에 데이터 삽입
-                for (RestaurantEntity entity : restaurantEntities) {
-                    insertData(connection, entity);
-                }
-            }
-        } catch (SQLException e) {
-            log.error("SQL error : {}", e.getMessage());
+        // 데이터베이스에 데이터 삽입
+        for (RestaurantEntity entity : restaurantEntities) {
+            insertData(entity);
         }
     }
 
-    private void insertData(Connection connection, RestaurantEntity entity) throws SQLException {
-        String sql = "INSERT INTO restaurantTable (businessStatus, streetNumberAddress, streetNameAddress, restaurantName, category, longitude, latitude) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private void insertData(RestaurantEntity entity) {
+        int success = jdbcTemplate.update("""
+                INSERT INTO restaurantTable (
+                businessStatus, streetNumberAddress, streetNameAddress, 
+                restaurantName, category, longitude, latitude
+                ) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+            entity.getBusinessStatus(),
+            entity.getStreetNumberAddress(),
+            entity.getStreetNameAddress(),
+            entity.getRestaurantName(),
+            entity.getCategory(),
+            entity.getLongitude(),
+            entity.getLatitude()
+        );
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, entity.getBusinessStatus());
-            preparedStatement.setString(2, entity.getStreetNumberAddress());
-            preparedStatement.setString(3, entity.getStreetNameAddress());
-            preparedStatement.setString(4, entity.getRestaurantName());
-            preparedStatement.setString(5, entity.getCategory());
-            preparedStatement.setString(6, entity.getLongitude());
-            preparedStatement.setString(7, entity.getLatitude());
-
-            // 쿼리 실행
-            int rowsInserted = preparedStatement.executeUpdate();
-            if (rowsInserted > 0) {
-                log.info("데이터가 성공적으로 삽입되었습니다.");
-            } else {
-                log.warn("데이터 삽입이 실패하였습니다.");
-            }
+        // 쿼리 실행
+        if (success > 0) {
+            log.info("데이터가 성공적으로 삽입되었습니다.");
+        } else {
+            log.warn("데이터 삽입이 실패하였습니다.");
         }
     }
 

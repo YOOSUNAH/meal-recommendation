@@ -2,9 +2,7 @@ package toy.ojm.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,8 +10,6 @@ import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.controller.dto.MealRecommendationResponse;
 import toy.ojm.domain.RecommendService;
 import toy.ojm.excel.ExcelToDatabaseService;
-
-import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -42,7 +38,7 @@ public class RecommendController {
     @PostMapping("/api/saveExcelToDatabase")
     public String saveExcelToDatabase() {
         try {
-            excelToDatabaseService.saveDataToDatabase("/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx");
+            excelToDatabaseService.readFromExcelAndSave("/Users/yuseon-a/Downloads/서울강남구영업중인음식점.xlsx");
             return "데이터 저장 성공";
         } catch (Exception e) {
             e.printStackTrace();
