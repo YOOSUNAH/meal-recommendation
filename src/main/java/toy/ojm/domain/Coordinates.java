@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class Coordinates {
 
-    private String longitude;
-    private String latitude;
+    private Double longitude;
+    private Double latitude;
 
 }

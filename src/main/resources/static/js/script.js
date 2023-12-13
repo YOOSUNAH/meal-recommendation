@@ -59,7 +59,7 @@ function recommend() {
                 "KOREAN",
                 "JAPANESE",
             ],
-            coodinates: {
+            coordinates: {
                 longitude: long,
                 latitude: lat,
             }
