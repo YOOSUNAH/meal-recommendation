@@ -27,14 +27,13 @@ dependencies {
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0' // jackson-databind 버전을 2.13.0으로 변경
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	testImplementation 'org.projectlombok:lombok:1.18.28'
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 	implementation 'mysql:mysql-connector-java:8.0.26'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.0'
 	implementation group: 'org.apache.poi', name: 'poi', version: '5.2.4'
 	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.4'
 }

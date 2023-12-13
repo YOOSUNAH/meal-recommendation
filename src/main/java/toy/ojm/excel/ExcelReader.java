@@ -38,7 +38,8 @@ public class ExcelReader {
 
             for (int r = 1; r < 100; r++) { // 첫 번째 행은 헤더일 수 있으므로 r = 1로 수정
                 XSSFRow row = sheet.getRow(r);
-                // log 찍어보기
+
+//                log 찍어보기
 //                log.info(String.valueOf(row.getCell(0)));
 //                log.info(String.valueOf(row.getCell(1)));
 //                log.info(String.valueOf(row.getCell(2)));
