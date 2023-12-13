@@ -1,3 +1,7 @@
+resources:
+  file:
+    path: "C:/my-files"
+
 server:
   address: localhost
   port: 8081

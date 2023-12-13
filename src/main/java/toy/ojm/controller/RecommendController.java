@@ -2,6 +2,7 @@ package toy.ojm.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +23,8 @@ public class RecommendController {
 
     @Value("${resources.file.path}") // application.properties 또는 application.yml에서 파일 경로 읽기
     private String filePath;
+
+
 
     @PostMapping("/api/recommend")
     public ResponseEntity<MealRecommendationResponse> getRecommendation(

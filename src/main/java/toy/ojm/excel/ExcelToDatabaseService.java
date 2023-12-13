@@ -16,10 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ExcelToDatabaseService {
-    /*
-    난 데이터 베이스에 서울특별시 음식점 데이터가 있어. 음식점 데이터는 좌표값을 가지고 있어. 크롬 브라우저를 이용하여 사용자로부터  현재 위치를 받아와서,
-    해당 위치 100M 이내의 음식점들을 찾는 MySQL 8 쿼리를 작성하고 싶어!
-     */
+
     private final ExcelReader excelReader;
     private final JdbcTemplate jdbcTemplate;
 
