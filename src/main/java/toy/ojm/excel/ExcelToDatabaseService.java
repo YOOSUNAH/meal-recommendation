@@ -88,7 +88,7 @@ public class ExcelToDatabaseService {
         return restaurantEntities;
     }
 
-    private List<RestaurantEntity> getNearbyRestaurants(Coordinates coordinates) {
+    public List<RestaurantEntity> getNearbyRestaurants(Coordinates coordinates) {
         List<RestaurantEntity> nearbyRestaurants = new ArrayList<>();
         try {
             String query = "SELECT * FROM restaurantTable WHERE ST_DISTANCE_SPHERE(POINT(longitude, latitude), POINT(?, ?)) <= 100";
@@ -113,8 +113,15 @@ public class ExcelToDatabaseService {
     }
 
     private boolean isValidCoordinates(Coordinates coordinates) {
-        // Coordinates의 경도와 위도 값이 유효한지 확인하는 로직 추가
-        // 예: 경도와 위도 값이 null이 아니고, 범위가 유효한지 등을 확인
+        if (coordinates == null) {
+            return false;
+        }
+
+        double longitude = Double.parseDouble(coordinates.getLongitude());
+        double latitude = Double.parseDouble(coordinates.getLatitude());
+        boolean isValidLongitude = (longitude >= -180.0 && longitude <= 180.0);
+        boolean isValidLatitude = (latitude >= -90.0 && latitude <= 90.0);
+
         return coordinates.getLongitude() != null && coordinates.getLatitude() != null;
     }
 }

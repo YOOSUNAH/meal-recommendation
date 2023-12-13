@@ -12,7 +12,7 @@ public class PageController {
         return "recommend";
     }
 
-    @GetMapping("/result")
+    @GetMapping("/result-page")
     public String goResult() {
         return "result";
     }
