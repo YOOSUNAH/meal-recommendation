@@ -35,6 +35,9 @@ public class RecommendController {
     public ResponseEntity<MealRecommendationResponse> getRecommendation(
         @RequestBody MealRecommendationRequest request
     ) {
+        // 로그 추가: 요청이 들어왔음을 확인
+        log.info("API '/api/recommend'로 POST 요청이 들어왔습니다.");
+
         // 추천된 음식점 목록을 서비스에서 가져옴
         MealRecommendationResponse recommendation = recommendService.recommend(request);
         log.info("요청 들어옴");
@@ -76,5 +79,8 @@ public class RecommendController {
 
         return new Coordinates();
     }
+
+
+
 
 }
