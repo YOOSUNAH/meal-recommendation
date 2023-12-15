@@ -28,6 +28,10 @@ public class ExcelToDatabaseService {
         List<RestaurantEntity> restaurantEntities = convertRestaurantEntities(excelRestaurants);
         // 데이터베이스에 데이터 삽입
         for (RestaurantEntity entity : restaurantEntities) {
+            // 데이터베이스의 TM 좌표계를 Geolocation의 GCS 좌표계로 변환하여 저장
+            ProjCoordinate transformedCoordinates = transCoord.transformToGCS(Double.parseDouble(entity.getLongitude()), Double.parseDouble(entity.getLatitude()));
+            entity.setLongitude(String.valueOf(transformedCoordinates.x));
+            entity.setLatitude(String.valueOf(transformedCoordinates.y));
             insertData(entity);
         }
         // 사용자의 위치로부터 100m 이내의 음식점 데이터 가져오기
@@ -91,6 +95,11 @@ public class ExcelToDatabaseService {
     public List<RestaurantEntity> getNearbyRestaurants(Coordinates coordinates) {
         List<RestaurantEntity> nearbyRestaurants = new ArrayList<>();
         try {
+            // 사용자의 현재 위치를 데이터베이스의 TM 좌표계에서 Geolocation의 GCS 좌표계로 변환
+            ProjCoordinate transformedCoordinates = transCoord.transformToGCS(Double.parseDouble(String.valueOf(coordinates.getLongitude())), Double.parseDouble(String.valueOf(coordinates.getLatitude())));
+            coordinates.setLongitude(String.valueOf(transformedCoordinates.x));
+            coordinates.setLatitude(String.valueOf(transformedCoordinates.y));
+
             //100m 이내에 음식점 쿼리문
             String query = "SELECT * FROM restaurantTable WHERE ST_DISTANCE_SPHERE(POINT(longitude, latitude), POINT(?, ?)) <= 100";
             Object[] params = {coordinates.getLongitude(), coordinates.getLatitude()};
