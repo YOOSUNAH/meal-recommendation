@@ -2,10 +2,12 @@ package toy.ojm.excel;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.domain.Coordinates;
+import toy.ojm.domain.TransCoord;
 import toy.ojm.entity.RestaurantEntity;
 import toy.ojm.repository.JdbcTemplateMemberRepository;
 
@@ -19,6 +21,7 @@ public class ExcelToDatabaseService {
 
     private final ExcelReader excelReader;
     private final JdbcTemplate jdbcTemplate;
+    private final TransCoord transCoord;
 
     public void readFromExcelAndSave(String filePath, MealRecommendationRequest request) {
         List<RestaurantDTO> excelRestaurants = excelReader.read(filePath);
@@ -30,6 +33,10 @@ public class ExcelToDatabaseService {
         // 사용자의 위치로부터 100m 이내의 음식점 데이터 가져오기
         Coordinates userCoordinates = request.getCoordinates();
         if (userCoordinates != null && isValidCoordinates(userCoordinates)) {
+            ProjCoordinate transformedCoordinates = transCoord.transformToGCS(userCoordinates.getLongitude(), userCoordinates.getLatitude());
+            userCoordinates.setLongitude(String.valueOf(transformedCoordinates.x)); // 변환된 경도 설정
+            userCoordinates.setLatitude(String.valueOf(transformedCoordinates.y)); // 변환된 위도 설정
+
             List<RestaurantEntity> nearbyRestaurants = getNearbyRestaurants(userCoordinates);
         } else {
             log.warn("유효하지 않은 사용자 위치 정보입니다.");

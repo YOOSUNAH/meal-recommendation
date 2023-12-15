@@ -50,7 +50,7 @@ function recommend() {
     navigator.geolocation.getCurrentPosition(position => {
         // lat = position.coords.latitude;
         // long = position.coords.longitude;
-        const { latitude, longitude } = position.coords;
+        const {latitude, longitude} = position.coords;
 
         console.log(position);
 
@@ -109,14 +109,32 @@ function recommend() {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                return response.json();
+
+                console.log('Received Response:', response);
+
+                if (response.status === 304) {
+                    return Promise.resolve();
+                }
+
+                return response.text();
             })
             .then(data => {
                 console.log('서버 응답:', data);
+
+                if (!data) {
+                    console.error('Empty response received.');
+                    return;
+                }
+
+                try {
+                    const jsonData = JSON.parse(data);
+                    console.log('Parsed JSON Data:', jsonData);
+                } catch (error) {
+                    console.error('Invalid JSON format:', error);
+                }
             })
             .catch(error => {
-                console.error('요청 실패:', error);
+                console.error('Request failed:', error);
             });
-
-    })
+    });
 }

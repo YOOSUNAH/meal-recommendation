@@ -2,6 +2,7 @@ package toy.ojm.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +41,13 @@ public class RecommendController {
 
         // 추천된 음식점 목록을 서비스에서 가져옴
         MealRecommendationResponse recommendation = recommendService.recommend(request);
+        log.info("추천된 음식점 목록: {}", recommendation); // 추천된 음식점 목록을 로그로 출력
+
+        if (recommendation == null) {
+            log.error("추천된 음식점 목록이 null입니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
         log.info("요청 들어옴");
 
 //        모델에 음식점 목록을 추가하여 Thymeleaf 템플릿에 전달
@@ -75,12 +83,14 @@ public class RecommendController {
         return "result";
     }
     private Coordinates getCurrentUserLocation() {
-        // 사용자의 현재 위치를 가져오는 로직
+        // 예시: 임의의 위치 정보 생성
+        Double latitude = 37.1234;
+        Double longitude = 127.5678;
 
-        return new Coordinates();
+        Coordinates currentLocation = new Coordinates();
+        currentLocation.setLatitude(String.valueOf(latitude));
+        currentLocation.setLongitude(String.valueOf(longitude));
+
+        return currentLocation;
     }
-
-
-
-
 }

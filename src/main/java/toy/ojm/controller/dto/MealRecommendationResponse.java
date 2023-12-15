@@ -9,7 +9,6 @@ import java.util.List;
 public class MealRecommendationResponse {
 
     private List<Item> list;
-
     private Integer itemCount;
 
     public static MealRecommendationResponse of(List<Item> list) {
@@ -27,6 +26,11 @@ public class MealRecommendationResponse {
         this.itemCount = itemCount;
     }
 
+    public void setRecommendedRestaurants(List<Item> recommendedItems) {
+        this.list = recommendedItems;
+        this.itemCount = recommendedItems.size();
+    }
+
     @Getter
     @AllArgsConstructor
     public static class Item {
@@ -35,25 +39,23 @@ public class MealRecommendationResponse {
         private String streetNameAddress;   //도로명 주소
         private String restaurantName;     //사업장명
         private String category;          //업태구분명
+        private Double longitude;        //좌표정보(X) 경도
+        private Double latitude;        //좌표정보(Y) 위도
 
-        // 여기도 Double로 수정해야 하는걸까?
-        private String longitude;        //좌표정보(X) 경도
-        private String latitude;        //좌표정보(Y) 위도
-
+        // 기본 생성자 추가
         public Item() {
-             String businessStatus;        //상세영업상태명 (폐업, 영업)
-             String streetNumberAddress;  //지번주소
-             String streetNameAddress;   //도로명 주소
-             String restaurantName;     //사업장명
-             String category;          //업태구분명
-
-            // 여기도 Double로 수정해야 하는걸까?
-             String longitude;        //좌표정보(X) 경도
-             String latitude;        //좌표정보(Y) 위도
+            this.businessStatus = null;
+            this.streetNumberAddress = null;
+            this.streetNameAddress = null;
+            this.restaurantName = null;
+            this.category = null;
+            this.longitude = null;
+            this.latitude = null;
         }
 
-
+        // category 설정 메서드 추가
         public void setCategory(String category) {
+            this.category = category;
         }
     }
 }

@@ -1,11 +1,15 @@
 package toy.ojm.domain;
 
+import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.controller.dto.MealRecommendationResponse;
 import toy.ojm.entity.RestaurantEntity;
 import toy.ojm.excel.ExcelToDatabaseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,17 +26,30 @@ import java.util.stream.Collectors;
  * for (categoryList categoryList : categoryListList) {
  * }
  */
+
 @Service
 @RequiredArgsConstructor
 public class RecommendService {
     public static final int LIST_LIMIT_COUNT = 10;
     private final ListRepository listRepository;
     private final ExcelToDatabaseService excelToDatabaseService;
+    private static final Logger log = LoggerFactory.getLogger(RecommendService.class);
 
     public MealRecommendationResponse recommend(MealRecommendationRequest request) {
-        // 로직 구현
+        MealRecommendationResponse recommendationResponse = new MealRecommendationResponse();
 
-        return null;
+        // 사용자 요청에 따른 카테고리로 음식점 필터링 및 추천
+        List<MealRecommendationResponse.Item> recommendedItems = filterByCategory(request.getCoordinates(), request.getRequestedCategory());
+
+        if (recommendedItems.isEmpty()) {
+            // 추천된 음식점 목록이 비어있는 경우에 대한 처리
+            log.warn("추천된 음식점 목록이 비어 있습니다.");
+            // 필요한 처리를 수행하거나 예외를 던질 수 있음
+        } else {
+            // 추천된 음식점 목록 설정
+            recommendationResponse.setRecommendedRestaurants(recommendedItems);
+        }
+        return recommendationResponse;
     }
 
     // 랜덤으로 10개 음식점 선택

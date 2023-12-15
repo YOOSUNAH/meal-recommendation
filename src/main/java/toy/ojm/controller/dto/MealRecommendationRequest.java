@@ -18,4 +18,11 @@ public class MealRecommendationRequest {
         return null; // 적절한 coordinates가 없을 경우 null을 반환하거나 예외 처리를 수행
     }
 
+    public String getRequestedCategory() {
+        // 첫 번째 카테고리만 반환하도록 수정
+        if (categoryList != null && !categoryList.isEmpty()) {
+            return categoryList.get(0);
+        }
+        return null;
+    }
 }
