@@ -27,10 +27,8 @@ public class RecommendController {
     private final RecommendService recommendService;
     private final ExcelToDatabaseService excelToDatabaseService;
 
-    @Value("${resources.file.path}") // application.properties 또는 application.yml에서 파일 경로 읽기
-    private String filePath;
-
-
+//    @Value("${resources.file.path}") // application.properties 또는 application.yml에서 파일 경로 읽기
+//    private String filePath;
 
     @PostMapping("/api/recommend")
     public ResponseEntity<MealRecommendationResponse> getRecommendation(
@@ -62,7 +60,7 @@ public class RecommendController {
     @PostMapping("/api/saveExcelToDatabase")
     public String saveExcelToDatabase(@RequestBody MealRecommendationRequest request) {
         try {
-            excelToDatabaseService.readFromExcelAndSave(filePath, request);
+            excelToDatabaseService.readFromExcelAndSave("C:/my-files", request);
             return "데이터 저장 성공";
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,8 +82,8 @@ public class RecommendController {
     }
     private Coordinates getCurrentUserLocation() {
         // 예시: 임의의 위치 정보 생성
-        Double latitude = 37.1234;
-        Double longitude = 127.5678;
+        Double latitude = 37.5811955;
+        Double longitude = 127.0165415;
 
         Coordinates currentLocation = new Coordinates();
         currentLocation.setLatitude(String.valueOf(latitude));
