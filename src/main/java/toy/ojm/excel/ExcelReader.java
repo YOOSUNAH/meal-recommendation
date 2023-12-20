@@ -17,15 +17,8 @@ import java.util.List;
 @Component
 public class ExcelReader {
 
-//    public static void main(String[] args) {
-//        try {
-//            new ExcelReader().read();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public List<RestaurantDTO> read(String filePath) {
+
         List<RestaurantDTO> list = new ArrayList<>();
         FileInputStream inputStream = null;
         XSSFWorkbook workbook = null;
@@ -39,10 +32,10 @@ public class ExcelReader {
             for (int r = 1; r < 100; r++) { // 첫 번째 행은 헤더일 수 있으므로 r = 1로 수정
                 XSSFRow row = sheet.getRow(r);
 
-//                log 찍어보기
-//                log.info(String.valueOf(row.getCell(0)));
-//                log.info(String.valueOf(row.getCell(1)));
-//                log.info(String.valueOf(row.getCell(2)));
+        //        log 찍어보기
+                log.info(String.valueOf(row.getCell(7)));
+                log.info(String.valueOf(row.getCell(15)));
+                log.info(String.valueOf(row.getCell(16)));
 
                 if (row == null) {
                     continue;
@@ -57,14 +50,14 @@ public class ExcelReader {
 
                 // Longitude 및 Latitude 셀의 데이터를 NUMERIC 타입으로 가져오기
                 if (row.getCell(5).getCellType() == CellType.NUMERIC) {
-                    rdto.setLongitude(String.valueOf(row.getCell(5).getNumericCellValue()));
+                    rdto.setLongitude(Double.valueOf(String.valueOf(row.getCell(5).getNumericCellValue())));
                 } else {
                     // NUMERIC 타입이 아닐 경우
                     System.out.println("Cell 5 in row " + r + " is not a numeric type.");
                 }
 
                 if (row.getCell(6).getCellType() == CellType.NUMERIC) {
-                    rdto.setLatitude(String.valueOf(row.getCell(6).getNumericCellValue()));
+                    rdto.setLatitude(Double.valueOf(String.valueOf(row.getCell(6).getNumericCellValue())));
                 } else {
                     // NUMERIC 타입이 아닐 경우
                     System.out.println("Cell 6 in row " + r + " is not a numeric type.");

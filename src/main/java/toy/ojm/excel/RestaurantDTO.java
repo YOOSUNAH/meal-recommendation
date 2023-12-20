@@ -11,6 +11,6 @@ public class RestaurantDTO {
     private String streetNameAddress;
     private String restaurantName;
     private String category;
-    private String longitude;
-    private String latitude;
+    private Double longitude;
+    private Double latitude;
 }

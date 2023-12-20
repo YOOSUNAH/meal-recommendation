@@ -1,20 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
     const swiper = new Swiper('.swiper-container', {
-        // Optional parameters
         direction: 'horizontal',
         loop: false,
 
-        // // Set slides per view to 1
         slidesPerView: 1,
         spaceBetween: 10, // Optional: Set space between slides to 0
         centeredSlides: true,
 
-        // Enable mousewheel control
-        // mousewheel: {
-        //     invert: false,
-        // },
-
-        // If we need pagination
         pagination: {
             el: '.swiper-pagination',
             clickable: true
@@ -48,54 +40,33 @@ function selectAllCategory() {
 function recommend() {
 
     navigator.geolocation.getCurrentPosition(position => {
-        // lat = position.coords.latitude;
-        // long = position.coords.longitude;
         const {latitude, longitude} = position.coords;
 
         console.log(position);
 
+        // HTML에서 체크된 카테고리를 가져와서 categoryList 배열에 추가
+        const categoryList = [];
+        if (document.getElementById("Korean").checked) {
+            categoryList.push("KOREAN");
+        }
+        if (document.getElementById("Japanese").checked) {
+            categoryList.push("JAPANESE");
+        }
+        if (document.getElementById("Chinese").checked) {
+            categoryList.push("CHINESE");
+        }
+        if (document.getElementById("Western").checked) {
+            categoryList.push("WESTERN");
+        }
+
         // 요청할 JSON 데이터
-        // var requestData = {
         const requestData = {
-            categoryList: [
-                "KOREAN",
-                "JAPANESE",
-            ],
+            categoryList: categoryList,
             coordinates: {
                 longitude: longitude,
                 latitude: latitude,
             }
         };
-
-        // JSON 데이터를 문자열로 변환
-        // var jsonData = JSON.stringify(requestData);
-        //
-        // // XMLHttpRequest 객체 생성
-        // var xhr = new XMLHttpRequest();
-        //
-        // // POST 요청 초기화
-        // xhr.open('POST', '/api/recommend', true);
-        //
-        // // 요청 헤더 설정 (JSON 형식으로 전송함을 명시)
-        // xhr.setRequestHeader('Content-type', 'application/json');
-        //
-        // // 요청 완료 시 실행되는 함수 설정
-        // xhr.onreadystatechange = function () {
-        //     if (xhr.readyState === XMLHttpRequest.DONE) {
-        //         // 요청이 완료되고 응답을 받았을 때 실행할 코드
-        //         if (xhr.status === 200) {
-        //             // 요청 성공
-        //             var response = JSON.parse(xhr.responseText);
-        //             console.log('서버 응답:', response);
-        //         } else {
-        //             // 요청 실패
-        //             console.log('요청 실패:', xhr.status);
-        //         }
-        //     }
-        // };
-        // // JSON 데이터 전송
-        // xhr.send(jsonData);
-
 
         // fetch API를 사용하여 POST 요청 보내기
         fetch('/api/recommend', {

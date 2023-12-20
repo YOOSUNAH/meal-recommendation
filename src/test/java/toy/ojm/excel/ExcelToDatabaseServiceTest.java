@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import toy.ojm.controller.dto.MealRecommendationRequest;
 
-@SpringBootTest(properties = {"resources.file.path=classpath:서울강남구영업중인음식점.xlsx"})
+@SpringBootTest(properties = {"resources.file.path=classpath:서울시종로구음식점_20개이하.xlsx"})
 class ExcelToDatabaseServiceTest {
 
     @Autowired

@@ -38,17 +38,5 @@ public class ApiExploer {
         conn.disconnect();
         System.out.println("out:" + sb.toString());
         String result = sb.toString();
-
-
-        /*
-        // 1. 문자열 형태의 JSON을 파싱하기 위한 JSONParser 객체 생성.
-        JSONParser parser = new JSONParser();
-        // 2. 문자열을 JSON 형태로 JSONObject 객체에 저장.
-        JSONObject obj = (JSONObject)parser.parse(sb.toString());
-        // 3. 필요한 리스트 데이터 부분만 가져와 JSONArray로 저장.
-        JSONArray dataArr = (JSONArray) obj.get("data");
-	// 4. model에 담아준다.
-        model.addAttribute("data",dataArr);
-         */
     }
 }

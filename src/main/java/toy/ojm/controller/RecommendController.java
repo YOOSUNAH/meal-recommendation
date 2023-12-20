@@ -27,9 +27,6 @@ public class RecommendController {
     private final RecommendService recommendService;
     private final ExcelToDatabaseService excelToDatabaseService;
 
-//    @Value("${resources.file.path}") // application.properties 또는 application.yml에서 파일 경로 읽기
-//    private String filePath;
-
     @PostMapping("/api/recommend")
     public ResponseEntity<MealRecommendationResponse> getRecommendation(
         @RequestBody MealRecommendationRequest request
@@ -47,10 +44,6 @@ public class RecommendController {
         }
 
         log.info("요청 들어옴");
-
-//        모델에 음식점 목록을 추가하여 Thymeleaf 템플릿에 전달
-//        model.addAttribute("result", recommendation);
-//        return "result"; // result.html 템플릿을 렌더링
 
         // ResponseEntity로 JSON 형식으로 응답 반환
         return ResponseEntity.ok().body(recommendation);

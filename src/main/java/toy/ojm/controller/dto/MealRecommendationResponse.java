@@ -36,7 +36,7 @@ public class MealRecommendationResponse {
     public static class Item {
         private String businessStatus;        //상세영업상태명 (폐업, 영업)
         private String streetNumberAddress;  //지번주소
-        private String streetNameAddress;   //도로명 주소
+//        private String streetNameAddress;   //도로명 주소
         private String restaurantName;     //사업장명
         private String category;          //업태구분명
         private Double longitude;        //좌표정보(X) 경도
@@ -46,7 +46,7 @@ public class MealRecommendationResponse {
         public Item() {
             this.businessStatus = null;
             this.streetNumberAddress = null;
-            this.streetNameAddress = null;
+//            this.streetNameAddress = null;
             this.restaurantName = null;
             this.category = null;
             this.longitude = null;
