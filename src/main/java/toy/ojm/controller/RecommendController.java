@@ -18,6 +18,7 @@ import toy.ojm.excel.ExcelToDatabaseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +32,6 @@ public class RecommendController {
     @Service
     @RequiredArgsConstructor
     public static class RecommendService {
-        // RecommendService 내용은 그대로 유지
         public MealRecommendationResponse recommend(MealRecommendationRequest request) {
             log.info("Selected categories: {}", request.getRequestedCategory());
 
@@ -58,12 +58,9 @@ public class RecommendController {
         }
 
         private List<MealRecommendationResponse.Item> filterByCategory(Coordinates coordinates, String requestedCategory) {
-            List<MealRecommendationResponse.Item> o = null;
-            return o;
+            // filterByCategory 메서드는 null 대신 비어있는 리스트를 반환하도록 수정
+            return Collections.emptyList();
         }
-
-
-        // 나머지 메서드들은 기존과 동일합니다.
     }
 
     @PostMapping("/api/recommend")
