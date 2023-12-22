@@ -18,22 +18,14 @@
         <div style="text-align:center">오늘 뭐 먹지?</div>
     </h3>
     <hr class="my-4">
-    <ol class="list-group list-group-numbered">
-        <!-- 여기에 음식점 목록 표시 -->
-        <li class="list-group-item" th:each="item : ${recommendedItems}">
-            <div class="ms-2 me-auto">
-                <div class="fw-bold" th:text="${item.category}"></div>
-                <div th:text="${item.streetNumberAddress}"></div>
-                <div th:text="${item.streetNameAddress}"></div>
-                <div th:text="${item.restaurantName}"></div>
-            </div>
-        </li>
-    </ol>
+    <div class="alert alert-warning" role="alert">
+        근처에 해당되는 음식점이 존재하지 않습니다.<br>
+        카데고리를 재선택하거나, 다른 곳으로 이동해주세요.
+    </div>
         <div style="text-align:center">
             <button type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
         </div>
 </div>
-
 <script>
     $(document).ready(function() {
         // ... (이전 JavaScript 코드는 여기에 있습니다.)
@@ -71,6 +63,5 @@
         });
     });
 </script>
-
 </body>
 </html>
