@@ -20,7 +20,7 @@ class ExcelToDatabaseServiceTest {
         // when
         try {
             excelToDatabaseService.readFromExcelAndSave(
-                "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/종로구숭인동음식점_50개.xlsx",
+                "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/서울시종로구음식점_500개이하.xlsx",
                 request
             );
 
