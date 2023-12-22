@@ -28,8 +28,6 @@
 </div>
 <script>
     $(document).ready(function() {
-        // ... (이전 JavaScript 코드는 여기에 있습니다.)
-
         $('#reloadButton').on('click', function() {
             $.ajax({
                 type: 'GET',
@@ -48,7 +46,6 @@
                             <li class="list-group-item">
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">${item.category}</div>
-                                    <div>${item.streetNumberAddress}</div>
                                     <div>${item.streetNameAddress}</div>
                                     <div>${item.restaurantName}</div>
                                 </div>

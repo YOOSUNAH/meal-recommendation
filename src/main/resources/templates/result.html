@@ -23,7 +23,6 @@
         <li class="list-group-item" th:each="item : ${recommendedItems}">
             <div class="ms-2 me-auto">
                 <div class="fw-bold" th:text="${item.category}"></div>
-                <div th:text="${item.streetNumberAddress}"></div>
                 <div th:text="${item.streetNameAddress}"></div>
                 <div th:text="${item.restaurantName}"></div>
             </div>
@@ -36,7 +35,6 @@
 
 <script>
     $(document).ready(function() {
-        // ... (이전 JavaScript 코드는 여기에 있습니다.)
 
         $('#reloadButton').on('click', function() {
             $.ajax({
@@ -55,8 +53,7 @@
                         listElement.append(`
                             <li class="list-group-item">
                                 <div class="ms-2 me-auto">
-                                    <div class="fw-bold">${item.category}</div>
-                                    <div>${item.streetNumberAddress}</div>
+                                    <div class="fw-bold">${itemcategory}</div>
                                     <div>${item.streetNameAddress}</div>
                                     <div>${item.restaurantName}</div>
                                 </div>

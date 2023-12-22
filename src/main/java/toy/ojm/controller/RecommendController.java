@@ -3,6 +3,7 @@ package toy.ojm.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,12 +28,51 @@ public class RecommendController {
     private final RecommendService recommendService;
     private final ExcelToDatabaseService excelToDatabaseService;
 
+    @Service
+    @RequiredArgsConstructor
+    public static class RecommendService {
+        // RecommendService 내용은 그대로 유지
+        public MealRecommendationResponse recommend(MealRecommendationRequest request) {
+            log.info("Selected categories: {}", request.getRequestedCategory());
+
+            // 사용자 요청에 따른 카테고리로 음식점 필터링 및 추천
+            List<MealRecommendationResponse.Item> recommendedItems = filterByCategory(request.getCoordinates(), request.getRequestedCategory());
+
+            MealRecommendationResponse recommendationResponse = new MealRecommendationResponse();
+
+            if (recommendedItems.isEmpty()) {
+                // 추천된 음식점 목록이 비어있는 경우에 대한 처리
+                log.warn("추천된 음식점 목록이 비어 있습니다.");
+                MealRecommendationResponse.Item noRestaurantItem = new MealRecommendationResponse.Item();
+                noRestaurantItem.setCategory("N/A");
+                noRestaurantItem.setStreetNumberAddress("N/A");
+               // noRestaurantItem.setStreetNameAddress("N/A");
+                noRestaurantItem.setRestaurantName("N/A");
+                noRestaurantItem.setNoRestaurantMessage("근처에 해당되는 음식점이 존재하지 않습니다.");
+                recommendationResponse.setRecommendedRestaurants(List.of(noRestaurantItem));
+            } else {
+                // 추천된 음식점 목록 설정
+                recommendationResponse.setRecommendedRestaurants(recommendedItems);
+            }
+            return recommendationResponse;
+        }
+
+        private List<MealRecommendationResponse.Item> filterByCategory(Coordinates coordinates, String requestedCategory) {
+            List<MealRecommendationResponse.Item> o = null;
+            return o;
+        }
+
+
+        // 나머지 메서드들은 기존과 동일합니다.
+    }
+
     @PostMapping("/api/recommend")
     public ResponseEntity<MealRecommendationResponse> getRecommendation(
         @RequestBody MealRecommendationRequest request
     ) {
         // 로그 추가: 요청이 들어왔음을 확인
         log.info("API '/api/recommend'로 POST 요청이 들어왔습니다.");
+
 
         // 추천된 음식점 목록을 서비스에서 가져옴
         MealRecommendationResponse recommendation = recommendService.recommend(request);
@@ -70,7 +110,6 @@ public class RecommendController {
 
         // recommendedRestaurants를 result.html 페이지에 전달한다.
         model.addAttribute("recommendedRestaurants", recommendedRestaurants);
-
         return "result";
     }
     private Coordinates getCurrentUserLocation() {

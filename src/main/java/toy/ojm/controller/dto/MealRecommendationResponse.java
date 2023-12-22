@@ -57,5 +57,21 @@ public class MealRecommendationResponse {
         public void setCategory(String category) {
             this.category = category;
         }
+
+        public void setStreetNumberAddress(String streetNumberAddress) {
+            this.streetNumberAddress = streetNumberAddress;
+        }
+
+//        public void setStreetNameAddress(String streetNameAddress) {
+//            this.streetNameAddress = streetNameAddress;
+//        }
+
+        public void setRestaurantName(String s) {
+            this.restaurantName = restaurantName;
+        }
+
+        public void setNoRestaurantMessage(String noRestaurantMessage) {
+            this.restaurantName = noRestaurantMessage;
+        }
     }
 }
