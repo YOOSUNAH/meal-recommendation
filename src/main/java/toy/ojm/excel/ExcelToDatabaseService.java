@@ -101,7 +101,7 @@ public class ExcelToDatabaseService {
             coordinates.setLatitude(String.valueOf(transformedCoordinates.y));
 
             //100m 이내에 음식점 쿼리문
-            String query = "SELECT * FROM restaurantTable WHERE ST_DISTANCE_SPHERE(POINT(longitude, latitude), POINT(?, ?)) <= 2000";
+            String query = "SELECT * FROM restaurantTable WHERE businessStatus = '영업' AND ST_DISTANCE_SPHERE(POINT(longitude, latitude), POINT(?, ?)) <= 2000";
             Object[] params = {coordinates.getLongitude(), coordinates.getLatitude()};
 
             nearbyRestaurants = jdbcTemplate.query(query, params, (resultSet, rowNum) -> {
