@@ -44,7 +44,12 @@ public class RecommendService {
         if (recommendedItems.isEmpty()) {
             // 추천된 음식점 목록이 비어있는 경우에 대한 처리
             log.warn("추천된 음식점 목록이 비어 있습니다.");
-            // 필요한 처리를 수행하거나 예외를 던질 수 있음
+            MealRecommendationResponse.Item noRestaurantItem = new MealRecommendationResponse.Item();
+            noRestaurantItem.setCategory("N/A");
+            noRestaurantItem.setStreetNumberAddress("N/A");
+            noRestaurantItem.setRestaurantName("N/A");
+            noRestaurantItem.setNoRestaurantMessage("근처에 해당되는 음식점이 존재하지 않습니다.");
+            recommendationResponse.setRecommendedRestaurants(List.of(noRestaurantItem));
         } else {
             // 추천된 음식점 목록 설정
             recommendationResponse.setRecommendedRestaurants(recommendedItems);
@@ -63,15 +68,23 @@ public class RecommendService {
     public List<MealRecommendationResponse.Item> filterByCategory(Coordinates coordinates, String requestedCategory) {
         List<RestaurantEntity> nearbyRestaurants = excelToDatabaseService.getNearbyRestaurants(coordinates);
         String categoryToMatch = listRepository.getCategory(requestedCategory);
-        List<RestaurantEntity> filteredRestaurants = nearbyRestaurants.stream()
-            .filter(restaurant -> {
-                String category = restaurant.getCategory();
-                return category != null && category.equalsIgnoreCase(categoryToMatch);
-            })
-            .collect(Collectors.toList());
+        List<RestaurantEntity> filteredRestaurants;
 
-        return convertToItems(randomize(filteredRestaurants));
+        if (categoryToMatch.equalsIgnoreCase("전체")) {
+            // 전체를 선택한 경우 모든 음식점 중에서 랜덤하게 10곳을 선택
+            filteredRestaurants = randomize(nearbyRestaurants);
+        } else {
+            filteredRestaurants = nearbyRestaurants.stream()
+                .filter(restaurant -> {
+                    String category = restaurant.getCategory();
+                    return category != null && category.equalsIgnoreCase(categoryToMatch);
+                })
+                .collect(Collectors.toList());
+        }
+
+        return convertToItems(filteredRestaurants);
     }
+
 
     private List<MealRecommendationResponse.Item> convertToItems(List<RestaurantEntity> restaurantEntities) {
         return restaurantEntities.stream()
@@ -82,7 +95,6 @@ public class RecommendService {
     private MealRecommendationResponse.Item convertToItem(RestaurantEntity restaurant) {
         MealRecommendationResponse.Item item = new MealRecommendationResponse.Item();
         item.setCategory(restaurant.getCategory());
-        // 필요한 정보들을 item에 설정합니다.
         return item;
     }
 }
