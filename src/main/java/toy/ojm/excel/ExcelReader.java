@@ -26,7 +26,7 @@ public class ExcelReader {
             ExcelReader excelReader = context.getBean(ExcelReader.class);
 
             // 엑셀 파일 경로
-            String filePath = "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/서울시종로구음식점_영업중.xlsx";
+            String filePath = "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/서울시종로구음식점_500개이하.xlsx";
 
             // Excel 파일 읽기
             List<RestaurantDTO> restaurantDTOList = excelReader.read(filePath);
