@@ -22,7 +22,7 @@ class ExcelToDatabaseServiceTest {
         // when
         try {
             excelToDatabaseService.readFromExcelAndSave(
-                "/Users/donggeollee/IdeaProjects/ebuild-github/meal-recommendation/src/main/resources/서울시종로구음식점_20개이하.xlsx",
+                "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/서울시종로구음식점_20개이하.xlsx",
                 request
             );
         } catch (Exception e) {
