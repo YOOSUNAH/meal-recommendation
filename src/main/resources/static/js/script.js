@@ -2,22 +2,18 @@ document.addEventListener('DOMContentLoaded', function () {
     const swiper = new Swiper('.swiper-container', {
         direction: 'horizontal',
         loop: false,
-
         slidesPerView: 1,
         spaceBetween: 10, // Optional: Set space between slides to 0
         centeredSlides: true,
-
         pagination: {
             el: '.swiper-pagination',
             clickable: true
         },
-
         // Navigation arrows
         navigation: {
             nextEl: '.swiper-button-next-custom',
             prevEl: '.swiper-button-prev',
         },
-
         // And if we need scrollbar
         scrollbar: {
             el: '.swiper-scrollbar',
@@ -57,14 +53,16 @@ function selectAllCategory() {
 
 
 function recommend() {
-
     navigator.geolocation.getCurrentPosition(position => {
         const {latitude, longitude} = position.coords;
-
-        console.log(position);
-
-        // HTML에서 체크된 카테고리를 가져와서 categoryList 배열에 추가
         const categoryList = [];
+
+        // 체크된 카테고리 가져오기
+        const koreanCheckbox = document.getElementById("Korean");
+        const japaneseCheckbox = document.getElementById("Japanese");
+        const chineseCheckbox = document.getElementById("Chinese");
+        const westernCheckbox = document.getElementById("Western");
+
         if (document.getElementById("Korean").checked) {
             categoryList.push("KOREAN");
         }
@@ -99,31 +97,34 @@ function recommend() {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-
                 return response.json();
             })
             .then(data => {
-                console.log('서버 응답:', data);
-
                 if (data && data.recommendedRestaurants && data.recommendedRestaurants.length > 0) {
-                    let listElement = $('ol.list-group');
-                    listElement.empty();
+                    const listElement = document.querySelector('ol.list-group');
+                    listElement.innerHTML = ''; // 리스트 초기화
 
                     data.recommendedRestaurants.forEach(function (item) {
-                        listElement.append(`
-                            <li class="list-group-item">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">${item.category}</div>
-                                    <div>${item.streetNameAddress}</div>
-                                    <div>${item.restaurantName}</div>
-                                </div>
-                            </li>
-                        `);
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('list-group-item');
+                        listItem.innerHTML = `
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">${item.category}</div>
+                            <div>${item.streetNameAddress}</div>
+                            <div>${item.restaurantName}</div>
+                        </div>
+                    `;
+                        listElement.appendChild(listItem);
                     });
                 } else {
-                    // Handle case when no data or empty array received
-                    $('.alert.alert-warning').show();
-                    $('ol.list-group').empty();
+                    const alertWarning = document.querySelector('.alert.alert-warning');
+                    if (alertWarning) {
+                        alertWarning.style.display = 'block';
+                    }
+                    const listGroup = document.querySelector('ol.list-group');
+                    if (listGroup) {
+                        listGroup.innerHTML = '';
+                    }
                 }
             })
             .catch(error => {
