@@ -29,80 +29,93 @@
         <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
     </div>
 </div>
+
 <script>
-    // 요청을 보내고 응답을 처리하는 함수
-    function recommend() {
-        // 위치 정보를 가져오는데 성공했을 때
-        navigator.geolocation.getCurrentPosition(position => {
-            // ... (이하 코드 생략)
-
-            // fetch 요청 보내기
-            fetch('/api/recommend', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            })
-                .then(response => {
-                    // 응답 처리
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // 응답 데이터 처리
-                    if (data && data.recommendedRestaurants && data.recommendedRestaurants.length > 0) {
-                        // 데이터가 있을 때 처리
-                        updateRestaurantList(data.recommendedRestaurants);
-                    } else {
-                        // 데이터가 없을 때 처리
-                        handleNoData();
-                    }
-                })
-                .catch(error => {
-                    // 에러 처리
-                    console.error('Request failed:', error);
-                });
-        });
-    }
-
-    // 음식점 목록을 업데이트하는 함수
-    function updateRestaurantList(restaurants) {
-        let listElement = $('ol.list-group');
-        listElement.empty();
-
-        restaurants.forEach(function (item) {
-            listElement.append(`
-                <li class="list-group-item">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">${item.category}</div>
-                        <div>${item.streetNameAddress}</div>
-                        <div>${item.restaurantName}</div>
-                    </div>
-                </li>
-            `);
-        });
-    }
-
-    // 데이터가 없을 때 처리하는 함수
-    function handleNoData() {
-        $('.alert.alert-warning').show();
-        $('ol.list-group').empty();
-    }
-
     $(document).ready(function() {
         $('#reloadButton').on('click', function() {
-            // 버튼 클릭 시 추천 받기 실행
-            recommend();
+            $.ajax({
+                type: 'GET',
+                url: '/recommend',
+                success: function(response) {
+                    let items = response.recommendedRestaurants;
+                    let listElement = $('ol.list-group');
+                    let alertMessage = $('.alert.alert-warning');
+
+                    listElement.empty();
+
+                    if (items.length > 0) {
+                        alertMessage.hide();
+
+                        items.forEach(function(item) {
+                            listElement.append(`
+                                <li class="list-group-item">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">${item.category}</div>
+                                        <div>${item.streetNameAddress}</div>
+                                        <div>${item.restaurantName}</div>
+                                    </div>
+                                </li>
+                            `);
+                        });
+                    } else {
+                        alertMessage.show();
+                        listElement.empty(); // 결과가 없는 경우 리스트 비우기
+                    }
+                },
+                error: function(error) {
+                    console.log('에러 발생: ', error);
+                }
+            });
         });
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-        // 페이지 로딩 시 추천 받기 실행
-        recommend();
+        recommend(); // 페이지 로딩 시 추천 받기 실행
+
+        // '다시 추천 받기!' 버튼 클릭 시
+        $('#reloadButton').on('click', function() {
+            recommend(); // 추천 받기 실행
+        });
     });
+
+    function recommend() {
+        $.ajax({
+            type: 'GET',
+            url: '/recommend',
+            success: function (response) {
+                // 가져온 추천 음식점 목록을 표시할 수 있도록 로직 추가 필요
+
+                let listElement = $('ol.list-group');
+                let alertMessage = $('.alert.alert-warning');
+
+                listElement.empty();
+
+                if (response.recommendedRestaurants.length > 0) {
+                    alertMessage.hide();
+
+                    // 추천된 음식점을 표시
+                    response.recommendedRestaurants.forEach(function(item) {
+                        listElement.append(`
+                            <li class="list-group-item">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">${item.category}</div>
+                                    <div>${item.streetNumberAddress}</div>
+                                    <div>${item.restaurantName}</div>
+                                </div>
+                            </li>
+                        `);
+                    });
+                } else {
+                    alertMessage.show();
+                    listElement.empty(); // 결과가 없는 경우 리스트 비우기
+                }
+            },
+            error: function (error) {
+                console.log('에러 발생: ', error);
+            }
+        });
+    }
+
 </script>
 
 </body>
