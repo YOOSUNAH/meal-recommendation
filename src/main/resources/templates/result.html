@@ -59,6 +59,7 @@
                         });
                     } else {
                         alertMessage.show();
+                        listElement.empty(); // 결과가 없는 경우 리스트 비우기
                     }
                 },
                 error: function(error) {

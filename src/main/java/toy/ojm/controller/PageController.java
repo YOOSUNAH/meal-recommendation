@@ -17,11 +17,11 @@ public class PageController {
     @GetMapping("/result-page")
     public String goResult(Model model, MealRecommendationResponse recommendationResponse) {
         if (recommendationResponse.getList() != null && !recommendationResponse.getList().isEmpty()) {
-            // 결과가 있는 경우 - result.html 리턴
+            // 결과가 있는 경우
             model.addAttribute("recommendedItems", recommendationResponse.getList());
             return "result";
         } else {
-            // 결과가 없는 경우 - noresult.html 리턴 또는 다른 페이지 반환
+            // 결과가 없는 경우
             return "noresult";
         }
     }
