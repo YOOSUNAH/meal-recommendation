@@ -111,4 +111,7 @@ function recommend() {
                 console.error('Request failed:', error);
             });
     });
+    function goToResultPage() {
+        window.location.href = '페이지 URL'; // 페이지 URL로 수정
+    }
 }
