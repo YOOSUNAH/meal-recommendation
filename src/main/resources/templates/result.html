@@ -20,46 +20,46 @@
     <hr class="my-4">
     <ol class="list-group list-group-numbered">
         <!-- 여기에 음식점 목록 표시 -->
-        <li class="list-group-item" th:each="item : ${recommendedItems}">
-            <div class="ms-2 me-auto">
-                <div class="fw-bold" th:text="${item.category}"></div>
-                <div th:text="${item.streetNameAddress}"></div>
-                <div th:text="${item.restaurantName}"></div>
-            </div>
-        </li>
     </ol>
-        <div style="text-align:center">
-            <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
-        </div>
+    <div class="alert alert-warning" role="alert" style="display:none">
+        근처에 해당되는 음식점이 존재하지 않습니다.<br>
+        카데고리를 재선택하거나, 다른 곳으로 이동해주세요.
+    </div>
+    <div style="text-align:center">
+        <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
+    </div>
 </div>
 
 <script>
     $(document).ready(function() {
-
         $('#reloadButton').on('click', function() {
             $.ajax({
                 type: 'GET',
                 url: '/recommend',
                 success: function(response) {
-                    // 기존 결과를 유지한 채, 새로운 결과를 받아서 화면에 표시
                     let items = response.recommendedRestaurants;
-
-                    // 기존 결과를 가져와서 화면에 표시하는 로직
                     let listElement = $('ol.list-group');
-                    listElement.empty(); // 이전 결과를 지웁니다.
+                    let alertMessage = $('.alert.alert-warning');
 
-                    items.forEach(function(item) {
-                        // 새로운 결과를 리스트에 추가합니다.
-                        listElement.append(`
-                            <li class="list-group-item">
-                                <div class="ms-2 me-auto">
-                                    <div class="fw-bold">${itemcategory}</div>
-                                    <div>${item.streetNameAddress}</div>
-                                    <div>${item.restaurantName}</div>
-                                </div>
-                            </li>
-                        `);
-                    });
+                    listElement.empty();
+
+                    if (items.length > 0) {
+                        alertMessage.hide();
+
+                        items.forEach(function(item) {
+                            listElement.append(`
+                                <li class="list-group-item">
+                                    <div class="ms-2 me-auto">
+                                        <div class="fw-bold">${item.category}</div>
+                                        <div>${item.streetNameAddress}</div>
+                                        <div>${item.restaurantName}</div>
+                                    </div>
+                                </li>
+                            `);
+                        });
+                    } else {
+                        alertMessage.show();
+                    }
                 },
                 error: function(error) {
                     console.log('에러 발생: ', error);

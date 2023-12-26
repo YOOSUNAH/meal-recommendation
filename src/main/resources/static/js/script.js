@@ -81,27 +81,30 @@ function recommend() {
                     throw new Error('Network response was not ok');
                 }
 
-                console.log('Received Response:', response);
-
-                if (response.status === 304) {
-                    return Promise.resolve();
-                }
-
-                return response.text();
+                return response.json();
             })
             .then(data => {
                 console.log('서버 응답:', data);
 
-                if (!data) {
-                    console.error('Empty response received.');
-                    return;
-                }
+                if (data && data.recommendedRestaurants && data.recommendedRestaurants.length > 0) {
+                    let listElement = $('ol.list-group');
+                    listElement.empty();
 
-                try {
-                    const jsonData = JSON.parse(data);
-                    console.log('Parsed JSON Data:', jsonData);
-                } catch (error) {
-                    console.error('Invalid JSON format:', error);
+                    data.recommendedRestaurants.forEach(function (item) {
+                        listElement.append(`
+                            <li class="list-group-item">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">${item.category}</div>
+                                    <div>${item.streetNameAddress}</div>
+                                    <div>${item.restaurantName}</div>
+                                </div>
+                            </li>
+                        `);
+                    });
+                } else {
+                    // Handle case when no data or empty array received
+                    $('.alert.alert-warning').show();
+                    $('ol.list-group').empty();
                 }
             })
             .catch(error => {

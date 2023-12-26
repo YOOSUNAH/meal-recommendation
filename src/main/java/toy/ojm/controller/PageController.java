@@ -21,10 +21,8 @@ public class PageController {
             model.addAttribute("recommendedItems", recommendationResponse.getList());
             return "result";
         } else {
-            // 결과가 없는 경우 - noresult.html 리턴
+            // 결과가 없는 경우 - noresult.html 리턴 또는 다른 페이지 반환
             return "noresult";
         }
     }
-
-
 }
