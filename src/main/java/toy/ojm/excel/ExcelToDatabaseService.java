@@ -59,26 +59,29 @@ public class ExcelToDatabaseService {
 
     private void insertData(RestaurantEntity entity) {
         try {
-            int success = jdbcTemplate.update("""
-                    INSERT INTO restaurantTable (
-                    businessStatus, StreetNumberAddress,streetNameAddress, 
-                    restaurantName, category, longitude, latitude
-                    ) 
-                    VALUES (?, ?, ? , ?, ?, ?, ?)
-                    """,
-                entity.getBusinessStatus(),
-                entity.getStreetNumberAddress(),
-                entity.getStreetNameAddress(),
-                entity.getRestaurantName(),
-                entity.getCategory(),
-                entity.getLongitude(),
-                entity.getLatitude()
-            );
-
-            if (success > 0) {
-                log.info("Data inserted successfully.");
+            if (entity.getBusinessStatus() != null && entity.getBusinessStatus().equalsIgnoreCase("영업")) {
+                int success = jdbcTemplate.update("""
+                        INSERT INTO restaurantTable (
+                        businessStatus, StreetNumberAddress,streetNameAddress, 
+                        restaurantName, category, longitude, latitude
+                        ) 
+                        VALUES (?, ?, ? , ?, ?, ?, ?)
+                        """,
+                    entity.getBusinessStatus(),
+                    entity.getStreetNumberAddress(),
+                    entity.getStreetNameAddress(),
+                    entity.getRestaurantName(),
+                    entity.getCategory(),
+                    entity.getLongitude(),
+                    entity.getLatitude()
+                );
+                if (success > 0) {
+                    log.info("Data inserted successfully.");
+                } else {
+                    log.warn("Failed to insert data.");
+                }
             } else {
-                log.warn("Failed to insert data.");
+                log.warn("Ignoring non-'영업' business status data.");
             }
         } catch (Exception e) {
             log.error("Error inserting data: {}", e.getMessage());
@@ -100,8 +103,8 @@ public class ExcelToDatabaseService {
             coordinates.setLongitude(String.valueOf(transformedCoordinates.x));
             coordinates.setLatitude(String.valueOf(transformedCoordinates.y));
 
-            //100m 이내에 음식점 쿼리문
-            String query = "SELECT * FROM restaurantTable WHERE businessStatus = '영업' AND ST_DISTANCE_SPHERE(POINT(longitude, latitude), POINT(?, ?)) <= 2000";
+            //100m 이내에 음식점 쿼리문 // test를 위해 거리 2000으로 조정함.
+            String query = "SELECT * FROM restaurantTable WHERE ST_DISTANCE_SPHERE(POINT(longitude, latitude), POINT(?, ?)) <= 2000";
             Object[] params = {coordinates.getLongitude(), coordinates.getLatitude()};
 
             nearbyRestaurants = jdbcTemplate.query(query, params, (resultSet, rowNum) -> {
