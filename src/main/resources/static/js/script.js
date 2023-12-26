@@ -27,15 +27,34 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function selectAllCategory() {
-    // '전체 선택하기' 체크박스의 상태를 가져옵니다.
-    let selectAll = document.getElementById("All").checked;
+    const koreanCheckbox = document.getElementById("Korean");
+    const japaneseCheckbox = document.getElementById("Japanese");
+    const chineseCheckbox = document.getElementById("Chinese");
+    const westernCheckbox = document.getElementById("Western");
+    const selectAllCheckbox = document.getElementById("All");
 
-    // 모든 체크박스의 상태를 '전체 선택하기' 체크박스의 상태와 동일하게 만듭니다.
-    document.getElementById("Korean").checked = selectAll;
-    document.getElementById("Japanese").checked = selectAll;
-    document.getElementById("Chinese").checked = selectAll;
-    document.getElementById("Western").checked = selectAll;
+    const checkboxes = [koreanCheckbox, japaneseCheckbox, chineseCheckbox, westernCheckbox];
+
+    // 각 카테고리 체크박스의 변화를 감지하여 '전체 선택하기' 상태를 조절합니다.
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            if (!checkbox.checked) {
+                selectAllCheckbox.checked = false;
+            } else {
+                const allChecked = checkboxes.every(cb => cb.checked);
+                selectAllCheckbox.checked = allChecked;
+            }
+        });
+    });
+
+    // '전체 선택하기' 체크박스의 상태에 따라 모든 카테고리 체크박스를 제어합니다.
+    selectAllCheckbox.addEventListener('change', () => {
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    });
 }
+
 
 function recommend() {
 
