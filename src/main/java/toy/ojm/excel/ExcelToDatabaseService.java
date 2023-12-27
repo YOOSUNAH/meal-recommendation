@@ -28,8 +28,7 @@ public class ExcelToDatabaseService {
 
         for (RestaurantEntity entity : restaurantEntities) {
             ProjCoordinate transformedCoordinates = transCoordination.transformToGCS(
-                Double.parseDouble(String.valueOf(entity.getLongitude())),
-                Double.parseDouble(String.valueOf(entity.getLatitude()))
+               entity.getLongitude(), entity.getLatitude()
             );
             entity.setLongitude(transformedCoordinates.x);
             entity.setLatitude(transformedCoordinates.y);

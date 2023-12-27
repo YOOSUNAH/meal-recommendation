@@ -17,30 +17,6 @@ import java.util.List;
 @Component
 public class ExcelReader {
 
-//    public static void main(String[] args) {
-//        try {
-//            // Spring Boot 애플리케이션 컨텍스트 생성
-//            ApplicationContext context = SpringApplication.run(ExcelReader.class, args);
-//
-//            // ExcelReader 빈(Bean) 객체 가져오기
-//            ExcelReader excelReader = context.getBean(ExcelReader.class);
-//
-//            // 엑셀 파일 경로
-//            String filePath = "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/서울시종로구창신동음식점.xlsx";
-//
-//            // Excel 파일 읽기
-//            List<RestaurantDTO> restaurantDTOList = excelReader.read(filePath);
-//
-//            // 읽은 데이터 로그로 출력
-//            for (RestaurantDTO rdto : restaurantDTOList) {
-//                log.info("RestaurantDTO: {}", rdto);
-//            }
-//
-//        } catch (Exception e) {
-//            log.error("Error occurred: {}", e.getMessage(), e);
-//        }
-//    }
-
     public List<RestaurantDTO> read(String filePath) {
 
         List<RestaurantDTO> list = new ArrayList<>();
