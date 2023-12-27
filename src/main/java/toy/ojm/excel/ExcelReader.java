@@ -40,13 +40,12 @@ public class ExcelReader {
 
                 XSSFCell businessStatusCell = row.getCell(7);
                 XSSFCell streetNumberAddressCell = row.getCell(15);
-                XSSFCell streetNameAddressCell = row.getCell(16);
                 XSSFCell restaurantNameCell = row.getCell(18);
                 XSSFCell categoryCell = row.getCell(22);
                 XSSFCell xCell = row.getCell(23);
                 XSSFCell yCell = row.getCell(24);
 
-                if (businessStatusCell == null || streetNumberAddressCell == null || streetNameAddressCell == null ||
+                if (businessStatusCell == null || streetNumberAddressCell == null ||
                     restaurantNameCell == null || categoryCell == null || xCell == null || yCell == null) {
                     continue;
                 }
@@ -54,7 +53,6 @@ public class ExcelReader {
                 // 값 가져오기
                 String tempBusinessStatus = businessStatusCell.getStringCellValue();
                 String tempStreetNumberAddress = streetNumberAddressCell.getStringCellValue();
-                String tempStreetNameAddress = streetNameAddressCell.getStringCellValue();
                 String tempRestaurantName = restaurantNameCell.getStringCellValue();
                 String tempCategory = categoryCell.getStringCellValue();
                 Double tempX = xCell.getNumericCellValue();
@@ -63,7 +61,6 @@ public class ExcelReader {
                 // log 찍어보기
                 log.info("tempBusinessStatus : {}", tempBusinessStatus);
                 log.info("tempStreetNumberAddress : {}", tempStreetNumberAddress);
-                log.info("tempStreetNameAddress : {}", tempStreetNameAddress);
                 log.info("tempRestaurantName : {}", tempRestaurantName);
                 log.info("tempCategory : {}", tempCategory);
                 log.info("tempX : {}", tempX);
@@ -74,7 +71,6 @@ public class ExcelReader {
                 RestaurantDTO rdto = new RestaurantDTO();
                 rdto.setBusinessStatus(tempBusinessStatus);
                 rdto.setStreetNumberAddress(tempStreetNumberAddress);
-                rdto.setStreetNameAddress(tempStreetNameAddress);
                 rdto.setRestaurantName(tempRestaurantName);
                 rdto.setCategory(tempCategory);
                 rdto.setLatitude(tempX);

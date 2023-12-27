@@ -43,7 +43,6 @@ public class ExcelToDatabaseService {
                 RestaurantEntity entity = new RestaurantEntity();
                 entity.setBusinessStatus(excelRestaurant.getBusinessStatus());
                 entity.setStreetNumberAddress(excelRestaurant.getStreetNumberAddress());
-                entity.setStreetNameAddress(excelRestaurant.getStreetNameAddress());
                 entity.setRestaurantName(excelRestaurant.getRestaurantName());
                 entity.setCategory(excelRestaurant.getCategory());
                 entity.setLongitude(excelRestaurant.getLongitude());
@@ -61,14 +60,13 @@ public class ExcelToDatabaseService {
             if (entity.getBusinessStatus() != null && entity.getBusinessStatus().equalsIgnoreCase("영업")) {
                 int success = jdbcTemplate.update("""
                         INSERT INTO restaurantTable (
-                        businessStatus, StreetNumberAddress,streetNameAddress, 
+                        businessStatus, StreetNumberAddress, 
                         restaurantName, category, longitude, latitude
                         ) 
-                        VALUES (?, ?, ? , ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?)
                         """,
                     entity.getBusinessStatus(),
                     entity.getStreetNumberAddress(),
-                    entity.getStreetNameAddress(),
                     entity.getRestaurantName(),
                     entity.getCategory(),
                     entity.getLongitude(),
@@ -110,7 +108,6 @@ public class ExcelToDatabaseService {
                 RestaurantEntity restaurant = new RestaurantEntity();
                 restaurant.setBusinessStatus(resultSet.getString("businessStatus"));
                 restaurant.setStreetNumberAddress(resultSet.getString("streetNumberAddress"));
-                restaurant.setStreetNameAddress(resultSet.getString("streetNameAddress"));
                 restaurant.setRestaurantName(resultSet.getString("restaurantName"));
                 restaurant.setCategory(resultSet.getString("category"));
                 restaurant.setLongitude(Double.valueOf(resultSet.getString("longitude")));

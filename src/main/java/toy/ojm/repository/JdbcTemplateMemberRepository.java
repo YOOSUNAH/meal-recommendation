@@ -35,19 +35,18 @@ public class JdbcTemplateMemberRepository {
 
     public int[] batchInsert(List<RestaurantEntity> restaurants) {
         return jdbcTemplate.batchUpdate(
-            "INSERT INTO restaurantTable (businessStatus, StreetNumberAddress, streetNameAddress, restaurantName, category, longitude, latitude) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "INSERT INTO restaurantTable (businessStatus, StreetNumberAddress, restaurantName, category, longitude, latitude) " +
+                "VALUES (?, ?, ?, ?, ?, ?)",
             new BatchPreparedStatementSetter() {
                 @Override
                 public void setValues(PreparedStatement ps, int i) throws SQLException {
                     RestaurantEntity restaurantEntity = restaurants.get(i);
                     ps.setString(1, restaurantEntity.getBusinessStatus());
                     ps.setString(2, restaurantEntity.getStreetNumberAddress());
-                    ps.setString(3, restaurantEntity.getStreetNameAddress());
-                    ps.setString(4, restaurantEntity.getRestaurantName());
-                    ps.setString(5, restaurantEntity.getCategory());
-                    ps.setString(6, String.valueOf(restaurantEntity.getLongitude()));
-                    ps.setString(7, String.valueOf(restaurantEntity.getLatitude()));
+                    ps.setString(3, restaurantEntity.getRestaurantName());
+                    ps.setString(4, restaurantEntity.getCategory());
+                    ps.setString(5, String.valueOf(restaurantEntity.getLongitude()));
+                    ps.setString(6, String.valueOf(restaurantEntity.getLatitude()));
                 }
 
                 @Override
