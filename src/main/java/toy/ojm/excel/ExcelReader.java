@@ -55,7 +55,7 @@ public class ExcelReader {
             XSSFSheet sheet = workbook.getSheetAt(0);
             int rows = sheet.getPhysicalNumberOfRows();
 
-            for (int r = 1; r < 300; r++) { // 첫 번째 행은 헤더일 수 있으므로 r = 1로 수정
+            for (int r = 1; r < 1457; r++) { // 첫 번째 행은 헤더일 수 있으므로 r = 1로 수정, 엑셀 행의 갯수에맞춰 r<1457로 수정
                 XSSFRow row = sheet.getRow(r);
 
                 if (row == null) {
