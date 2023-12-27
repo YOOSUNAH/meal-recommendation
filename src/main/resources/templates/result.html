@@ -68,6 +68,54 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        recommend(); // 페이지 로딩 시 추천 받기 실행
+
+        // '다시 추천 받기!' 버튼 클릭 시
+        $('#reloadButton').on('click', function() {
+            recommend(); // 추천 받기 실행
+        });
+    });
+
+    function recommend() {
+        $.ajax({
+            type: 'GET',
+            url: '/recommend',
+            success: function (response) {
+                // 가져온 추천 음식점 목록을 표시할 수 있도록 로직 추가 필요
+
+                let listElement = $('ol.list-group');
+                let alertMessage = $('.alert.alert-warning');
+
+                listElement.empty();
+
+                if (response.recommendedRestaurants.length > 0) {
+                    alertMessage.hide();
+
+                    // 추천된 음식점을 표시
+                    response.recommendedRestaurants.forEach(function(item) {
+                        listElement.append(`
+                            <li class="list-group-item">
+                                <div class="ms-2 me-auto">
+                                    <div class="fw-bold">${item.category}</div>
+                                    <div>${item.streetNumberAddress}</div>
+                                    <div>${item.restaurantName}</div>
+                                </div>
+                            </li>
+                        `);
+                    });
+                } else {
+                    alertMessage.show();
+                    listElement.empty(); // 결과가 없는 경우 리스트 비우기
+                }
+            },
+            error: function (error) {
+                console.log('에러 발생: ', error);
+            }
+        });
+    }
+
 </script>
 
 </body>

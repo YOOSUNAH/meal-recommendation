@@ -71,19 +71,3 @@
     padding: 15px;
 }
 
-.btn {
-    display: block;
-    margin-bottom: 20px;
-    font-size: 1.0em;
-    padding: 8px 16px;
-    border-radius: 8px;
-    background-color: #007BFF;
-    color: #FFFFFF;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
