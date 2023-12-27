@@ -1,6 +1,7 @@
 package toy.ojm.excel;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -26,7 +27,7 @@ public class ExcelReader {
             ExcelReader excelReader = context.getBean(ExcelReader.class);
 
             // 엑셀 파일 경로
-            String filePath = "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/서울시종로구음식점_500개이하.xlsx";
+            String filePath = "/Users/yuseon-a/IdeaProjects/meal-recommendation/src/main/resources/서울시종로구창신동음식점.xlsx";
 
             // Excel 파일 읽기
             List<RestaurantDTO> restaurantDTOList = excelReader.read(filePath);
@@ -40,11 +41,14 @@ public class ExcelReader {
             log.error("Error occurred: {}", e.getMessage(), e);
         }
     }
+
     public List<RestaurantDTO> read(String filePath) {
 
         List<RestaurantDTO> list = new ArrayList<>();
         FileInputStream inputStream = null;
         XSSFWorkbook workbook = null;
+
+
         try {
             inputStream = new FileInputStream(filePath);
             workbook = new XSSFWorkbook(inputStream);
@@ -52,41 +56,47 @@ public class ExcelReader {
             XSSFSheet sheet = workbook.getSheetAt(0);
             int rows = sheet.getPhysicalNumberOfRows();
 
-            for (int r = 1; r < 100; r++) { // 첫 번째 행은 헤더일 수 있으므로 r = 1로 수정
+            for (int r = 1; r < 300; r++) { // 첫 번째 행은 헤더일 수 있으므로 r = 1로 수정
                 XSSFRow row = sheet.getRow(r);
 
                 if (row == null) {
                     continue;
                 }
 
-                if (row.getCell(7) == null) {
-                    break;
-                }
+                XSSFCell businessStatusCell = row.getCell(7);
+                XSSFCell streetNumberAddressCell = row.getCell(15);
+                XSSFCell streetNameAddressCell = row.getCell(16);
+                XSSFCell restaurantNameCell = row.getCell(18);
+                XSSFCell categoryCell = row.getCell(22);
+                XSSFCell xCell = row.getCell(23);
+                XSSFCell yCell = row.getCell(24);
 
-                // log 찍어보기
-                String tempBusinessStatus = row.getCell(7).getStringCellValue();
-                log.info("tempBusinessStatus : {}", tempBusinessStatus);
-                String tempStreetNumberAddress = row.getCell(15).getRawValue().trim();
-                log.info("tempStreetNumberAddress : {}", tempStreetNumberAddress);
-                String tempStreetNameAddress = row.getCell(16).getStringCellValue();
-                log.info("tempStreetNameAddress : {}", tempStreetNameAddress);
-                String tempRestaurantName = row.getCell(18).getStringCellValue();
-                log.info("tempRestaurantName : {}", tempRestaurantName);
-                String tempCategory = row.getCell(22).getStringCellValue();
-                log.info("tempCategory : {}", tempCategory);
-                if (row.getCell(23) == null) {
-                    log.info("");
+                if (businessStatusCell == null || streetNumberAddressCell == null || streetNameAddressCell == null ||
+                    restaurantNameCell == null || categoryCell == null || xCell == null || yCell == null) {
                     continue;
                 }
-                Double tempX = row.getCell(23).getNumericCellValue();
+
+                // 값 가져오기
+                String tempBusinessStatus = businessStatusCell.getStringCellValue();
+                String tempStreetNumberAddress = streetNumberAddressCell.getRawValue().trim();
+                String tempStreetNameAddress = streetNameAddressCell.getStringCellValue();
+                String tempRestaurantName = restaurantNameCell.getStringCellValue();
+                String tempCategory = categoryCell.getStringCellValue();
+                Double tempX = xCell.getNumericCellValue();
+                Double tempY = yCell.getNumericCellValue();
+
+                // log 찍어보기
+                log.info("tempBusinessStatus : {}", tempBusinessStatus);
+                log.info("tempStreetNumberAddress : {}", tempStreetNumberAddress);
+                log.info("tempStreetNameAddress : {}", tempStreetNameAddress);
+                log.info("tempRestaurantName : {}", tempRestaurantName);
+                log.info("tempCategory : {}", tempCategory);
                 log.info("tempX : {}", tempX);
-                Double tempY = row.getCell(24).getNumericCellValue();
                 log.info("tempY : {}", tempY);
                 log.info("");
 
-                RestaurantDTO rdto = new RestaurantDTO();
-
                 // 각 열의 데이터를 RestaurantDTO에 저장
+                RestaurantDTO rdto = new RestaurantDTO();
                 rdto.setBusinessStatus(tempBusinessStatus);
                 rdto.setStreetNumberAddress(tempStreetNumberAddress);
                 rdto.setStreetNameAddress(tempStreetNameAddress);
@@ -98,7 +108,7 @@ public class ExcelReader {
                 list.add(rdto);
             }
         } catch (Exception e) {
-//            log.error(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         }
         return list;
