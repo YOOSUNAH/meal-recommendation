@@ -33,21 +33,45 @@
 <script>
     $(document).ready(function() {
         $('#reloadButton').on('click', function() {
-            $.ajax({
-                type: 'GET',
-                url: '/recommend',
-                success: function(response) {
-                    let items = response.recommendedRestaurants;
-                    let listElement = $('ol.list-group');
-                    let alertMessage = $('.alert.alert-warning');
+            getLocationAndRecommend(); // 위치를 확인하고 추천 받기 실행
+        });
+        getLocationAndRecommend(); // 페이지 로딩 시 위치를 확인하고 추천 받기 실행
+    });
+    function getLocationAndRecommend() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const {latitude, longitude} = position.coords;
+                const requestData = {
+                    coordinates: {
+                        longitude: longitude,
+                        latitude: latitude,
+                    }
+                };
 
-                    listElement.empty();
+                fetch('/api/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        let listElement = $('ol.list-group');
+                        let alertMessage = $('.alert.alert-warning');
 
-                    if (items.length > 0) {
-                        alertMessage.hide();
+                        listElement.empty();
 
-                        items.forEach(function(item) {
-                            listElement.append(`
+                        if (data && data.recommendedRestaurants && data.recommendedRestaurants.length > 0) {
+                            alertMessage.hide();
+
+                            data.recommendedRestaurants.forEach(function(item) {
+                                listElement.append(`
                                 <li class="list-group-item">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-bold">${item.category}</div>
@@ -56,63 +80,81 @@
                                     </div>
                                 </li>
                             `);
-                        });
-                    } else {
-                        alertMessage.show();
-                        listElement.empty(); // 결과가 없는 경우 리스트 비우기
-                    }
-                },
-                error: function(error) {
-                    console.log('에러 발생: ', error);
-                }
+                            });
+                        } else {
+                            alertMessage.show();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Request failed:', error);
+                    });
+            }, function(error) {
+                console.error('Error getting geolocation:', error);
             });
-        });
-    });
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+    }
+
+
 
     document.addEventListener('DOMContentLoaded', function () {
-        recommend(); // 페이지 로딩 시 추천 받기 실행
-
-        // '다시 추천 받기!' 버튼 클릭 시
         $('#reloadButton').on('click', function() {
             recommend(); // 추천 받기 실행
         });
+        recommend(); // 페이지 로딩 시 추천 받기 실행
     });
 
     function recommend() {
-        $.ajax({
-            type: 'GET',
-            url: '/recommend',
-            success: function (response) {
-                // 가져온 추천 음식점 목록을 표시할 수 있도록 로직 추가 필요
+        navigator.geolocation.getCurrentPosition(position => {
+            const {latitude, longitude} = position.coords;
+            const requestData = {
+                coordinates: {
+                    longitude: longitude,
+                    latitude: latitude,
+                }
+            };
 
-                let listElement = $('ol.list-group');
-                let alertMessage = $('.alert.alert-warning');
+            fetch('/api/recommend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let listElement = $('ol.list-group');
+                    let alertMessage = $('.alert.alert-warning');
 
-                listElement.empty();
+                    listElement.empty();
 
-                if (response.recommendedRestaurants.length > 0) {
-                    alertMessage.hide();
+                    if (data && data.recommendedRestaurants && data.recommendedRestaurants.length > 0) {
+                        alertMessage.hide();
 
-                    // 추천된 음식점을 표시
-                    response.recommendedRestaurants.forEach(function(item) {
-                        listElement.append(`
+                        data.recommendedRestaurants.forEach(function(item) {
+                            listElement.append(`
                             <li class="list-group-item">
                                 <div class="ms-2 me-auto">
                                     <div class="fw-bold">${item.category}</div>
-                                    <div>${item.streetNumberAddress}</div>
+                                    <div>${item.streetNameAddress}</div>
                                     <div>${item.restaurantName}</div>
                                 </div>
                             </li>
                         `);
-                    });
-                } else {
-                    alertMessage.show();
-                    listElement.empty(); // 결과가 없는 경우 리스트 비우기
-                }
-            },
-            error: function (error) {
-                console.log('에러 발생: ', error);
-            }
+                        });
+                    } else {
+                        alertMessage.show();
+                    }
+                })
+                .catch(error => {
+                    console.error('Request failed:', error);
+                });
         });
     }
 
