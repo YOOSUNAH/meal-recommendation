@@ -33,10 +33,10 @@ public class RecommendController {
     @RequiredArgsConstructor
     public static class RecommendService {
         public MealRecommendationResponse recommend(MealRecommendationRequest request) {
-            log.info("Selected categories: {}", request.getRequestedCategory());
+            log.info("Selected categories: {}", request.getCategoryList());
 
             // 사용자 요청에 따른 카테고리로 음식점 필터링 및 추천
-            List<MealRecommendationResponse.Item> recommendedItems = filterByCategory(request.getCoordinates(), request.getRequestedCategory());
+            List<MealRecommendationResponse.Item> recommendedItems = filterByCategory(request.getCoordinates(), request.getCategoryList());
 
             MealRecommendationResponse recommendationResponse = new MealRecommendationResponse();
 

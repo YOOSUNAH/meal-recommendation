@@ -39,7 +39,7 @@ public class RecommendService {
         MealRecommendationResponse recommendationResponse = new MealRecommendationResponse();
 
         // 사용자 요청에 따른 카테고리로 음식점 필터링 및 추천
-        List<MealRecommendationResponse.Item> recommendedItems = filterByCategory(request.getCoordinates(), request.getRequestedCategory());
+        List<MealRecommendationResponse.Item> recommendedItems = filterByCategory(request.getCoordinates(), request.getCategoryList());
 
         if (recommendedItems.isEmpty()) {
             // 추천된 음식점 목록이 비어있는 경우에 대한 처리
