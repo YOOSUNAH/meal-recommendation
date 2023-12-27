@@ -66,9 +66,9 @@ public class ExcelReader {
                 // log 찍어보기
                 String tempBusinessStatus = row.getCell(7).getStringCellValue();
                 log.info("tempBusinessStatus : {}", tempBusinessStatus);
-                String tempStreetNumberAddress = row.getCell(14).getRawValue().trim();
+                String tempStreetNumberAddress = row.getCell(15).getRawValue().trim();
                 log.info("tempStreetNumberAddress : {}", tempStreetNumberAddress);
-                String tempStreetNameAddress = row.getCell(15).getStringCellValue();
+                String tempStreetNameAddress = row.getCell(16).getStringCellValue();
                 log.info("tempStreetNameAddress : {}", tempStreetNameAddress);
                 String tempRestaurantName = row.getCell(18).getStringCellValue();
                 log.info("tempRestaurantName : {}", tempRestaurantName);
