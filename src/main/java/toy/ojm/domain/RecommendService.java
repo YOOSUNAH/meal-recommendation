@@ -7,9 +7,11 @@ import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.controller.dto.MealRecommendationResponse;
 import toy.ojm.entity.DatabaseRestaurant;
 import toy.ojm.excel.ExcelToDatabaseService;
+import toy.ojm.excel.NearbyRestaurantService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import toy.ojm.excel.NearbyRestaurantService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,6 +35,8 @@ public class RecommendService {   // 음식점 추천 서비스를 담당하는 
     private final ListRepository listRepository; // ListRepository 의존성 주입.  ListRepository 클래스의 listRepository라는 인스턴스.
     // RecommendService 클래스의 멤버 변수로 선언되어 의존성 주입을 통해 해당 클래스를 사용할 수 있게 된다.
     private final ExcelToDatabaseService excelToDatabaseService; // ExcelToDatabaseService 의존성 주입
+    private final NearbyRestaurantService nearbyRestaurantService;
+
     private static final Logger log = LoggerFactory.getLogger(RecommendService.class); // SLF4J Logger
 
     // MealRecommendationRequest의 객체 request를 전달 받아와서 음식추천을 수행하는 recommend 메서드
@@ -72,7 +76,7 @@ public class RecommendService {   // 음식점 추천 서비스를 담당하는 
     // filterByCategory 메서드. 사용자가 요청한 카테고리에 따라 음식점을 필터링하여 추천하는 메서드.
     // 입력된 좌표와 요청된 카테고리 목록에 따라 음식점을 필터링하여 추천하는 역할을 한다.
     public List<MealRecommendationResponse.Item> filterByCategory(Coordinates coordinates, List<String> requestedCategoryList) { //Coordinates coordinates와 List<String> requestedCategoryList를 매개변수로 받는 filterByCategory 메서드
-        List<DatabaseRestaurant> nearbyRestaurants = excelToDatabaseService.getNearbyRestaurants(coordinates); //excelToDatabaseService.getNearbyRestaurants(coordinates)를 통해 coordinates를 활용하여 주변 음식점을 얻어온다.
+        List<DatabaseRestaurant> nearbyRestaurants = nearbyRestaurantService.getNearbyRestaurants(coordinates); //excelToDatabaseService.getNearbyRestaurants(coordinates)를 통해 coordinates를 활용하여 주변 음식점을 얻어온다.
         List<DatabaseRestaurant> filteredRestaurants;
 
         filteredRestaurants = nearbyRestaurants.stream() // nearbyRestaurants 리스트를 스트림으로 변환한 뒤,

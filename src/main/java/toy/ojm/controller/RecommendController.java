@@ -14,7 +14,10 @@ import toy.ojm.domain.Coordinates;
 import toy.ojm.domain.RecommendService;
 import toy.ojm.entity.DatabaseRestaurant;
 import toy.ojm.excel.ExcelToDatabaseService;
+import toy.ojm.excel.NearbyRestaurantService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import toy.ojm.domain.TransCoordination;
 
 import java.util.List;
 
@@ -25,6 +28,9 @@ public class RecommendController {
 
     private final RecommendService recommendService;  // RecommendService클래스의 recommendService라는 인스턴스 생성
     private final ExcelToDatabaseService excelToDatabaseService;   // ExcelToDatabaseService클래스의 excelToDatabaseService라는 인스턴스 생성
+    private final NearbyRestaurantService nearbyRestaurantService;
+    private final JdbcTemplate jdbcTemplate;
+    private final TransCoordination transCoordination;
 
     @PostMapping("/api/recommend") // HTTP POST 요청 "/api/recommend"을 처리하는 메서드. "/api/recommend"경로로 들어오면 아래 메서드를 호출
     public ResponseEntity<MealRecommendationResponse> getRecommendation(   // ResponseEntity : HTTP 응답을 나타내는 객체
@@ -33,10 +39,9 @@ public class RecommendController {
         // 로그 추가: 요청이 들어왔음을 확인
         log.info("API '/api/recommend'로 POST 요청이 들어왔습니다.");
 
-
         // 추천된 음식점 목록을 서비스에서 가져옴
         MealRecommendationResponse recommendation = recommendService.recommend(request);  // 요청에 따른 음식점 추천 서비스를 호출
-        log.info("추천된 음식점 목록: {}", recommendation); // 추천된 음식점 목록을 로그로 출력
+       log.info("추천된 음식점 목록: {}", recommendation); // 추천된 음식점 목록을 로그로 출력
 
         if (recommendation == null) {
             log.error("추천된 음식점 목록이 null입니다.");
@@ -65,8 +70,11 @@ public class RecommendController {
         // 사용자의 위치 정보를 얻어온다
         Coordinates currentLocation = getCurrentUserLocation();
 
+        // NearbyRestaurantService 클래스의 인스턴스 생성
+        NearbyRestaurantService nearbyRestaurantService = new NearbyRestaurantService(jdbcTemplate, transCoordination);
+
         // 데이터베이스에서 100m 이내의 식당 정보를 가져온다.
-        List<DatabaseRestaurant> recommendedRestaurants = excelToDatabaseService.getNearbyRestaurants(currentLocation);
+        List<DatabaseRestaurant> recommendedRestaurants = nearbyRestaurantService.getNearbyRestaurants(currentLocation);
 
         // recommendedRestaurants를 result.html 페이지에 전달한다.
         model.addAttribute("recommendedRestaurants", recommendedRestaurants);  // 뷰로 식당 정보를 전달합니다.
