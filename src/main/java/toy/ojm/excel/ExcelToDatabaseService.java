@@ -7,8 +7,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import toy.ojm.controller.dto.MealRecommendationRequest;
 import toy.ojm.domain.Coordinates;
+import toy.ojm.entity.DatabaseRestaurant;
 import toy.ojm.domain.TransCoordination;
-import toy.ojm.entity.RestaurantEntity;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,30 +18,27 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ExcelToDatabaseService {
+    // RestaurantDTO 객체 리스트를 RestaurantEntity 객체 리스트로 변환하고 데이터베이스에 저장하거나 읽어올 때 사용된다.
+    // 엑셀에서 데이터를 읽어와 DB에 저장하거나 DB에서 데이터를 읽어올 때 사용된다.
 
-    private final ExcelReader excelReader;
-    private final JdbcTemplate jdbcTemplate;
-    private final TransCoordination transCoordination;
+    private final ExcelReader excelReader;  // Excel 파일을 읽는 데 사용되는 객체. 인스턴스 선언
+    private final SaveToDatabaseService saveToDatabaseService;
 
+    // Excel 파일을 읽어와서 데이터베이스에 저장하는 메서드
     public void readFromExcelAndSave(String filePath, MealRecommendationRequest request) {
-        List<RestaurantDTO> excelRestaurants = excelReader.read(filePath);
-        List<RestaurantEntity> restaurantEntities = convertRestaurantEntities(excelRestaurants);
+        List<ExcelRestaurantData> excelRestaurants = excelReader.read(filePath); // Excel 파일에서 읽어온 데이터를 RestaurantDTO 리스트인 excelRestaurants에 저장한다.
+        List<DatabaseRestaurant> restaurantEntities = convertRestaurantEntities(excelRestaurants);  // RestaurantDTO 리스트인 excelRestaurants를 RestaurantEntity 리스트인 restaurantEntities로 변환하여 저장.
 
-        for (RestaurantEntity entity : restaurantEntities) {
-            ProjCoordinate transformedCoordinates = transCoordination.transformToGCS(
-               entity.getLongitude(), entity.getLatitude()
-            );
-            entity.setLongitude(transformedCoordinates.x);
-            entity.setLatitude(transformedCoordinates.y);
-            insertData(entity);
-        }
+        saveToDatabaseService.saveRestaurants(restaurantEntities);
     }
 
-    private List<RestaurantEntity> convertRestaurantEntities(List<RestaurantDTO> excelRestaurants) {
-        List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-        for (RestaurantDTO excelRestaurant : excelRestaurants) {
+    // RestaurantDTO 리스트를 RestaurantEntity 리스트로 변환하는 메서드
+    private List<DatabaseRestaurant> convertRestaurantEntities(List<ExcelRestaurantData> excelRestaurants) { // RestaurantDTO 리스트인 excelRestaurants를 전달값으로 받는 RestaurantEntity 리스트인 convertRestaurantEntities 메서드
+        List<DatabaseRestaurant> restaurantEntities = new ArrayList<>(); // RestaurantEntity 리스트 타입의 restaurantEntities을 생성한다. ArrayList로 생성한다.
+        for (ExcelRestaurantData excelRestaurant : excelRestaurants) { // RestaurantDTO를 돈다. excelRestaurants하나하나로 돈다. 돈 것을 excelRestaurant 여기에 저장한다.
             try {
-                RestaurantEntity entity = new RestaurantEntity();
+                // RestaurantEntity 객체 생성 및 데이터 설정(entity에 저장)
+                DatabaseRestaurant entity = new DatabaseRestaurant();
                 entity.setBusinessStatus(excelRestaurant.getBusinessStatus());
                 entity.setStreetNumberAddress(excelRestaurant.getStreetNumberAddress());
                 entity.setRestaurantName(excelRestaurant.getRestaurantName());
@@ -52,75 +50,11 @@ public class ExcelToDatabaseService {
                 log.error("Error creating RestaurantEntity: {}", e.getMessage());
             }
         }
-        return restaurantEntities;
+        return restaurantEntities; // 변환된 RestaurantEntity 리스트를 반환
     }
 
-    private void insertData(RestaurantEntity entity) {
-        try {
-            if (entity.getBusinessStatus() != null && entity.getBusinessStatus().equalsIgnoreCase("영업")) {
-                int success = jdbcTemplate.update("""
-                        INSERT INTO restaurantTable (
-                        businessStatus, StreetNumberAddress, 
-                        restaurantName, category, longitude, latitude
-                        ) 
-                        VALUES (?, ?, ?, ?, ?, ?)
-                        """,
-                    entity.getBusinessStatus(),
-                    entity.getStreetNumberAddress(),
-                    entity.getRestaurantName(),
-                    entity.getCategory(),
-                    entity.getLongitude(),
-                    entity.getLatitude()
-                );
-                if (success > 0) {
-                    log.info("Data inserted successfully.");
-                } else {
-                    log.warn("Failed to insert data.");
-                }
-            } else {
-                log.warn("Ignoring non-'영업' business status data.");
-            }
-        } catch (Exception e) {
-            log.error("Error inserting data: {}", e.getMessage());
-        }
-    }
 
-    public List<RestaurantEntity> getNearbyRestaurants(Coordinates coordinates) {
-        List<RestaurantEntity> nearbyRestaurants = new ArrayList<>();
-        try {
-            // 사용자의 현재 위치를 데이터베이스의 TM 좌표계에서 Geolocation의 GCS 좌표계로 변환
-            ProjCoordinate transformedCoordinates = transCoordination.transformToGCS(
-                Double.parseDouble(
-                    String.valueOf(coordinates.getLongitude())
-                ),
-                Double.parseDouble(
-                    String.valueOf(coordinates.getLatitude())
-                )
-            );
-            coordinates.setLongitude(String.valueOf(transformedCoordinates.x));
-            coordinates.setLatitude(String.valueOf(transformedCoordinates.y));
-
-            //100m 이내에 음식점 쿼리문 // test를 위해 거리 400000으로 조정함.
-            String query = "SELECT * FROM restaurantTable WHERE ST_DISTANCE_SPHERE(POINT(longitude, latitude), POINT(?, ?)) <= 400000";
-            Object[] params = {coordinates.getLongitude(), coordinates.getLatitude()};
-
-            nearbyRestaurants = jdbcTemplate.query(query, params, (resultSet, rowNum) -> {
-                RestaurantEntity restaurant = new RestaurantEntity();
-                restaurant.setBusinessStatus(resultSet.getString("businessStatus"));
-                restaurant.setStreetNumberAddress(resultSet.getString("streetNumberAddress"));
-                restaurant.setRestaurantName(resultSet.getString("restaurantName"));
-                restaurant.setCategory(resultSet.getString("category"));
-                restaurant.setLongitude(Double.valueOf(resultSet.getString("longitude")));
-                restaurant.setLatitude(Double.valueOf(resultSet.getString("latitude")));
-                return restaurant;
-            });
-        } catch (Exception e) {
-            log.error("100m 이내의 음식점을 가져오는 중 오류 발생: {}", e.getMessage());
-            // 오류 처리를 원하는 방식으로 수행
-        }
-        return nearbyRestaurants;
-    }
-
+    // 유효한 좌표인지 확인하는 메서드
     private boolean isValidCoordinates(Coordinates coordinates) {
         if (coordinates == null) {
             return false;
