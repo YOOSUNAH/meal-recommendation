@@ -1,4 +1,4 @@
-package toy.ojm.domain;
+package toy.ojm.location;
 
 import org.locationtech.proj4j.BasicCoordinateTransform;
 import org.locationtech.proj4j.CRSFactory;

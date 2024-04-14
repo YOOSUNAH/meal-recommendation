@@ -1,28 +1,34 @@
-resources:
-  file:
-    path: "C:/my-files"
-
 server:
   address: localhost
   port: 8081
 
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/OJMDB
-    username: ojm
-    password: 4027
-  thymeleaf:
-    cache: false
   jpa:
-    database: mysql
-    open-in-view: false
-    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
     hibernate:
       ddl-auto: update
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/${database.name}
+    username: ${mysql.username}
+    password: ${mysql.password}
 
 logging:
   level:
     toy.ojm: DEBUG
     org.springframework.web: DEBUG
+
+
+
+
+
+
+
+
+
+
 
