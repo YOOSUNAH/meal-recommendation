@@ -1,4 +1,4 @@
-package toy.ojm.controller.dto;
+package toy.ojm.dto;
 
 import lombok.Getter;
 
@@ -8,6 +8,5 @@ import java.util.List;
 public class CategoryRequestDto {
 
     private List<String> categoryList;
-
 
 }

@@ -1,4 +1,4 @@
-package toy.global;
+package toy.ojm.global;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
