@@ -5,9 +5,10 @@
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/styles.css}" rel="stylesheet"> <!-- CSS 파일 참조 추가 -->
     <style>
-        .container {
+        .containers {
             max-width: 560px;
             text-align: center;
+            margin-top: 90px;
         }
 
         /* 각 요소를 블록 요소로 설정하여 줄바꿈을 적용합니다. */
@@ -15,14 +16,33 @@
             display: block;
             margin-bottom: 20px; /* 간격 조절 */
         }
+        .btn {
+            display: block;
+            margin: 20px auto; /* 가운데 정렬 */
+            font-size: 1.0em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #map {
+            width: 60% !important;
+            height: 525px !important;
+            margin: 0 auto /* 가운데 정렬 */
+        }
+
     </style>
 </head>
 <body>
 <div th:fragment="block">
-    <div class="container">
+    <div class="containers">
 
     </div> <!-- /container -->
-    <hr class="my-2">
+
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="showRecommend()">
