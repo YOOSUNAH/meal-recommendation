@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+            text-align: center;
+        }
+
+        /* 각 요소를 블록 요소로 설정하여 줄바꿈을 적용합니다. */
+        h4, .btn {
+            display: block;
+            margin-bottom: 20px; /* 간격 조절 */
+          //  font-family: "BM Jua", sans-serif; /* 폰트 적용 실패!*/
+        }
+
+    </style>
+</head>
+<body>
+<div th:fragment="block">
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>오늘의 점심 메뉴</h2>
+        </div>
+    </div>
+    <button th:onclick="|window.location.href='@{/page2}'|" class="btn">
+        메뉴 선택하러가기
+    </button>
+</div>
+
+<script>
+
+</script>
+</body>
+</html>
