@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+    <link th:href="@{/css/styles.css}" rel="stylesheet"> <!-- CSS 파일 참조 추가 -->
     <style>
         .container {
             max-width: 560px;
@@ -25,6 +26,7 @@
             <h2>오늘의 점심 메뉴</h2>
         </div>
     </div>
+
     <button th:onclick="|window.location.href='@{/page2}'|" class="btn">
         메뉴 선택하러가기
     </button>
