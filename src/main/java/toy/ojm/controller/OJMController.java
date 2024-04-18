@@ -1,14 +1,19 @@
-package toy.ojm.controller.controller;
+package toy.ojm.controller;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import toy.global.ResponseDto;
-import toy.ojm.controller.dto.CategoryRequestDto;
+import toy.ojm.dto.CategoryRequestDto;
+import toy.ojm.entity.FoodCategory;
+import toy.ojm.global.ResponseDto;
+import toy.ojm.location.TransCoordination;
 import toy.ojm.service.OJMService;
 
 @RestController
@@ -18,16 +23,39 @@ public class OJMController {
 
     private final OJMService OJMService;
 
-//    private final JdbcTemplate jdbcTemplate;
-//    private final TransCoordination transCoordination;
+    private final JdbcTemplate jdbcTemplate;
+    private final TransCoordination transCoordination;
 
-    @PostMapping("/recommend")
+    @PostMapping("/category")
     public ResponseEntity<ResponseDto<Void>> getRecommendation(
-        @RequestBody CategoryRequestDto request
+        @RequestBody CategoryRequestDto request,
+        HttpSession session
     ){
-        OJMService.recommend(request);
+        OJMService.recommend(request, session);
         return ResponseDto.of(HttpStatus.OK, null);
     }
+
+    @GetMapping("/category")
+    public FoodCategory getCategory(
+        HttpSession session
+    ) {
+        FoodCategory selectedCategory = OJMService.getLastCategory();
+        return selectedCategory;
+    }
+}
+
+//
+//    @PostMapping("/lunch")
+//    private ResponseEntity<String> searchLunch(HttpServletRequest request) {
+//        String latitude = request.getParameter("latitude");
+//        String longitude = request.getParameter("longitude");
+//        String page = request.getParameter("page");
+//
+//        return OJMService.getSearchLunchList(latitude, longitude, page, "15");
+//    }
+
+
+
 //
 //
 //    public ResponseEntity<List<ContentDto>> myMapList(
@@ -39,7 +67,7 @@ public class OJMController {
 //    }
 //
 //
-//
+////
 //    @GetMapping("/result")
 //    public String showRecommendedRestaurants(Model model) {  // Model model: 뷰에 데이터를 전달하기 위한 Spring의 모델 객체
 //        // 사용자의 위치 정보를 얻어온다
@@ -74,4 +102,19 @@ public class OJMController {
 //            return "데이터 저장 실패";
 //        }
 //    }
-}
+//    @GetMapping("/recommend")
+//    public String goRecommend() {
+//        return "recommend";
+//    }
+//
+//    @GetMapping("/result-page")
+//    public String goResult(Model model, RecommendResponseDto recommendationResponse) {
+//        if (recommendationResponse.getList() != null && !recommendationResponse.getList().isEmpty()) {
+//            model.addAttribute("recommendedItems", recommendationResponse.getList()); // recommendItems라는 이름으로 list의 내용을 뷰로 전달 할 수 있게 된다.
+//            // 즉, recommendationResponse 객체의 list를 recommendedItems라는 이름으로 뷰에 전달하여, 뷰에서 이 정보를 활용할 수 있도록 하는 역할.
+//            return "result";
+//        }
+//        else {
+//            return "noresult";
+//        }
+//    }

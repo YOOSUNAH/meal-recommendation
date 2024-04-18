@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
     <link th:href="@{/css/styles.css}" rel="stylesheet"> <!-- CSS 파일 참조 추가 -->
+    <script th:src="@{/js/script.js}"></script>
     <style>
         .containers {
             max-width: 560px;
@@ -40,9 +41,9 @@
 <body>
 <div th:fragment="block">
     <div class="containers">
+        <h2 th:text="${selectedCategory}"></h2>
 
     </div> <!-- /container -->
-
     <div class="row">
         <div class="col">
             <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="showRecommend()">
@@ -56,6 +57,12 @@
     <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf620856f46d903f5b7f04166e0f9ea3"></script>
 
 </div>
+
+<button th:onclick="|window.location.href='@{/map1}'|" class="btn">
+    현위치를 중심으로 메뉴 선택하러 가기
+</button>
+
+
 <script>
     function showRecommend() {
         if (navigator.geolocation) {
@@ -88,6 +95,7 @@
             alert("이 브라우저는 Geolocation을 지원하지 않습니다.");
         }
     }
+
 </script>
 </body>
 </html>
