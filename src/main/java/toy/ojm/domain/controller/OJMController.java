@@ -1,6 +1,7 @@
-package toy.ojm.controller;
+package toy.ojm.domain.controller;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +10,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import toy.ojm.dto.CategoryRequestDto;
-import toy.ojm.entity.FoodCategory;
+import toy.ojm.domain.dto.CategoryRequestDto;
+import toy.ojm.domain.entity.FoodCategory;
+import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.global.ResponseDto;
-import toy.ojm.location.TransCoordination;
-import toy.ojm.service.OJMService;
+import toy.ojm.domain.location.TransCoordination;
+import toy.ojm.domain.service.OJMService;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +45,19 @@ public class OJMController {
         FoodCategory selectedCategory = OJMService.getLastCategory();
         return selectedCategory;
     }
+
+
+    @GetMapping("/restaurant")
+    public List<Restaurant> getRestaurant(
+        @RequestParam double latitude,
+        @RequestParam double longitude,
+        @RequestParam String category
+    ) {
+
+        return OJMService.searchRestaurant(latitude, longitude, category);
+    }
+
+
 }
 
 //

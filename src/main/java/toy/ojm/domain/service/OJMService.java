@@ -1,12 +1,13 @@
-package toy.ojm.service;
+package toy.ojm.domain.service;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toy.ojm.dto.CategoryRequestDto;
-import toy.ojm.entity.FoodCategory;
-import toy.ojm.repository.CategoryRepository;
+import toy.ojm.domain.dto.CategoryRequestDto;
+import toy.ojm.domain.entity.FoodCategory;
+import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.repository.CategoryRepository;
 
 /**
  * TODO: 규칙 수행
@@ -65,6 +66,11 @@ public class OJMService {
     public FoodCategory getLastCategory() {
         FoodCategory getLastCategory = (FoodCategory) categoryRepository.findAll();
         return getLastCategory;
+    }
+
+    public List<Restaurant> searchRestaurant(double latitude, double longitude, String category) {
+
+    return null;
     }
 }
 //    public ResponseEntity<String> getSearchLunchList(String longitude, String latitude, String page, String size) {

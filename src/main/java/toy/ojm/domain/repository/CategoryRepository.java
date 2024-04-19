@@ -1,7 +1,7 @@
-package toy.ojm.repository;
+package toy.ojm.domain.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import toy.ojm.entity.FoodCategory;
+import toy.ojm.domain.entity.FoodCategory;
 
 
 public interface CategoryRepository extends JpaRepository<FoodCategory, Long>{

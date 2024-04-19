@@ -1,4 +1,4 @@
-package toy.ojm.dto;
+package toy.ojm.domain.dto;
 
 import lombok.Getter;
 

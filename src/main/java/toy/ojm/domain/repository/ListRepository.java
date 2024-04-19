@@ -1,4 +1,4 @@
-package toy.ojm.repository;
+package toy.ojm.domain.repository;
 
 import org.springframework.stereotype.Component;
 import java.util.HashMap;

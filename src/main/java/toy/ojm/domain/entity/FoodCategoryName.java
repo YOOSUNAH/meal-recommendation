@@ -1,4 +1,4 @@
-package toy.ojm.entity;
+package toy.ojm.domain.entity;
 
 public enum FoodCategoryName {
     KOREAN("한식"),

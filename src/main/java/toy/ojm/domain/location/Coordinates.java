@@ -1,4 +1,4 @@
-package toy.ojm.location;
+package toy.ojm.domain.location;
 
 import java.awt.Point;
 import lombok.Getter;
@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public class Coordinates {  // 좌표
 
-    private Double latitude; // 경도
-    private Double longitude; // 위도
+    private final Double latitude; // 경도
+    private final Double longitude; // 위도
 
-    private Point point;
+//    private Point point;
 
     public Coordinates(Double latitude, Double longitude){
        this.latitude = latitude;

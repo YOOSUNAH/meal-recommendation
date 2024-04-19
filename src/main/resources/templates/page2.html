@@ -3,14 +3,20 @@
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
-    <script th:src="@{/js/script.js}"></script>
     <link th:href="@{/css/styles.css}" rel="stylesheet"> <!-- CSS 파일 참조 추가 -->
+    <script th:src="@{/js/script.js}"></script>
     <style>
-        .form-check {
-            font-size: 1.25rem;
+        .containers {
+            max-width: 560px;
             text-align: center;
+            margin-top: 90px;
         }
 
+        /* 각 요소를 블록 요소로 설정하여 줄바꿈을 적용합니다. */
+        h4, .btn {
+            display: block;
+            margin-bottom: 20px; /* 간격 조절 */
+        }
         .btn {
             display: block;
             margin: 20px auto; /* 가운데 정렬 */
@@ -23,75 +29,76 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
+        #map {
+            width: 60% !important;
+            height: 525px !important;
+            margin: 0 auto /* 가운데 정렬 */
+        }
+
     </style>
 </head>
 <body>
 <div th:fragment="block">
-    <div class="form-check">
-        <h2>메뉴 선택하기</h2>
-    </div>
-    <div class="form-check">
-        <input type="checkbox" value="" id="All" onclick="selectAllCategory()">
-        <label for="All">
-            전체 선택
-        </label>
-    </div>
-    <br>
-    <div class="form-check">
-        <input type="checkbox" value="" id="Korean" checked>
-        <label for="Korean">
-            한식
-        </label>
-    </div>
-    <br>
-    <div class="form-check">
-        <input type="checkbox" value="" id="Japanese">
-        <label for="Japanese">
-            일식
-        </label>
-    </div>
-    <br>
-    <div class="form-check">
-        <input type="checkbox" value="" id="Chinese">
-        <label for="Chinese">
-            중식
-        </label>
-    </div>
-    <br>
-    <div class="form-check">
-        <input type="checkbox" value="" id="Western">
-        <label for="Western">
-            양식
-        </label>
-    </div>
-    <br>
+    <div class="containers">
+        <h2 th:text="${selectedCategory}"></h2>
 
-    <button th:onclick="|window.location.href='@{/page3}'|" class="btn">
-        메뉴 선택하러가기
-    </button>
+    </div> <!-- /container -->
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="showRecommend()">
+                위치 확인하기
+            </button>
+            <p id="location"></p> <!-- 위치 정보를 표시할 요소 추가 -->
+        </div>
+    </div>
+
+    <div id="map" style="width:100%;height:350px;"></div>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf620856f46d903f5b7f04166e0f9ea3"></script>
 
 </div>
 
+<button th:onclick="|window.location.href='@{/page3}'|" class="btn">
+    현위치를 중심으로 메뉴 선택하러 가기
+</button>
+
+
 <script>
-    function sendCategorySelection() {
-        const categories = ['Korean', 'Japanese', 'Chinese', 'Western'];
-        let selectedCategories = categories.filter(category => document.getElementById(category).checked).map(category => category === 'Korean' ? '한식' : category === 'Japanese' ? '일식' : category === 'Chinese' ? '중식' : '양식');
+    function showRecommend() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
 
-        fetch('/v1/ojm/category', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ categoryList: selectedCategories }),
-        })
-        .then(response => response.json())
-        .then(data => console.log('Success:', data))
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+                // 위치 정보를 세션 스토리지에 저장합니다.
+                sessionStorage.setItem('latitude', latitude);
+                sessionStorage.setItem('longitude', longitude);
+
+                document.getElementById("location").innerHTML = "위도: " + latitude + "<br>경도: " + longitude;
+
+                var mapContainer = document.getElementById('map');
+                var mapOption = {
+                    center: new kakao.maps.LatLng(latitude, longitude), // 현재 위치를 중심으로 지도 표시
+                    level: 3
+                };
+
+                var map = new kakao.maps.Map(mapContainer, mapOption); // 지도 생성
+
+                // 마커가 표시될 위치입니다
+                var markerPosition = new kakao.maps.LatLng(latitude, longitude);
+
+                // 마커를 생성합니다
+                var marker = new kakao.maps.Marker({
+                    position: markerPosition
+                });
+
+                // 마커가 지도 위에 표시되도록 설정합니다
+                marker.setMap(map);
+            });
+        } else {
+            alert("이 브라우저는 Geolocation을 지원하지 않습니다.");
+        }
     }
-
-    document.querySelector('.btn').addEventListener('click', sendCategorySelection);
 
 </script>
 </body>

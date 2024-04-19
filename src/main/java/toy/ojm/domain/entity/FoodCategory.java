@@ -1,4 +1,4 @@
-package toy.ojm.entity;
+package toy.ojm.domain.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
