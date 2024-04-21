@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>위치 확인</title>
+  <script>
+    function showLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+          document.getElementById("location").innerHTML = "위도: " + latitude + "<br>경도: " + longitude;
+        });
+      } else {
+        alert("이 브라우저는 Geolocation을 지원하지 않습니다.");
+      }
+    }
+  </script>
+</head>
+<body>
+<h2>위치를 확인하려면 아래 버튼을 클릭하세요:</h2>
+<button onclick="showLocation()">위치 확인하기</button>
+<p id="location"></p>
+</body>
+</html>

@@ -1,8 +1,9 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.1.0'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'application' // application 플러그인 추가
+	id 'java'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'application' // application 플러그인 추가
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'toy'
@@ -10,23 +11,20 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
-
-bootJar {
-    // mainClassName 설정 제거
-}
-
 
 dependencies {
 	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// MySQL
-	runtimeOnly 'com.mysql:mysql-connector-j'
-
+	runtimeOnly 'com.mysql:mysql-connector-java'
 	// Thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	// QueryDSL
+	implementation 'com.querydsl:querydsl-jpa'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
@@ -43,5 +41,11 @@ dependencies {
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
+}
+
+// QueryDSL 설정
+querydsl {
+	jpa = true
+	querydslSourcesDir = "src/main/generated" // 생성된 소스 코드의 저장 디렉토리 지정
 }

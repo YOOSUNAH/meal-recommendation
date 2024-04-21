@@ -1,9 +1,10 @@
 package toy.ojm.service;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toy.ojm.controller.dto.CategoryRequestDto;
+import toy.ojm.dto.CategoryRequestDto;
 import toy.ojm.entity.FoodCategory;
 import toy.ojm.repository.CategoryRepository;
 
@@ -24,10 +25,9 @@ public class OJMService {
 //    public static final int LIST_LIMIT_COUNT = 10;
 //    private static final Logger log = LoggerFactory.getLogger(OJMService.class);
 
-    public void recommend(CategoryRequestDto request) {
+    public void recommend(CategoryRequestDto request, HttpSession session) {
 
         List<String> categoryList = request.getCategoryList();
-
         FoodCategory category = new FoodCategory();
 
         if (categoryList != null) {
@@ -50,9 +50,45 @@ public class OJMService {
                 }
             }
         }
-
         categoryRepository.save(category);
+
+        // 사용자 선택을 세션에 저장
+        session.setAttribute("selectedCategory", category);
+        System.out.println("Saved in session: " + session.getAttribute("selectedCategory"));
     }
+
+    public FoodCategory getCategory(HttpSession session) {
+        FoodCategory selectedCategory = (FoodCategory) session.getAttribute("selectedCategory");
+        return selectedCategory;
+    }
+
+    public FoodCategory getLastCategory() {
+        FoodCategory getLastCategory = categoryRepository.findByTopByOrderByIdDesc().orElseThrow(() -> new IllegalArgumentException("No category found"));
+        return getLastCategory;
+    }
+
+//    public ResponseEntity<String> getSearchLunchList(String longitude, String latitude, String page, String size) {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        headers.set("Authorization", "KakaoAK {APIKEY}");
+//
+//        HttpEntity<String> entity = new HttpEntity<>("", headers);
+//
+//        String baseUrl = "https://dapi.kakao.com/v2/local/search/category.json?" +
+//            "category_group_code=FD6" +
+//            "&page=" + page +
+//            "&size="+ size +
+//            "&sort=accuracy" +
+//            "&x=" + latitude +
+//            "&y=" + longitude;
+//
+//        RestTemplate restTemplate = new RestTemplate();
+//
+//        return restTemplate.exchange(baseUrl, HttpMethod.GET, entity, String.class);
+//    }
+
+
 
 //    public List<OJMResponseDto.Item> filterByCategory(Coordinates coordinates, List<String> requestedCategoryList) {
 //        List<Restaurant> nearbyRestaurants = nearbyRestaurantService.getNearbyRestaurants(coordinates);

@@ -17,4 +17,11 @@ public class Coordinates {  // 좌표
     }
 
 
+    public void setLongitude(double x) {
+        this.longitude = x;
+    }
+
+    public void setLatitude(double y) {
+        this.latitude = y;
+    }
 }

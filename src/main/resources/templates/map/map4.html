@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+
+<body>
+<div>
+  <div class="container">
+    <h4 class="mb-3">현재 위치를 확인해 주세요</h4><br>
+  </div>
+  <button onclick="showLocation()">위치 확인하기</button>
+  <p id="location"></p>
+</div>
+</body>
+
+<script>
+  function showLocation() {
+    if (navigator.geolocation) {
+
+      navigator.geolocation.getCurrentPosition(function(position) {  // geolocation으로 현재 위치 가져오기
+
+        var latitude = position.coords.latitude;  // 위도
+        var longitude = position.coords.longitude;  // 경도
+        document.getElementById("location").innerHTML = "위도: " + latitude + "<br>경도: " + longitude;
+
+        displayMarker(locPosition, message);
+
+      });
+    } else {
+      alert("이 브라우저는 Geolocation을 지원하지 않습니다.");
+    }
+  }
+
+  // 지도에 마커와 인포윈도우를 표시하는 함수입니다
+  function displayMarker(locPosition, message) {
+
+    // 마커를 생성합니다
+    var marker = new kakao.maps.Marker({
+      map: map,
+      position: locPosition
+    });
+
+    var iwContent = message, // 인포윈도우에 표시할 내용
+        iwRemoveable = true;
+
+    // 인포윈도우를 생성합니다
+    var infowindow = new kakao.maps.InfoWindow({
+      content : iwContent,
+      removable : iwRemoveable
+    });
+
+    // 인포윈도우를 마커위에 표시합니다
+    infowindow.open(map, marker);
+
+    // 지도 중심좌표를 접속위치로 변경합니다
+    map.setCenter(locPosition);
+  }
+
+</script>
+
+</html>
