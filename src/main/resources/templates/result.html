@@ -40,6 +40,7 @@
         var longitude = sessionStorage.getItem('longitude');
         // 세션 스토리지에서 카테고리 정보를 가져옵니다.
         var categoryString = sessionStorage.getItem('category');
+        var restaurants = []; // 모든 검색 결과를 저장할 배열
         // 카테고리 정보가 올바른 JSON 형식의 문자열인지 확인합니다.
         try {
             var category = JSON.parse(categoryString);
@@ -61,7 +62,55 @@
         recommend(); // 페이지 로딩 시 추천 받기 실행
     });
 
-    // 기존의 recommend 함수는 그대로 유지합니다.
+    function recommend() {
+        var latitude = sessionStorage.getItem('latitude');
+        var longitude = sessionStorage.getItem('longitude');
+        var categories = JSON.parse(sessionStorage.getItem('category')); // 예: ["한식", "일식", "중식", "양식"]
+        var restaurants = []; // 모든 검색 결과를 저장할 배열
+
+        categories.forEach(function(category) {
+            var url = 'https://dapi.kakao.com/v2/local/search/keyword.json?query=' + category +
+                '&y=' + latitude + '&x=' + longitude + '&radius=20000';
+            $.ajax({
+                method: "GET",
+                url: url,
+                headers: { 'Authorization': 'KakaoAK YOUR_REST_API_KEY' },
+                async: false, // 동기 방식으로 변경
+                success: function(data) {
+                    // 검색된 식당 정보를 restaurants 배열에 추가
+                    data.documents.forEach(function(document) {
+                        restaurants.push(document);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error occurred: " + error);
+                }
+            });
+        });
+
+        // restaurants 배열에서 랜덤으로 10개 선택하여 화면에 표시
+        var selectedRestaurants = shuffle(restaurants).slice(0, 10);
+        displayRestaurants(selectedRestaurants); // 선택된 식당 정보를 화면에 표시하는 함수
+    }
+
+    // 배열을 랜덤으로 섞는 함수
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // 식당 정보를 화면에 표시하는 함수
+    function displayRestaurants(restaurants) {
+        var list = $('.list-group');
+        list.empty(); // 기존 목록을 비움
+        restaurants.forEach(function(restaurant) {
+            list.append('<li class="list-group-item">' + restaurant.place_name + '</li>');
+        });
+    }
+
 </script>
 
 </body>
