@@ -38,9 +38,15 @@ public class PageController {
     public String page2() {
         return "page2";
     }
+
     @GetMapping("/page3")
     public String page3() {
         return "page3";
+    }
+
+    @GetMapping("/page4")
+    public String page4() {
+        return "page4";
     }
 
 
@@ -74,8 +80,12 @@ public class PageController {
         return "map/geolocationSample";
     }
 
-    @GetMapping("/result")
+    @GetMapping("/result2")
     public String result() {
-        return "result";
+        return "result2";
+    }
+    @GetMapping("/recommendation")
+    public String recommendation() {
+        return "result2";
     }
 }

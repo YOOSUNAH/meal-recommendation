@@ -1,30 +1,30 @@
 package toy.ojm.domain.service;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.repository.CategoryRepository;
-
-/**
- * TODO: 규칙 수행
- * 1. 사용자가 요청한 카테고리만 필터링할 것
- * List<ListDto> ListDtoList = naverAPI.search(request.getCoordinates());
- * 2. 음식점 랜덤으로 10개 추출
- * for (categoryList categoryList : categoryListList) {}
- */
 
 @Service
 @RequiredArgsConstructor
 public class OJMService {
 
     private final CategoryRepository categoryRepository;
+    private final RestTemplate restTemplate;
 
-//    public static final int LIST_LIMIT_COUNT = 10;
-//    private static final Logger log = LoggerFactory.getLogger(OJMService.class);
+    @Value("${kakao.rest-api-key}")
+    private String kakaoApiKey;
+
+
 
     public void recommend(CategoryRequestDto request, HttpSession session) {
 
@@ -58,119 +58,80 @@ public class OJMService {
         System.out.println("Saved in session: " + session.getAttribute("selectedCategory"));
     }
 
-    public FoodCategory getCategory(HttpSession session) {
-        FoodCategory selectedCategory = (FoodCategory) session.getAttribute("selectedCategory");
-        return selectedCategory;
-    }
-
     public FoodCategory getLastCategory() {
-        FoodCategory getLastCategory = (FoodCategory) categoryRepository.findAll();
-        return getLastCategory;
+        return categoryRepository.findAll().stream().findFirst().orElse(null); // 단일 객체 반환
     }
 
-    public List<Restaurant> searchRestaurant(double latitude, double longitude, String category) {
+    public List<Restaurant> getRecommendedRestaurants(double latitude, double longitude, List<String> categories) {
+        // 카카오 맵 API를 호출하여 검색 결과를 받아옴
+        List<Restaurant> restaurants = new ArrayList<>();
+        for (String category : categories) {
+            String url = "https://dapi.kakao.com/v2/local/search/keyword.json?y=" + latitude + "&x=" + longitude +
+                "&query=" + category + "&apikey=" + kakaoApiKey;
 
-    return null;
+            // API 호출
+            KakaoApiResponse response = restTemplate.getForObject(url, KakaoApiResponse.class);
+
+            // 응답 결과를 Restaurant 엔티티로 변환하여 반환
+            if (response != null && response.getDocuments() != null) {
+                restaurants.addAll(convertToRestaurants(response.getDocuments()));
+            }
+        }
+
+        // 랜덤하게 10개의 식당 선택하여 반환
+        Collections.shuffle(restaurants);
+        return restaurants.subList(0, Math.min(restaurants.size(), 10));
+    }
+
+    // 카카오 API 응답을 Restaurant 엔티티로 변환하는 메서드
+    private List<Restaurant> convertToRestaurants(KakaoApiDocument[] documents) {
+        return Arrays.stream(documents)
+            .map(doc -> {
+                Restaurant restaurant = new Restaurant();
+                restaurant.setRestaurantName(doc.getPlaceName());
+                restaurant.setAddress(doc.getAddressName());
+                restaurant.setLatitude(doc.getY());
+                restaurant.setLongitude(doc.getX());
+                return restaurant;
+            })
+            .toList();
+    }
+
+
+
+    // 카카오 API 응답 데이터 구조를 매핑하기 위한 클래스
+    private static class KakaoApiResponse {
+        private KakaoApiDocument[] documents;
+        public KakaoApiDocument[] getDocuments() {
+            return documents;
+        }
+    }
+    // 카카오 API 응답 데이터 구조를 매핑하기 위한 클래스
+    private static class KakaoApiDocument {
+        private String placeName;
+        private String addressName;
+        private double x;
+        private double y;
+
+        public String getPlaceName() {
+            return placeName;
+        }
+
+        public String getAddressName() {
+            return addressName;
+        }
+
+        public double getX() {
+            return x;
+        }
+        public double getY() {
+            return y;
+        }
     }
 }
-//    public ResponseEntity<String> getSearchLunchList(String longitude, String latitude, String page, String size) {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        headers.set("Authorization", "KakaoAK {APIKEY}");
-//
-//        HttpEntity<String> entity = new HttpEntity<>("", headers);
-//
-//        String baseUrl = "https://dapi.kakao.com/v2/local/search/category.json?" +
-//            "category_group_code=FD6" +
-//            "&page=" + page +
-//            "&size="+ size +
-//            "&sort=accuracy" +
-//            "&x=" + latitude +
-//            "&y=" + longitude;
-//
-//        RestTemplate restTemplate = new RestTemplate();
-//
-//        return restTemplate.exchange(baseUrl, HttpMethod.GET, entity, String.class);
-//    }
 
 
 
-//    public List<OJMResponseDto.Item> filterByCategory(Coordinates coordinates, List<String> requestedCategoryList) {
-//        List<Restaurant> nearbyRestaurants = nearbyRestaurantService.getNearbyRestaurants(coordinates);
-//        List<Restaurant> filteredRestaurants;
-//
-//        filteredRestaurants = nearbyRestaurants.stream()
-//            .filter(restaurant -> {
-//                String category = restaurant.getCategory();
-//                return category != null && requestedCategoryList.contains(category);
-//            })
-//            .collect(Collectors.toList());
-//        return convertToItems(filteredRestaurants);
-//    }
-//
-//    private List<OJMResponseDto.Item> convertToItems(List<Restaurant> restaurantEntities) {
-//        return restaurantEntities.stream().map(this::convertToItem).collect(Collectors.toList());
-//    }
-//
-//    private OJMResponseDto.Item convertToItem(Restaurant restaurant) {
-//        OJMResponseDto.Item item = new OJMResponseDto.Item();
-//        item.setCategory(restaurant.getCategory());
-//        return item;
-//    }
-//
-//    // 랜덤으로 10개 음식점 선택
-//    public List<Restaurant> randomize(List<Restaurant> restaurantEntities) {
-//        List<Restaurant> randomList = new ArrayList<>(restaurantEntities);
-//        Collections.shuffle(randomList);   // randomList의 요소들을 무작위로 섞는다.
-//        return randomList.subList(0, Math.min(LIST_LIMIT_COUNT, randomList.size()));
-//    }
-//
-//
-//    @Transactional
-//    public List<ContentDto> listMyMap(Double x, Double y) {
-//
-//        // Location 자료형으로 변수를 선언하여 해당 요청받은 x,y 값으로 북동쪽과 남서쪽의 위치를 계산
-//        Coordinates northEast = GeometryUtil.calculate(x, y, 2.0, Direction.NORTHEAST.getBearing());
-//        Coordinates southWest = GeometryUtil.calculate(x, y, 2.0, Direction.SOUTHWEST.getBearing());
-//
-//        // 이를 바탕으로 NativeQuery로 북동쪽, 남서쪽 거리를 String으로 작성
-//        String pointFormat = String.format(
-//            "'LINESTRING(%f %f, %f %f)'",
-//            northEast.getLatitude(), northEast.getLongitude(), southWest.getLatitude(), southWest.getLongitude()
-//        );
-//
-//
-//    }
-//
-//
-//
-//
-//
-//    @Transactional(readOnly = true)
-//    public List<Restaurant> getNearByRestaurants(Double latitude, Double longitude, Double distance) {
-//        Coordinates northEast = GeometryUtil
-//            .calculate(latitude, longitude, distance, Direction.NORTHEAST.getBearing());
-//        Coordinates southWest = GeometryUtil
-//            .calculate(latitude, longitude, distance, Direction.SOUTHWEST.getBearing());
-//
-//        double x1 = northEast.getLatitude();
-//        double y1 = northEast.getLongitude();
-//        double x2 = southWest.getLatitude();
-//        double y2 = southWest.getLongitude();
-//
-//        String pointFormat = String.format("'LINESTRING(%f %f, %f %f)')", x1, y1, x2, y2);
-//        Query query = em.createNativeQuery("SELECT r.id, r.address, r.address_city, "
-//                + "r.address_district, r.address_district_old, r.address_old, r.address_province, "
-//                + "r.category, r.category_code, r.category_industry, r.category_main, r.category_sub, "
-//                + "r.point, r.name, r.zip_code "
-//                + "FROM restaurant AS r "
-//                + "WHERE MBRContains(ST_LINESTRINGFROMTEXT(" + pointFormat + ", r.point)", Restaurant.class)
-//            .setMaxResults(10);
-//
-//        List<Restaurant> restaurants = query.getResultList();
-//        return restaurants;
-//    }
 
 
 
