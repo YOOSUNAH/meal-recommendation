@@ -88,12 +88,8 @@
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf620856f46d903f5b7f04166e0f9ea3&libraries=services"></script>
 <script>
-    // 마커를 담을 배열입니다
-    var markers = [];
     var latitude = sessionStorage.getItem('latitude');
     var longitude = sessionStorage.getItem('longitude');
-    var categoryString = sessionStorage.getItem('category');
-    var category = JSON.parse(categoryString);
 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
@@ -124,7 +120,9 @@
         }
 
         // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-        ps.keywordSearch( keyword, placesSearchCB);
+        ps.keywordSearch(keyword, placesSearchCB, {
+            radius: 1000      // 반경 100m로 설정하여 검색합니다.
+        });
     }
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -317,7 +315,9 @@
         $('#selectCategoryButton').on('click', function() {
             window.location.href = '/page3'; // 카테고리 선택 페이지로 이동
         });
-        recommend(); // 페이지 로딩 시 추천 받기 실행
+
+        // 페이지 로딩 시 추천 받기 실행
+        recommend();
     });
 
     $(document).ready(function() {
@@ -353,7 +353,6 @@
         }
     });
 
-
     $(document).ready(function() {
         var categoryString = sessionStorage.getItem('category');
         var category = JSON.parse(categoryString);
@@ -363,7 +362,7 @@
         if (category.includes("한식")) {
             keyword = "한식";
         } else if (category.includes("일식")) {
-                keyword = "일식";
+            keyword = "일식";
         } else if (category.includes("중식")) {
             keyword = "중식";
         } else if (category.includes("양식")) {
@@ -374,19 +373,25 @@
         // 키워드 입력 요소에 설정
         $('#keyword').val(keyword);
 
-        // 백엔드로 현위치와 카테고리 정보를 전송
-        $.ajax({
-            method: "POST",
-            url: "/v1/ojm/restaurant",
-            data: {latitude: latitude, longitude: longitude, category: category.join(), keyword: keyword}, // keyword 추가
-            success: function (data) {
-                displayRestaurants(data);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error occurred: " + error);
-            }
-        });
+        // 키워드 검색을 요청하는 함수를 호출합니다.
+        searchPlaces();
     });
+
+    // 키워드 검색을 요청하는 함수입니다
+    function searchPlaces() {
+        var keyword = document.getElementById('keyword').value;
+
+        if (!keyword.replace(/^\s+|\s+$/g, '')) {
+            alert('키워드를 입력해주세요!');
+            return false;
+        }
+
+        // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+        ps.keywordSearch(keyword, placesSearchCB, {
+            radius: 1000      // 반경 100m로 설정하여 검색합니다.
+        });
+    }
+
 
 </script>
 </body>
