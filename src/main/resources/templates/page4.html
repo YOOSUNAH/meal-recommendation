@@ -41,8 +41,29 @@
         #pagination a {display:inline-block;margin-right:10px;}
         #pagination .on {font-weight: bold; cursor: default;color:#777;}
     </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
+<h1>
+    <div style="text-align:center">오늘의 점심 메뉴</div>
+</h1>
+<h3>
+    <div style="text-align:center">오늘 뭐 먹지?</div>
+</h3>
+<hr class="my-4">
+<p id="location"></p> <!-- 위치 정보를 표시할 요소 -->
+<p id="category"></p> <!-- 카테고리 정보를 표시할 요소 -->
+<ol class="list-group list-group-numbered" id="restaurantList">
+    <!-- 여기에 음식점 목록 표시 -->
+</ol>
+<div class="alert alert-warning" role="alert" style="display:none">
+    근처에 해당되는 음식점이 존재하지 않습니다.<br>
+    카데고리를 재선택하거나, 다른 곳으로 이동해주세요.
+</div>
+
+
 <div class="map_wrap">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
@@ -50,7 +71,7 @@
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    키워드 : <input type="text" value="식당" id="keyword" size="15">
+                    키워드 : <input type="text" value="맛집" id="keyword" size="15">
                     <button type="submit">검색하기</button>
                 </form>
             </div>
@@ -60,20 +81,19 @@
         <div id="pagination"></div>
     </div>
 </div>
+<div style="text-align:center">
+    <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
+    <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">카테고리 다시 선택하기</button>
+</div>
+
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=cf620856f46d903f5b7f04166e0f9ea3&libraries=services"></script>
 <script>
     // 마커를 담을 배열입니다
     var markers = [];
-
     var latitude = sessionStorage.getItem('latitude');
     var longitude = sessionStorage.getItem('longitude');
     var categoryString = sessionStorage.getItem('category');
     var category = JSON.parse(categoryString);
-
-    // 변수들이 잘 꺼내졌는지 콘솔에 출력하여 확인합니다
-    console.log('latitude:', latitude);
-    console.log('longitude:', longitude);
-    console.log('category:', category);
 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
@@ -96,18 +116,15 @@
     // 키워드 검색을 요청하는 함수입니다
     function searchPlaces() {
 
-        var keyword = category; // 검색할 키워드 설정
-        // var keyword = document.getElementById('keyword').value;
-        var radius = 10000; // 검색 반경 설정 (미터 단위)
+        var keyword = document.getElementById('keyword').value;
 
         if (!keyword.replace(/^\s+|\s+$/g, '')) {
             alert('키워드를 입력해주세요!');
             return false;
         }
-        currentPosition = new kakao.maps.LatLng(latitude, longitude);
-        map.setCenter(currentPosition);
+
         // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
-        ps.keywordSearch( keyword, currentPosition, radius, placesSearchCB);
+        ps.keywordSearch( keyword, placesSearchCB);
     }
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
@@ -291,6 +308,86 @@
             el.removeChild (el.lastChild);
         }
     }
+
+
+    $(document).ready(function() {
+        $('#reloadButton').on('click', function() {
+            recommend(); // 추천 받기 실행
+        });
+        $('#selectCategoryButton').on('click', function() {
+            window.location.href = '/page3'; // 카테고리 선택 페이지로 이동
+        });
+        recommend(); // 페이지 로딩 시 추천 받기 실행
+    });
+
+    $(document).ready(function() {
+        // 세션 스토리지에서 데이터를 가져옵니다.
+        var latitude = sessionStorage.getItem('latitude');
+        var longitude = sessionStorage.getItem('longitude');
+        var categoryString = sessionStorage.getItem('category');
+        var category = JSON.parse(categoryString);
+
+        // 확인용
+        $('#location').text('위도: ' + latitude + ', 경도: ' + longitude);
+        // $('#category').text('선택한 카테고리: ' + category.join(', ')); // 배열의 요소들을 쉼표로 구분하여 문자열로 변환합니다.
+
+        // 백엔드로 현위치와 카테고리 정보를 전송
+        $.ajax({
+            method: "POST",
+            url: "/v1/ojm/restaurant",
+            data: {latitude: latitude, longitude: longitude, category: category.join()},
+            success: function (data) {
+                displayRestaurants(data);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error occurred: " + error);
+            }
+        });
+
+        function displayRestaurants(restaurants) {
+            var list = $('#restaurantList');
+            list.empty(); // 기존 목록을 비움
+            restaurants.forEach(function (restaurant) {
+                list.append('<li class="list-group-item">' + restaurant.restaurantName + '</li>');
+            });
+        }
+    });
+
+
+    $(document).ready(function() {
+        var categoryString = sessionStorage.getItem('category');
+        var category = JSON.parse(categoryString);
+
+        // 카테고리에 따라 키워드 설정
+        var keyword;
+        if (category.includes("한식")) {
+            keyword = "한식";
+        } else if (category.includes("일식")) {
+                keyword = "일식";
+        } else if (category.includes("중식")) {
+            keyword = "중식";
+        } else if (category.includes("양식")) {
+            keyword = "양식";
+        } else {
+            keyword = "맛집";
+        }
+        // 키워드 입력 요소에 설정
+        $('#keyword').val(keyword);
+
+        // 백엔드로 현위치와 카테고리 정보를 전송
+        $.ajax({
+            method: "POST",
+            url: "/v1/ojm/restaurant",
+            data: {latitude: latitude, longitude: longitude, category: category.join(), keyword: keyword}, // keyword 추가
+            success: function (data) {
+                displayRestaurants(data);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error occurred: " + error);
+            }
+        });
+    });
+
 </script>
 </body>
 </html>
