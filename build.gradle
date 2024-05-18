@@ -24,6 +24,11 @@ dependencies {
 	// MySQL
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
+	// Crawling
+	implementation 'org.jsoup:jsoup:1.15.4'
+	implementation 'org.seleniumhq.selenium:selenium-java:4.20.0'
+	implementation 'io.github.bonigarcia:webdrivermanager:5.7.0'
+
 	// Thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
