@@ -25,8 +25,6 @@ public class ExcelReaderService {
 
         // 엑셀 index는 0부터 시작
         int rowindex = 0;
-        int columnindex = 0;
-
         // 시트 수
         XSSFSheet sheet = workbook.getSheetAt(0);
         // 행의 수
@@ -37,36 +35,6 @@ public class ExcelReaderService {
             XSSFRow row = sheet.getRow(rowindex);
             if (row != null) {
                 Restaurant restaurant = new Restaurant();
-//                int cells = row.getPhysicalNumberOfCells();
-//                for (columnindex = 0; columnindex <= cells; columnindex++) {
-//
-//                    XSSFCell cell = row.getCell(columnindex);
-//                    String value = "";
-//
-//                    if (cell == null) {
-//                        continue;
-//                    } else {
-//                        // type 별로 내용 읽기
-//                        switch (cell.getCellType()) {
-//                            case FORMULA:
-//                                value = cell.getCellFormula() + "";
-//                                break;
-//                            case STRING:
-//                                value = cell.getStringCellValue() + "";
-//                                break;
-//                            case NUMERIC:
-//                                value = cell.getNumericCellValue() + "";
-//                                break;
-//                            case BLANK:
-//                                value = cell.getBooleanCellValue() + "";
-//                                break;
-//                            case ERROR:
-//                                value = cell.getErrorCellValue() + "";
-//                                break;
-//                        }
-//                    }
-//                }
-
                 restaurant.setBusinessStatus(String.valueOf(row.getCell(7)));
                 restaurant.setNumber(String.valueOf(row.getCell(12)));
                 restaurant.setAddress(String.valueOf(row.getCell(15)));
