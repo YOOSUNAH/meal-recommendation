@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.location.ExcelReaderService;
+import toy.ojm.domain.service.ExcelReaderService;
 import toy.ojm.domain.service.OJMService;
 import toy.ojm.global.ResponseDto;
 

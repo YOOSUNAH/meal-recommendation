@@ -1,4 +1,4 @@
-package toy.ojm.domain.location;
+package toy.ojm.domain.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;

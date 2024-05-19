@@ -1,27 +1,22 @@
-//package toy.ojm.service;
+//package toy.ojm.domain.service;
 //
+//import java.util.ArrayList;
+//import java.util.List;
+//import lombok.RequiredArgsConstructor;
 //import lombok.extern.slf4j.Slf4j;
 //import org.locationtech.proj4j.ProjCoordinate;
 //import org.springframework.jdbc.core.JdbcTemplate;
 //import org.springframework.stereotype.Service;
-//import toy.ojm.entity.Restaurant;
-//import toy.ojm.location.TransCoordination;
+//import toy.ojm.domain.entity.Restaurant;
+//import toy.ojm.domain.location.Coordinates;
 //
-//import java.util.ArrayList;
-//import java.util.List;
-//import toy.ojm.location.Coordinates;
 //
 //@Slf4j
 //@Service
+//@RequiredArgsConstructor
 //public class NearbyRestaurantService {
 //    // 사용자 근처의 음식점을 데이터베이스에서 가져오는 메서드 (100m 이내의 음식점을 검색하는 쿼리)
 //    private final JdbcTemplate jdbcTemplate;
-//    private final TransCoordination transCoordination;
-//
-//    public NearbyRestaurantService(JdbcTemplate jdbcTemplate, TransCoordination transCoordination) {
-//        this.jdbcTemplate = jdbcTemplate;
-//        this.transCoordination = transCoordination;
-//    }
 //
 //    public List<Restaurant> getNearbyRestaurants(Coordinates coordinates) {
 //        List<Restaurant> nearbyRestaurants = new ArrayList<>();
@@ -43,7 +38,7 @@
 //             // 여기서 query는 실행할 SQL 쿼리문이고, params는 쿼리에 전달될 파라미터들을 의미하고, rowMapper는 각 행(row)의 결과를 객체로 변환하는데 사용한다.
 //                Restaurant restaurant = new Restaurant(); // RestaurantEntity클래스의 객체(인스턴스)인 restaurant 생성
 //                restaurant.setBusinessStatus(resultSet.getString("businessStatus")); // restaurant에 resultSet으로 가져온 businessStatus 저장
-//                restaurant.setStreetNumberAddress(resultSet.getString("streetNumberAddress"));
+//                restaurant.setAddress(resultSet.getString("streetNumberAddress"));
 //                restaurant.setRestaurantName(resultSet.getString("restaurantName"));
 //                restaurant.setCategory(resultSet.getString("category"));
 //                restaurant.setLongitude(Double.valueOf(resultSet.getString("longitude")));

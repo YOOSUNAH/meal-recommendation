@@ -9,8 +9,6 @@ public class Coordinates {  // 좌표
     private final Double latitude; // 경도
     private final Double longitude; // 위도
 
-//    private Point point;
-
     public Coordinates(Double latitude, Double longitude){
        this.latitude = latitude;
        this.longitude = longitude;
