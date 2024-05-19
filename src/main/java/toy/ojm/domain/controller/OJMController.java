@@ -1,7 +1,7 @@
 package toy.ojm.domain.controller;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.location.ExcelReaderService;
 import toy.ojm.domain.service.OJMService;
 import toy.ojm.global.ResponseDto;
 
@@ -24,12 +25,13 @@ import toy.ojm.global.ResponseDto;
 public class OJMController {
 
     private final OJMService ojmService;
+    private final ExcelReaderService excelReaderService;
 
     @PostMapping("/category")
     public ResponseEntity<ResponseDto<Void>> getRecommendation(
         @RequestBody CategoryRequestDto request,
         HttpSession session
-    ){
+    ) {
         ojmService.recommend(request, session);
         return ResponseDto.of(HttpStatus.OK, null);
     }
@@ -42,22 +44,19 @@ public class OJMController {
     }
 
     @PostMapping("/restaurant")
-    public ResponseEntity<List<Restaurant>> getRecommendation(
-        @RequestParam double latitude,
-        @RequestParam double longitude,
-        @RequestParam List<String> category
-    ) {
-        List<String> categories = category;
-        List<Restaurant> recommendedRestaurants = ojmService.getRecommendedRestaurants(latitude, longitude, categories);
-        return ResponseEntity.ok(recommendedRestaurants);
+    public ResponseEntity<ResponseDto<Void>> uploadExcel() {
+        try {
+            excelReaderService.readExcelAndSaveTo();
+            return ResponseDto.of(HttpStatus.OK, null);
+        } catch (IOException e) {
+            return ResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR, null);
+        }
     }
 
-//    @GetMapping("/restaurant")
-//    public List<Restaurant> getRestaurant(
-//        @RequestParam double latitude,
-//        @RequestParam double longitude,
-//        @RequestParam String category
-//    ) {
-//        return ojmService.searchRestaurant(latitude, longitude, category);
-//    }
+    @GetMapping("/restaurant")
+    public ResponseEntity<List<Restaurant>> saveRestaurant(Restaurant restaurant) {
+        List<Restaurant> restaurants = excelReaderService.getAllRestaurants();
+        return ResponseEntity.ok(restaurants);
+    }
+
 }
