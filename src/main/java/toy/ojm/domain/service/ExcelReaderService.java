@@ -25,10 +25,12 @@ public class ExcelReaderService {
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
 
+    // csv -> excel
+
     public void readExcelAndSaveTo(Path path) throws IOException {
 //        FileInputStream inputStream = new FileInputStream("src/main/resources/sample.xlsx");
 //        FileInputStream inputStream = new FileInputStream("src/main/resources/csv-data/sample.xlsx");
-        // csv -> excel
+
         InputStream inputStream = Files.newInputStream(path);
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
 
@@ -51,17 +53,11 @@ public class ExcelReaderService {
                 restaurant.setName(String.valueOf(row.getCell(18)));
                 restaurant.setCategory(String.valueOf(row.getCell(22)));
 
-                // 좌표 변경 전 저장
-                // x 좌표 :  경도 longitude
-               // restaurant.setLongitude(Double.valueOf(String.valueOf(row.getCell(23))));
-                // y 좌표 :  위도 latitude
-                // restaurant.setLatitude(Double.valueOf(String.valueOf(row.getCell(24))));
+                // 바로 좌표 변경해서 저장하기
+                Double utmkX = Double.valueOf(String.valueOf(row.getCell(23)));
+                Double utmkY = Double.valueOf(String.valueOf(row.getCell(24)));
 
-               // 좌표 변경해서 저장하기
-                ProjCoordinate coordinate = transCoordination.transformToGCS(
-                   Double.valueOf(String.valueOf(row.getCell(23))),
-                   Double.valueOf(String.valueOf(row.getCell(24)))
-                );
+                ProjCoordinate coordinate = transCoordination.transformToGCS(utmkX, utmkY);
                 restaurant.setLongitude(coordinate.x);
                 restaurant.setLatitude(coordinate.y);
 
@@ -81,14 +77,10 @@ public class ExcelReaderService {
     public void transCoordinate() {
         List<Restaurant> newRestaurant = getAllRestaurants();
         for(Restaurant restaurant : newRestaurant){
-            ProjCoordinate coordinate = transCoordination.transformToGCS(
-                restaurant.getLongitude(),
-                restaurant.getLatitude()
-            );
+            ProjCoordinate coordinate = transCoordination.transformToGCS(restaurant.getLongitude(), restaurant.getLatitude());
             restaurant.setLongitude(coordinate.x);
             restaurant.setLatitude(coordinate.y);
-            restaurantRepository.saveAll(newRestaurant);
         }
-
+        restaurantRepository.saveAll(newRestaurant);
     }
 }

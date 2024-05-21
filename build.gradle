@@ -19,6 +19,9 @@ bootJar {
 
 
 dependencies {
+	// proj4j를 이용한 좌표 변환
+	implementation 'org.locationtech.proj4j:proj4j:1.2.2'
+
 	// POI
 	implementation 'org.apache.poi:poi:5.2.3'
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
