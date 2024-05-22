@@ -11,7 +11,6 @@ import org.locationtech.proj4j.CoordinateTransformFactory;
 import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.stereotype.Component;
 
-// Todo
 // 중부원점 TM(EPSG:2097)좌표 → WGS84(EPSG:4326) 좌표 로 변환
 @Component
 @Slf4j
@@ -31,13 +30,6 @@ public class TransCoordination {
         String wgs84Proj = "+proj=longlat +datum=WGS84 +no_defs";
         CoordinateReferenceSystem wgs84System = factory.createFromParameters(wgs84Name, wgs84Proj);
 
-//
-//        // 중부원점 좌표계 정의
-//        CoordinateReferenceSystem grs80 = factory.createFromName("EPSG:2097");
-//        // WGS84 좌표계 정의
-//        CoordinateReferenceSystem wgs84 = factory.createFromName("EPSG:4326");
-//        BasicCoordinateTransform transformer = new BasicCoordinateTransform(grs80, wgs84);
-
         CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
         // 변환 시스템 지정. (원본 시스템, 변환 시스템)
         CoordinateTransform coordinateTransform = ctFactory.createTransform(utmkSystem, wgs84System);
@@ -49,9 +41,6 @@ public class TransCoordination {
 
         // 좌표 변환
         coordinateTransform.transform(beforeCoord, afterCoord);
-
-        // 좌표 변환 수행
-//        transformer.transform(beforeCoord, afterCoord);
 
         // 변환된 좌표 로그 출력
         log.info("변환된 경도 : " + afterCoord.x);
