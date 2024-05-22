@@ -53,16 +53,16 @@ public class ExcelReaderService {
                 restaurant.setName(String.valueOf(row.getCell(18)));
                 restaurant.setCategory(String.valueOf(row.getCell(22)));
 
-                // 먼저 변경전 좌표계 저장
-                restaurant.setLongitude(Double.valueOf(String.valueOf(row.getCell(23))));
-                restaurant.setLatitude(Double.valueOf(String.valueOf(row.getCell(24))));
+//                // 먼저 변경전 좌표계 저장
+//                restaurant.setLongitude(Double.valueOf(String.valueOf(row.getCell(23))));
+//                restaurant.setLatitude(Double.valueOf(String.valueOf(row.getCell(24))));
 
-//                // 바로 좌표 변경해서 저장하기
-//                Double utmkX = Double.valueOf(String.valueOf(row.getCell(23)));
-//                Double utmkY = Double.valueOf(String.valueOf(row.getCell(24)));
-//                ProjCoordinate coordinate = transCoordination.transformToWGS(utmkX, utmkY);
-//                restaurant.setLongitude(coordinate.x);
-//                restaurant.setLatitude(coordinate.y);
+                // 바로 좌표 변경해서 저장하기
+                Double utmkX = Double.valueOf(String.valueOf(row.getCell(23)));
+                Double utmkY = Double.valueOf(String.valueOf(row.getCell(24)));
+                ProjCoordinate coordinate = transCoordination.transformToWGS(utmkX, utmkY);
+                restaurant.setLongitude(coordinate.x);
+                restaurant.setLatitude(coordinate.y);
 
                 restaurants.add(restaurant);
             }
