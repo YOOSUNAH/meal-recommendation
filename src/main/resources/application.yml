@@ -22,8 +22,7 @@ logging:
     toy.ojm: DEBUG
     org.springframework.web: DEBUG
 
-kakao:
-  rest-api-key: ${KAKAO_REST_API_KEY}
+
 
 
 
