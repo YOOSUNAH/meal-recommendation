@@ -11,6 +11,10 @@ sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+
+	maven {
+		url 'https://repository.aspose.com/repo/'
+	}
 }
 
 bootJar {
@@ -19,8 +23,11 @@ bootJar {
 
 
 dependencies {
+	//  Aspose.Cells for Java
+	implementation 'com.aspose:aspose-cells:20.8'
+   //	implementation 'org.apache.commons:commons-csv:1.8'
+
 	// proj4j를 이용한 좌표 변환
-//	implementation 'org.locationtech.proj4j:proj4j:1.3.0'
 	implementation 'org.locationtech.proj4j:proj4j:1.1.13'
 
 	// POI

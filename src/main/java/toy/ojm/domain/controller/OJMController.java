@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.service.CsvToExcelService;
 import toy.ojm.domain.service.ExcelReaderService;
 import toy.ojm.domain.service.OJMService;
 import toy.ojm.global.ResponseDto;
@@ -31,6 +31,7 @@ public class OJMController {
     private final OJMService ojmService;
     private final ExcelReaderService excelReaderService;
     private final PublicDataDownloader publicDataDownloader;
+    private final CsvToExcelService csvToExcelService;
 
     @PostMapping("/category")
     public ResponseEntity<ResponseDto<Void>> getRecommendation(
@@ -52,11 +53,16 @@ public class OJMController {
     @PostMapping("/restaurant")
     public ResponseEntity<ResponseDto<Void>> uploadExcel() {
         try {
-            Path path = Path.of("src/main/resources/sample.xlsx");
+//            Path path = Path.of("src/main/resources/sample.xlsx");
+            Path path = Path.of("out/production/resources/csv-data/data.csv");
             excelReaderService.readExcelAndSaveTo(path);
+            csvToExcelService.changeCSVToExcel();
+
             return ResponseDto.of(HttpStatus.OK, null);
         } catch (IOException e) {
             return ResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR, null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -69,15 +75,19 @@ public class OJMController {
 
     // 크롤링한 데이터 java로 불러와서 , 저장하기
     @PostMapping("/restaurant/crawl")
-    public ResponseEntity<Path> saveRestaurantByCrawling(Restaurant restaurant) throws IOException {
+    public ResponseEntity<Path> saveRestaurantByCrawling() throws Exception {
         Path path = publicDataDownloader.downloadCsvFile();
-        excelReaderService.readExcelAndSaveTo(path);
         log.info("크롤링한  데이터 java로 불러와서, 저장하기");
+        // csv -> excel
+        csvToExcelService.changeCSVToExcel();
+        log.info("csv -> 엑셀로 변환하기");
+//        // excel -> DB에 저장
+//        excelReaderService.readExcelAndSaveTo(path);
         return ResponseEntity.ok(path);
     }
 
     @GetMapping("/restaurant")
-    public ResponseEntity<List<Restaurant>> saveRestaurant(Restaurant restaurant) {
+    public ResponseEntity<List<Restaurant>> saveRestaurant() {
         List<Restaurant> restaurants = excelReaderService.getAllRestaurants();
         return ResponseEntity.ok(restaurants);
     }
