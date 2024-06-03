@@ -35,9 +35,9 @@ public class CsvReaderService {
 
             List<Restaurant> restaurants = new ArrayList<>();
 
-            int lineCount = 0; // 처리된 줄의 수를 추적하는 카운터
+//            int lineCount = 0; // 처리된 줄의 수를 추적하는 카운터
 
-            while ((line = br.readLine()) != null && lineCount < 50) {
+            while ((line = br.readLine()) != null ) {  // && lineCount < 50
                 List<String> aLine = new ArrayList<>();
                 String[] lineArr = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 aLine = Arrays.asList(lineArr);
@@ -68,22 +68,37 @@ public class CsvReaderService {
                     restaurant.setLatitude(0.0);
                 }
 
-                //  좌표 변환
-//                ProjCoordinate coordinate =
-//                    transCoordination.transformToWGS(restaurant.getLongitude(), restaurant.getLatitude());
+                // 좌표 변경
+ //                ProjCoordinate coordinate = transCoordination.transformToWGS(
+//                restaurant.getLongitude(), restaurant.getLatitude());
 //                restaurant.setLongitude(coordinate.x);
 //                restaurant.setLatitude(coordinate.y);
 
-                // 저장
                 restaurants.add(restaurant);
 
-                lineCount++;
+//                lineCount++;
                 restaurantRepository.saveAll(restaurants);
             }
 
         } catch (Exception e) {
             log.error(e.getMessage());
         }
+    }
+
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantRepository.findAll();
+    }
+
+    // 좌표 변경하기
+    public void transCoordinate() {
+        List<Restaurant> newRestaurant = getAllRestaurants();
+        for (Restaurant restaurant : newRestaurant) {
+            ProjCoordinate coordinate = transCoordination.transformToWGS(restaurant.getLongitude(),
+                restaurant.getLatitude());
+            restaurant.setLongitude(coordinate.x);
+            restaurant.setLatitude(coordinate.y);
+        }
+        restaurantRepository.saveAll(newRestaurant);
     }
 }
 
