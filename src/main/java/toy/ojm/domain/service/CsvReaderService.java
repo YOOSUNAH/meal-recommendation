@@ -9,11 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.TransCoordination;
 import toy.ojm.domain.repository.RestaurantRepository;
+import org.locationtech.proj4j.ProjCoordinate;
 
 @Slf4j
 @Service
@@ -23,7 +23,7 @@ public class CsvReaderService {
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
 
-    public void readCSV() {
+    public void readAndSaveCSV() {
         try {
             File file = new File("out/production/resources/csv-data/data.csv");
             BufferedReader br = new BufferedReader(
@@ -35,9 +35,9 @@ public class CsvReaderService {
 
             List<Restaurant> restaurants = new ArrayList<>();
 
-//            int lineCount = 0; // 처리된 줄의 수를 추적하는 카운터
+            int lineCount = 0; // 처리된 줄의 수를 추적하는 카운터
 
-            while ((line = br.readLine()) != null ) {  // && lineCount < 50
+            while ((line = br.readLine()) != null && lineCount < 50 ) {
                 List<String> aLine = new ArrayList<>();
                 String[] lineArr = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 aLine = Arrays.asList(lineArr);
@@ -69,14 +69,14 @@ public class CsvReaderService {
                 }
 
                 // 좌표 변경
- //                ProjCoordinate coordinate = transCoordination.transformToWGS(
-//                restaurant.getLongitude(), restaurant.getLatitude());
-//                restaurant.setLongitude(coordinate.x);
-//                restaurant.setLatitude(coordinate.y);
+                 ProjCoordinate coordinate = transCoordination.transformToWGS(
+                restaurant.getLongitude(), restaurant.getLatitude());
+                restaurant.setLongitude(coordinate.x);
+                restaurant.setLatitude(coordinate.y);
 
                 restaurants.add(restaurant);
 
-//                lineCount++;
+                lineCount++;
                 restaurantRepository.saveAll(restaurants);
             }
 

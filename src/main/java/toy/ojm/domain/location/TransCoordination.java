@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.BasicCoordinateTransform;
 import org.locationtech.proj4j.CRSFactory;
 import org.locationtech.proj4j.CoordinateReferenceSystem;
-
 import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 public class TransCoordination {
 
     public ProjCoordinate transformToWGS(Double x, Double y){
-
         // CRS 객체 생성
         CRSFactory factory = new CRSFactory();
 

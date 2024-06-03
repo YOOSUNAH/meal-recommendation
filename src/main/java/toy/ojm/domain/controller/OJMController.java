@@ -1,7 +1,6 @@
 package toy.ojm.domain.controller;
 
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,6 @@ import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.service.CsvReaderService;
-import toy.ojm.domain.service.CsvToExcelService;
-import toy.ojm.domain.service.ExcelReaderService;
 import toy.ojm.domain.service.OJMService;
 import toy.ojm.global.ResponseDto;
 import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
@@ -30,9 +27,7 @@ import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
 public class OJMController {
 
     private final OJMService ojmService;
-    private final ExcelReaderService excelReaderService;
     private final PublicDataDownloader publicDataDownloader;
-    private final CsvToExcelService csvToExcelService;
     private final CsvReaderService csvReaderService;
 
     @PostMapping("/category")
@@ -51,63 +46,31 @@ public class OJMController {
         return ojmService.getLastCategory();
     }
 
-    // sample 엑셀 java로 불러와서 저장하기
-    @PostMapping("/restaurant")
-    public ResponseEntity<ResponseDto<Void>> uploadExcel() {
-        try {
-            Path path = Path.of("out/production/resources/csv-data/dataExcel.xlsx");  // 변환된 엑셀
-            excelReaderService. readExcelAndSaveTo(path);
-            log.info("excel -> db에 저장하기");
-
-            return ResponseDto.of(HttpStatus.OK, null);
-        } catch (IOException e) {
-            return ResponseDto.of(HttpStatus.INTERNAL_SERVER_ERROR, null);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @PostMapping("/transCoordinate")
     public void transCoordinate(
     ) {
-//        excelReaderService.transCoordinate();
         csvReaderService.transCoordinate();
         log.info("좌표 변환 요청 API 성공!");
     }
 
-    // 크롤링한 데이터 java로 불러와서 , 저장하기
+    // 크롤링한 데이터 java로 불러와서, 저장하기
     @PostMapping("/restaurant/crawl")
     public ResponseEntity<Path> saveRestaurantByCrawling() throws Exception {
         Path path = publicDataDownloader.downloadCsvFile();
         log.info("크롤링한  데이터 java로 불러와서 저장하기");
-
-        // csv -> excel
-        csvToExcelService.changeCSVToExcel();
-        log.info("csv -> 엑셀로 변환하기");
-
         return ResponseEntity.ok(path);
     }
 
-    // csv -> excel
-    @PostMapping("/csvToExcel")
-    public ResponseEntity<ResponseDto<Void>> changeToExcel() throws Exception {
-        // csv -> excel
-        csvToExcelService.changeCSVToExcel();
-        log.info("csv -> 엑셀로 변환하기");
-        return ResponseDto.of(HttpStatus.OK, null);
-    }
-
-    // csv
     @PostMapping("/csv")
     public ResponseEntity<ResponseDto<Void>> csvReadAndSave(){
-        csvReaderService.readCSV();
+        csvReaderService.readAndSaveCSV();
         log.info("csv 읽어오기");
         return ResponseDto.of(HttpStatus.OK, null);
     }
 
     @GetMapping("/restaurant")
     public ResponseEntity<List<Restaurant>> saveRestaurant() {
-        List<Restaurant> restaurants = excelReaderService.getAllRestaurants();
+        List<Restaurant> restaurants = csvReaderService.getAllRestaurants();
         return ResponseEntity.ok(restaurants);
     }
 }
