@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.service.CsvReaderService;
 import toy.ojm.domain.service.CsvToExcelService;
 import toy.ojm.domain.service.ExcelReaderService;
 import toy.ojm.domain.service.OJMService;
@@ -32,6 +33,7 @@ public class OJMController {
     private final ExcelReaderService excelReaderService;
     private final PublicDataDownloader publicDataDownloader;
     private final CsvToExcelService csvToExcelService;
+    private final CsvReaderService csvReaderService;
 
     @PostMapping("/category")
     public ResponseEntity<ResponseDto<Void>> getRecommendation(
@@ -53,10 +55,9 @@ public class OJMController {
     @PostMapping("/restaurant")
     public ResponseEntity<ResponseDto<Void>> uploadExcel() {
         try {
-//            Path path = Path.of("src/main/resources/sample.xlsx");
-            Path path = Path.of("out/production/resources/csv-data/data.csv");
-            excelReaderService.readExcelAndSaveTo(path);
-            csvToExcelService.changeCSVToExcel();
+            Path path = Path.of("out/production/resources/csv-data/dataExcel.xlsx");  // 변환된 엑셀
+            excelReaderService. readExcelAndSaveTo(path);
+            log.info("excel -> db에 저장하기");
 
             return ResponseDto.of(HttpStatus.OK, null);
         } catch (IOException e) {
@@ -69,7 +70,8 @@ public class OJMController {
     @PostMapping("/transCoordinate")
     public void transCoordinate(
     ) {
-        excelReaderService.transCoordinate();
+//        excelReaderService.transCoordinate();
+        csvReaderService.transCoordinate();
         log.info("좌표 변환 요청 API 성공!");
     }
 
@@ -77,13 +79,30 @@ public class OJMController {
     @PostMapping("/restaurant/crawl")
     public ResponseEntity<Path> saveRestaurantByCrawling() throws Exception {
         Path path = publicDataDownloader.downloadCsvFile();
-        log.info("크롤링한  데이터 java로 불러와서, 저장하기");
+        log.info("크롤링한  데이터 java로 불러와서 저장하기");
+
         // csv -> excel
         csvToExcelService.changeCSVToExcel();
         log.info("csv -> 엑셀로 변환하기");
-//        // excel -> DB에 저장
-//        excelReaderService.readExcelAndSaveTo(path);
+
         return ResponseEntity.ok(path);
+    }
+
+    // csv -> excel
+    @PostMapping("/csvToExcel")
+    public ResponseEntity<ResponseDto<Void>> changeToExcel() throws Exception {
+        // csv -> excel
+        csvToExcelService.changeCSVToExcel();
+        log.info("csv -> 엑셀로 변환하기");
+        return ResponseDto.of(HttpStatus.OK, null);
+    }
+
+    // csv
+    @PostMapping("/csv")
+    public ResponseEntity<ResponseDto<Void>> csvReadAndSave(){
+        csvReaderService.readCSV();
+        log.info("csv 읽어오기");
+        return ResponseDto.of(HttpStatus.OK, null);
     }
 
     @GetMapping("/restaurant")
