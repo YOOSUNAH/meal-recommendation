@@ -18,6 +18,7 @@ import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.TransCoordination;
 import toy.ojm.domain.repository.CategoryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
+import toy.ojm.domain.location.Distance;
 
 
 @Service
@@ -68,85 +69,50 @@ public class OJMService {
         return categoryRepository.findAll().stream().findFirst().orElse(null); // 단일 객체 반환
     }
 
-    public List<RestaurantResponseDto> AroundRestaurants(double currentLat, double currentLon) { // List<String> selectedCategories
+    public List<RestaurantResponseDto> AroundRestaurants(double currentLat,
+        double currentLon) { // List<String> selectedCategories
         List<Restaurant> restaurants = restaurantRepository.findAll();
 //        Distance distanceCalculator = new Distance();
 //        double maxDistance = 100.0;
-        List<Restaurant> nearbyRestaurants = new ArrayList<>();
+        List<Restaurant> recommendRestaurants = new ArrayList<>();
 
         // 세션에서 선택된 카테고리 가져오기
 //        FoodCategory selectedCategory = (FoodCategory) session.getAttribute("selectedCategory");
-//        if(selectedCategory == null){
-//            throw new IllegalArgumentException("선택된 카테고리가 없습니다.");
-//        }
 //        if (selectedCategories == null || selectedCategories.isEmpty()) {
 //            throw new IllegalArgumentException("선택된 카테고리가 없습니다.");
 //        }
 
-        for (Restaurant restaurant : restaurants) {
-            // 거리 구하기
+        //  100m 이내 인 조건
+//        for (Restaurant restaurant : restaurants) {
+//            // 거리 구하기
 //            double distance = distanceCalculator.distance(currentLat, currentLon,
 //                restaurant.getLatitude(), restaurant.getLatitude());
-
-            // 100m 이내 인 조건 //  카테고리 조건 추가
-//                if (distance <= maxDistance ) { // matchesCategory(restaurant, selectedCategories)
-                nearbyRestaurants.add(restaurant);
+//            if (distance <= maxDistance) {
+//                nearbyRestaurants.add(restaurant);
 //            }
-        }
-//        for(Restaurant restaurant : nearbyRestaurants){
-//            System.out.println("100m 이내의 식당 : " + restaurant.getName());
+//            for (Restaurant restaurantIn100 : nearbyRestaurants) {
+//                System.out.println("100m 이내의 식당 : " + restaurantIn100.getName());
+//            }
 //        }
 
-//        return nearbyRestaurants;
-//         랜덤 10개 방법 1
-//        List<Restaurant> randomRestaurants =  selectRandomRestaurants(nearbyRestaurants);
-//        랜덤 10개 방법 2
-        Collections.shuffle(nearbyRestaurants);
-        List<Restaurant> randomRestaurants = nearbyRestaurants.stream()
+        // 영업 중인 곳만 추천해주기  "영업" "폐업"
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getBusinessStatus().equals("영업")) {
+                recommendRestaurants.add(restaurant);
+            }
+        }
+        // 랜덤 10개
+        Collections.shuffle(recommendRestaurants);
+        List<Restaurant> randomRestaurants = recommendRestaurants.stream()
             .limit(10)
             .collect(Collectors.toList());
 
         return randomRestaurants.stream()
-            .map(r -> new RestaurantResponseDto(r.getName(), r.getCategory(), r.getAddress(), r.getNumber()))
+            .map(r -> new RestaurantResponseDto(r.getName(), r.getCategory(), r.getAddress(),
+                r.getNumber()))
             .collect(Collectors.toList());
-    }
 
-    private boolean matchesCategory(Restaurant restaurant, List<String> foodCategory){
-       for( String category : foodCategory){
-        if(category.equals("한식") && "한식".equals(restaurant.getCategory())){
-               return true;
-           }
-           if(category.equals("일식") && "일식".equals(restaurant.getCategory())){
-               return true;
-           }
-           if(category.equals("중식") && "중식".equals(restaurant.getCategory())){
-               return true;
-           }
-           if(category.equals("양식") && "양식".equals(restaurant.getCategory())){
-               return true;
-           }
-       }
-        return false;
     }
-
-    public List<Restaurant> selectRandomRestaurants(List<Restaurant> restaurants) {
-        List<Restaurant> randomRestaurants = new ArrayList<>();
-        Random random = new Random();
-        int count = 10;
-        int totalSize = restaurants.size();
-        if (totalSize <= count) {
-            return restaurants;
-        }
-        while (randomRestaurants.size() < count) {
-            int index = random.nextInt(totalSize);
-            Restaurant restaurant = restaurants.get(index);
-            if (!randomRestaurants.contains(restaurant)) {
-                randomRestaurants.add(restaurant);
-            }
-        }
-        return randomRestaurants;
-    }
-
 }
 
 

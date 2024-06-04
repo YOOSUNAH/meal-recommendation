@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class RestaurantResponseDto {
-
     private String name;  //사업장명
     private String category;  //업태구분명
     private String address;  //지번주소
