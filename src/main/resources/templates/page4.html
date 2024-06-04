@@ -28,9 +28,16 @@
 
     .restaurant-info {
       border: 1px solid #ddd;
-      margin: 20px 0;
+      margin: 20px auto; /* 가운데 정렬 */
       padding: 10px;
       border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      width: 50%;
+      list-style: none;
+    }
+
+    .list-group-item {
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -43,8 +50,8 @@
 </h3>
 
 <div>
-<hr class="my-4">
-  <p id="location" class="center-text"></p> <!-- 위치 정보를 표시할 요소 -->
+  <hr class="my-4">
+  <!--  <p id="location" class="center-text"></p> &lt;!&ndash; 위치 정보를 표시할 요소 &ndash;&gt;-->
   <p id="category" class="center-text"></p> <!-- 카테고리 정보를 표시할 요소 -->
   <ol class="list-group list-group-numbered center-text" id="restaurantList">
     <!-- 여기에 음식점 목록 표시 -->
@@ -83,7 +90,7 @@
 
     // 확인용
     $('#location').text('위도: ' + latitude + ', 경도: ' + longitude);
-    $('#category').text('선택한 카테고리: ' + category.join(', ')); // 배열의 요소들을 쉼표로 구분하여 문자열로 변환합니다.
+    $('#category').text('선택하신 카테고리: ' + category.join(', ')); // 배열의 요소들을 쉼표로 구분하여 문자열로 변환합니다.
 
     // 백엔드로 현위치와 카테고리 정보를 전송
     $.ajax({
@@ -114,11 +121,11 @@
       } else {
         $('.alert-warning').hide(); // 음식점이 있는 경우 경고 숨김
         restaurants.slice(0, 10).forEach(function (restaurant) { // 최대 10개만 표시
-          list.append('<li class="list-group-item">' +
+          list.append('<li class="list-group-item restaurant-info">' +
               '<h4>식당 이름: ' + restaurant.name + '</h4>' +
               '<p>카테고리: ' + restaurant.category + '</p>' +
               '<p>주소: ' + restaurant.address + '</p>' +
-              '<p>전화번호: ' + restaurant.number + '</p>' +
+              '<p>전화번호: ' + (restaurant.number ? restaurant.number : '정보 없음') + '</p>' +
               '</li>');
         });
       }

@@ -9,6 +9,7 @@
         .form-check {
             font-size: 1.25rem;
             text-align: center;
+            margin-bottom: 15px; /* 각 체크박스 요소 사이의 여백 추가 */
         }
 
         .btn {
@@ -38,28 +39,28 @@
     </div>
     <br>
     <div class="form-check">
-        <input type="checkbox" value="" id="Korean" checked>
+        <input type="checkbox" value="" id="Korean" checked onclick="updateSelectAllCheckbox()">
         <label for="Korean">
             한식
         </label>
     </div>
     <br>
     <div class="form-check">
-        <input type="checkbox" value="" id="Japanese">
+        <input type="checkbox" value="" id="Japanese" onclick="updateSelectAllCheckbox()">
         <label for="Japanese">
             일식
         </label>
     </div>
     <br>
     <div class="form-check">
-        <input type="checkbox" value="" id="Chinese">
+        <input type="checkbox" value="" id="Chinese" onclick="updateSelectAllCheckbox()">
         <label for="Chinese">
             중식
         </label>
     </div>
     <br>
     <div class="form-check">
-        <input type="checkbox" value="" id="Western">
+        <input type="checkbox" value="" id="Western" onclick="updateSelectAllCheckbox()">
         <label for="Western">
             양식
         </label>
@@ -67,7 +68,7 @@
     <br>
     <br>
     <div class="form-check">
-        <input type="checkbox" value="" id="ETC">
+        <input type="checkbox" value="" id="ETC" onclick="updateSelectAllCheckbox()">
         <label for="ETC">
             기타
         </label>
@@ -81,6 +82,21 @@
 </div>
 
 <script>
+    function selectAllCategory() {
+        const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
+        const allCheckbox = document.getElementById('All');
+        categories.forEach(category => {
+            document.getElementById(category).checked = allCheckbox.checked;
+        });
+    }
+
+    function updateSelectAllCheckbox() {
+        const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
+        const allCheckbox = document.getElementById('All');
+        const allChecked = categories.every(category => document.getElementById(category).checked);
+        allCheckbox.checked = allChecked;
+    }
+
     function sendCategorySelection() {
         const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
         let selectedCategories = categories.filter(category => document.getElementById(category).checked).map(category => category === 'Korean' ? '한식' : category === 'Japanese' ? '일식' : category === 'Chinese' ? '중식' : category === 'Western' ? '양식' : '기타');
@@ -90,12 +106,7 @@
         sessionStorage.setItem('category', JSON.stringify(selectedCategories));
     }
 
-
-
-
-
     document.querySelector('.btn').addEventListener('click', sendCategorySelection);
 </script>
 </body>
 </html>
-
