@@ -65,8 +65,16 @@
         </label>
     </div>
     <br>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="ETC">
+        <label for="ETC">
+            기타
+        </label>
+    </div>
+    <br>
 
-    <button th:onclick="|window.location.href='@{/result3}'|" class="btn">
+    <button th:onclick="|window.location.href='@{/page4}'|" class="btn">
         식당 추천 받으러 가기
     </button>
 
@@ -74,13 +82,17 @@
 
 <script>
     function sendCategorySelection() {
-        const categories = ['Korean', 'Japanese', 'Chinese', 'Western'];
-        let selectedCategories = categories.filter(category => document.getElementById(category).checked).map(category => category === 'Korean' ? '한식' : category === 'Japanese' ? '일식' : category === 'Chinese' ? '중식' : '양식');
+        const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
+        let selectedCategories = categories.filter(category => document.getElementById(category).checked).map(category => category === 'Korean' ? '한식' : category === 'Japanese' ? '일식' : category === 'Chinese' ? '중식' : category === 'Western' ? '양식' : '기타');
 
         // 카테고리 선택 결과를 세션 스토리지에 저장합니다.
         // 배열을 문자열로 변환하여 저장합니다.
         sessionStorage.setItem('category', JSON.stringify(selectedCategories));
     }
+
+
+
+
 
     document.querySelector('.btn').addEventListener('click', sendCategorySelection);
 </script>

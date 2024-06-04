@@ -55,7 +55,6 @@ public class OJMController {
         log.info("좌표 변환 요청 API 성공!");
     }
 
-    // 크롤링한 데이터 java로 불러와서, 저장하기
     @PostMapping("/restaurant/crawl")
     public ResponseEntity<Path> saveRestaurantByCrawling(){
         Path path = publicDataDownloader.downloadCsvFile();
