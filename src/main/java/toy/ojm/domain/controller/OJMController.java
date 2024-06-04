@@ -57,7 +57,7 @@ public class OJMController {
 
     // 크롤링한 데이터 java로 불러와서, 저장하기
     @PostMapping("/restaurant/crawl")
-    public ResponseEntity<Path> saveRestaurantByCrawling() throws Exception {
+    public ResponseEntity<Path> saveRestaurantByCrawling(){
         Path path = publicDataDownloader.downloadCsvFile();
         log.info("크롤링한  데이터 java로 불러와서 저장하기");
         return ResponseEntity.ok(path);

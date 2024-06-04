@@ -94,7 +94,7 @@ public class OJMService {
         Collections.shuffle(recommendRestaurants);
         List<Restaurant> randomRestaurants = recommendRestaurants.stream()
             .limit(10)
-            .collect(Collectors.toList());
+            .toList();
 
         return randomRestaurants.stream()
             .map(r -> new RestaurantResponseDto(r.getName(), r.getCategory(), r.getAddress(),
