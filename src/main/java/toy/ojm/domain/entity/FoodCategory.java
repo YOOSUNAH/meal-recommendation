@@ -18,7 +18,7 @@ public class FoodCategory {
     private boolean Japanese = false;
     private boolean Chinese = false;
     private boolean Western = false;
-    private boolean Else = false;
+    private boolean etc = false;
 
     public void setKorean(boolean korean) {
         this.Korean = korean;
@@ -36,6 +36,6 @@ public class FoodCategory {
         this.Western = western;
     }
 
-    public void setElse(boolean ELSE) {
-        Else = true;}
+    public void setEtc(boolean etc) {
+        etc = true;}
 }

@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +27,9 @@ public class OJMService {
 
     private final CategoryRepository categoryRepository;
     private final RestaurantRepository restaurantRepository;
-    private final JdbcTemplate jdbcTemplate;
-    private final TransCoordination transCoordination;
 
-    @Value("${kakao.rest-api-key}")
-    private String kakaoApiKey;
+//    @Value("${kakao.rest-api-key}")
+//    private String kakaoApiKey;
 
     public void recommend(CategoryRequestDto request, HttpSession session) {
         List<String> categoryList = request.getCategoryList();
@@ -72,9 +69,23 @@ public class OJMService {
     public List<RestaurantResponseDto> AroundRestaurants(double currentLat,
         double currentLon) { // List<String> selectedCategories
         List<Restaurant> restaurants = restaurantRepository.findAll();
-//        Distance distanceCalculator = new Distance();
-//        double maxDistance = 100.0;
         List<Restaurant> recommendRestaurants = new ArrayList<>();
+        Distance distanceCalculator = new Distance();
+        double maxDistance = 100;
+
+        // 영업 중인 곳만 추천해주기
+        for (Restaurant restaurant : restaurants) {
+            if (restaurant.getBusinessStatus().equals("영업")) {
+
+                //  100m 이내 인 조건
+                double distance = distanceCalculator.distance(currentLat, currentLon,
+                    restaurant.getLatitude(), restaurant.getLongitude());
+                if (distance <= maxDistance) {
+                    recommendRestaurants.add(restaurant);
+                    log.info("100m 이내의 식당 : " + restaurant.getName());
+                }
+            }
+        }
 
         // 세션에서 선택된 카테고리 가져오기
 //        FoodCategory selectedCategory = (FoodCategory) session.getAttribute("selectedCategory");
@@ -82,25 +93,6 @@ public class OJMService {
 //            throw new IllegalArgumentException("선택된 카테고리가 없습니다.");
 //        }
 
-        //  100m 이내 인 조건
-//        for (Restaurant restaurant : restaurants) {
-//            // 거리 구하기
-//            double distance = distanceCalculator.distance(currentLat, currentLon,
-//                restaurant.getLatitude(), restaurant.getLatitude());
-//            if (distance <= maxDistance) {
-//                nearbyRestaurants.add(restaurant);
-//            }
-//            for (Restaurant restaurantIn100 : nearbyRestaurants) {
-//                System.out.println("100m 이내의 식당 : " + restaurantIn100.getName());
-//            }
-//        }
-
-        // 영업 중인 곳만 추천해주기  "영업" "폐업"
-        for (Restaurant restaurant : restaurants) {
-            if (restaurant.getBusinessStatus().equals("영업")) {
-                recommendRestaurants.add(restaurant);
-            }
-        }
         // 랜덤 10개
         Collections.shuffle(recommendRestaurants);
         List<Restaurant> randomRestaurants = recommendRestaurants.stream()

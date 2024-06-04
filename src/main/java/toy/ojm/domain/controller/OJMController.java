@@ -64,7 +64,7 @@ public class OJMController {
     }
 
     @PostMapping("/csv")
-    public ResponseEntity<ResponseDto<Void>> csvReadAndSave(){
+    public ResponseEntity<ResponseDto<Void>> csvReadAndSave() {
         csvReaderService.readAndSaveCSV();
         log.info("csv 읽어오기");
         return ResponseDto.of(HttpStatus.OK, null);
@@ -77,13 +77,17 @@ public class OJMController {
     }
 
     @PostMapping("/nearbyRestaurant")
-    public ResponseEntity<List<RestaurantResponseDto>> AroundRestaurants(
+    public ResponseEntity<ResponseDto<List<RestaurantResponseDto>>> AroundRestaurants(
         @RequestBody RestaurantRequestDto restaurantRequestDto
-    ){
+    ) {
         List<RestaurantResponseDto> restaurants = ojmService.AroundRestaurants(
             restaurantRequestDto.getCurrentLat(),
             restaurantRequestDto.getCurrentLon());
 //            restaurantRequestDto.getSelectedCategories());
-        return ResponseEntity.ok(restaurants);
+        if (restaurants == null || restaurants.isEmpty()) {
+           return ResponseDto.notFound("근처에 식당이 없습니다.");
+        } else {
+            return ResponseDto.of(HttpStatus.OK, restaurants);
+        }
     }
 }
