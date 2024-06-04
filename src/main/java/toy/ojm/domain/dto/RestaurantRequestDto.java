@@ -8,5 +8,5 @@ public class RestaurantRequestDto {
 
     double currentLat;
     double currentLon;
-//    private List<String> selectedCategories;
+    private List<String> selectedCategories;
 }

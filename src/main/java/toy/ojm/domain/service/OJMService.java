@@ -50,8 +50,11 @@ public class OJMService {
                     case "양식":
                         category.setWestern(true);
                         break;
+                    case "기타":
+                        category.setEtc(true);
+                        break;
                     default:
-                        throw new IllegalArgumentException("Unknown category: " + categoryElement);
+                        category.setEtc(true);
                 }
             }
         }
@@ -66,32 +69,29 @@ public class OJMService {
         return categoryRepository.findAll().stream().findFirst().orElse(null); // 단일 객체 반환
     }
 
-    public List<RestaurantResponseDto> AroundRestaurants(double currentLat,
-        double currentLon) { // List<String> selectedCategories
+    public List<RestaurantResponseDto> AroundRestaurants(
+        double currentLat,
+        double currentLon,
+        List<String> selectedCategories) {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<Restaurant> recommendRestaurants = new ArrayList<>();
         Distance distanceCalculator = new Distance();
         double maxDistance = 100;
 
-        // 영업 중인 곳만 추천해주기
+        // 조건 : 영업 중인 곳만 추천
         for (Restaurant restaurant : restaurants) {
             if (restaurant.getBusinessStatus().equals("영업")) {
 
-                //  100m 이내 인 조건
+                //  조건 : 100m 이내인 곳만 추천
                 double distance = distanceCalculator.distance(currentLat, currentLon,
                     restaurant.getLatitude(), restaurant.getLongitude());
-                if (distance <= maxDistance) {
+                // 조건 : 해당 카테고리만 추천
+                if (distance <= maxDistance  && categoryRestaurant(selectedCategories, restaurant)) {
                     recommendRestaurants.add(restaurant);
                     log.info("100m 이내의 식당 : " + restaurant.getName());
                 }
             }
         }
-
-        // 세션에서 선택된 카테고리 가져오기
-//        FoodCategory selectedCategory = (FoodCategory) session.getAttribute("selectedCategory");
-//        if (selectedCategories == null || selectedCategories.isEmpty()) {
-//            throw new IllegalArgumentException("선택된 카테고리가 없습니다.");
-//        }
 
         // 랜덤 10개
         Collections.shuffle(recommendRestaurants);
@@ -105,6 +105,17 @@ public class OJMService {
             .collect(Collectors.toList());
 
     }
+
+    // 카테고리 확인
+    private boolean categoryRestaurant(List<String> selectedCategories, Restaurant restaurant){
+        for (String category : selectedCategories) {
+            if (restaurant.getCategory().equals(category)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 

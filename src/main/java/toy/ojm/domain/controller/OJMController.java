@@ -82,8 +82,10 @@ public class OJMController {
     ) {
         List<RestaurantResponseDto> restaurants = ojmService.AroundRestaurants(
             restaurantRequestDto.getCurrentLat(),
-            restaurantRequestDto.getCurrentLon());
-//            restaurantRequestDto.getSelectedCategories());
+            restaurantRequestDto.getCurrentLon(),
+            restaurantRequestDto.getSelectedCategories()
+        );
+
         if (restaurants == null || restaurants.isEmpty()) {
            return ResponseDto.notFound("근처에 식당이 없습니다.");
         } else {
