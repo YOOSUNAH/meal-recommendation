@@ -39,7 +39,6 @@ public class CsvReaderService {
                 List<String> aLine = new ArrayList<>();
                 String[] lineArr = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 aLine = Arrays.asList(lineArr);
-                //  System.out.println(aLine);
 
                 Restaurant restaurant = new Restaurant();
                 restaurant.setBusinessStatus(aLine.get(7));

@@ -7,17 +7,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.location.TransCoordination;
+import toy.ojm.domain.location.Distance;
 import toy.ojm.domain.repository.CategoryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
-import toy.ojm.domain.location.Distance;
 
 
 @Service
@@ -86,7 +83,7 @@ public class OJMService {
                 double distance = distanceCalculator.distance(currentLat, currentLon,
                     restaurant.getLatitude(), restaurant.getLongitude());
                 // 조건 : 해당 카테고리만 추천
-                if (distance <= maxDistance  && categoryRestaurant(selectedCategories, restaurant)) {
+                if (distance <= maxDistance && categoryRestaurant(selectedCategories, restaurant)) {
                     recommendRestaurants.add(restaurant);
                     log.info("100m 이내의 식당 : " + restaurant.getName());
                 }
@@ -103,11 +100,10 @@ public class OJMService {
             .map(r -> new RestaurantResponseDto(r.getName(), r.getCategory(), r.getAddress(),
                 r.getNumber()))
             .collect(Collectors.toList());
-
     }
 
     // 카테고리 확인
-    private boolean categoryRestaurant(List<String> selectedCategories, Restaurant restaurant){
+    private boolean categoryRestaurant(List<String> selectedCategories, Restaurant restaurant) {
         for (String category : selectedCategories) {
             if (restaurant.getCategory().equals(category)) {
                 return true;
@@ -115,7 +111,6 @@ public class OJMService {
         }
         return false;
     }
-
 }
 
 

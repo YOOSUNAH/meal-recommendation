@@ -87,7 +87,7 @@ public class OJMController {
         );
 
         if (restaurants == null || restaurants.isEmpty()) {
-           return ResponseDto.notFound("근처에 식당이 없습니다.");
+            return ResponseDto.notFound("근처에 식당이 없습니다.");
         } else {
             return ResponseDto.of(HttpStatus.OK, restaurants);
         }
