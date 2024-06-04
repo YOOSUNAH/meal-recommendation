@@ -35,9 +35,7 @@ public class CsvReaderService {
 
             List<Restaurant> restaurants = new ArrayList<>();
 
-            int lineCount = 0; // 처리된 줄의 수를 추적하는 카운터
-
-            while ((line = br.readLine()) != null && lineCount < 50 ) {
+            while ((line = br.readLine()) != null) {
                 List<String> aLine = new ArrayList<>();
                 String[] lineArr = line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
                 aLine = Arrays.asList(lineArr);
@@ -76,7 +74,6 @@ public class CsvReaderService {
 
                 restaurants.add(restaurant);
 
-                lineCount++;
                 restaurantRepository.saveAll(restaurants);
             }
 

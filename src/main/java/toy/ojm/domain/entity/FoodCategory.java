@@ -18,21 +18,24 @@ public class FoodCategory {
     private boolean Japanese = false;
     private boolean Chinese = false;
     private boolean Western = false;
-
+    private boolean Else = false;
 
     public void setKorean(boolean korean) {
-        this.Korean = true;
+        this.Korean = korean;
     }
 
     public void setJapanese(boolean japanese) {
-        Japanese = true;
+        this.Japanese = japanese;
     }
 
     public void setChinese(boolean chinese) {
-        Chinese = true;
+        this.Chinese = chinese;
     }
 
     public void setWestern(boolean western) {
-        Western = true;
+        this.Western = western;
     }
+
+    public void setElse(boolean ELSE) {
+        Else = true;}
 }

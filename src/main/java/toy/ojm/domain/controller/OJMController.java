@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.domain.dto.CategoryRequestDto;
+import toy.ojm.domain.dto.RestaurantRequestDto;
+import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.service.CsvReaderService;
@@ -71,6 +73,17 @@ public class OJMController {
     @GetMapping("/restaurant")
     public ResponseEntity<List<Restaurant>> saveRestaurant() {
         List<Restaurant> restaurants = csvReaderService.getAllRestaurants();
+        return ResponseEntity.ok(restaurants);
+    }
+
+    @PostMapping("/nearbyRestaurant")
+    public ResponseEntity<List<RestaurantResponseDto>> AroundRestaurants(
+        @RequestBody RestaurantRequestDto restaurantRequestDto
+    ){
+        List<RestaurantResponseDto> restaurants = ojmService.AroundRestaurants(
+            restaurantRequestDto.getCurrentLat(),
+            restaurantRequestDto.getCurrentLon());
+//            restaurantRequestDto.getSelectedCategories());
         return ResponseEntity.ok(restaurants);
     }
 }

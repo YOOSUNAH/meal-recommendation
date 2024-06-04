@@ -13,8 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "restaurants")
-public class Restaurant {
+@Table(name = "AroundRestaurants")
+public class AroundRestaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +28,4 @@ public class Restaurant {
     private String category;  //업태구분명
     private Double longitude; //좌표정보(X) 경도
     private Double latitude; //좌표정보(Y) 위도
-
 }
