@@ -69,7 +69,8 @@ public class OJMService {
     public List<RestaurantResponseDto> AroundRestaurants(
         double currentLat,
         double currentLon,
-        List<String> selectedCategories) {
+        List<String> selectedCategories
+    ) {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<Restaurant> recommendRestaurants = new ArrayList<>();
         Distance distanceCalculator = new Distance();
@@ -77,7 +78,7 @@ public class OJMService {
 
         // 조건 : 영업 중인 곳만 추천
         for (Restaurant restaurant : restaurants) {
-            if (restaurant.getBusinessStatus().equals("영업")) {
+            if (restaurant.getBusinessStatus().contains("영업")) {
 
                 //  조건 : 100m 이내인 곳만 추천
                 double distance = distanceCalculator.distance(currentLat, currentLon,
@@ -85,7 +86,7 @@ public class OJMService {
                 // 조건 : 해당 카테고리만 추천
                 if (distance <= maxDistance && categoryRestaurant(selectedCategories, restaurant)) {
                     recommendRestaurants.add(restaurant);
-                    log.info("100m 이내의 식당 : " + restaurant.getName());
+                    log.info("지정 거리 이내의 식당 : " + restaurant.getName());
                 }
             }
         }
@@ -105,7 +106,7 @@ public class OJMService {
     // 카테고리 확인
     private boolean categoryRestaurant(List<String> selectedCategories, Restaurant restaurant) {
         for (String category : selectedCategories) {
-            if (restaurant.getCategory().equals(category)) {
+            if (restaurant.getCategory().contains(category)) {
                 return true;
             }
         }
