@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
-  <script th:src="@{/js/script.js}"></script>
-  <link th:href="@{/css/styles.css}" rel="stylesheet"> <!-- CSS 파일 참조 추가 -->
-
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>오점머</title>
+  <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">
+  <link th:href="@{/css/styles.css}" href="../css/styles.css" rel="stylesheet">
+  <script th:src="@{/js/script.js}" src="../js/script.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
   <style>
+    body {
+      font-size: 16px; /* PC 모드 기본 글씨 크기 */
+    }
+
     .btn {
       display: block;
       margin: 20px auto; /* 가운데 정렬 */
@@ -22,6 +25,7 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
+
     .center-text {
       text-align: center;
     }
@@ -39,23 +43,46 @@
     .list-group-item {
       margin-bottom: 20px;
     }
+
+    h1, h3, #category {
+      font-size: 1.2em;
+    }
+
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 14px; /* 모바일 모드 기본 글씨 크기 조정 */
+      }
+
+      .restaurant-info {
+        font-size: 0.9em; /* 모바일 모드에서 상대적으로 작은 글씨 크기 설정 */
+        width: 90%; /* 모바일 모드에서 너비 조정 */
+      }
+
+      .restaurant-info h4, .restaurant-info p {
+        font-size: 0.9em; /* 모바일 모드에서 상대적으로 작은 글씨 크기 설정 */
+      }
+
+      h1, h3, #category {
+        font-size: 0.8em; /* 모바일 모드에서 제목 글씨 크기 조정 */
+      }
+
+      .btn {
+        font-size: 0.6em; /* 모바일 모드에서 버튼 글씨 크기 조정 */
+        padding: 4px 8px; /* 모바일 모드에서 버튼 패딩 조정 */
+      }
+    }
+
   </style>
 </head>
 <body>
-<h1>
-  <div style="text-align:center">오늘의 점심 메뉴</div>
-</h1>
-<h3>
-  <div style="text-align:center">오늘 뭐 먹지?</div>
-</h3>
+<h1 class="center-text">오늘의 점심 메뉴</h1>
+<h3 class="center-text">오늘 뭐 먹지?</h3>
 
 <div>
   <hr class="my-4">
-  <!--  <p id="location" class="center-text"></p> &lt;!&ndash; 위치 정보를 표시할 요소 &ndash;&gt;-->
   <p id="category" class="center-text"></p> <!-- 카테고리 정보를 표시할 요소 -->
   <ol class="list-group list-group-numbered center-text" id="restaurantList">
     <!-- 여기에 음식점 목록 표시 -->
-
   </ol>
 </div>
 
@@ -68,38 +95,33 @@
   근처에 식당이 없습니다.
 </div>
 
-<div style="text-align:center">
+<div class="center-text">
   <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
-  <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">카테고리 다시 선택하기
-  </button>
+  <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">카테고리 다시 선택하기</button>
 </div>
 
 <script>
   $(document).ready(function() {
-    // 페이지 로딩 시 recommend() 함수 자동 실행
     recommend();
 
-    // "다시 추천 받기!" 버튼에 대한 이벤트 리스너 설정
     $('#reloadButton').on('click', function() {
       recommend();
     });
+
     $('#selectCategoryButton').on('click', function () {
       window.location.href = '/page3'; // 카테고리 선택 페이지로 이동
     });
   });
 
-  // 세션 스토리지에서 데이터를 가져옵니다.
   var latitude = sessionStorage.getItem('latitude');
   var longitude = sessionStorage.getItem('longitude');
   var categoryString = sessionStorage.getItem('category');
   var category = JSON.parse(categoryString);
 
-  // 확인용
   $('#location').text('위도: ' + latitude + ', 경도: ' + longitude);
-  $('#category').text('선택하신 카테고리: ' + category.join(', ')); // 배열의 요소들을 쉼표로 구분하여 문자열로 변환합니다.
+  $('#category').text('선택하신 카테고리: ' + category.join(', '));
 
   function recommend() {
-    // 백엔드로 현위치와 카테고리 정보를 전송
     $.ajax({
       method: "POST",
       url: "/v1/ojm/nearbyRestaurant",
@@ -114,7 +136,7 @@
       },
       error: function (xhr, status, error) {
         if (xhr.status === 404) {
-          $('.alert-danger').show(); // 404 에러일 경우 경고 표시
+          $('.alert-danger').show();
         } else {
           console.error("Error occurred: " + error);
         }
@@ -123,14 +145,15 @@
   }
 
   function displayRestaurants(data) {
-    var restaurants = data.data; // 응답 데이터의 구조에 따라 수정 필요
+    var restaurants = data.data;
     var list = $('#restaurantList');
-    list.empty(); // 기존 목록을 비움
+    list.empty();
+
     if (restaurants.length === 0) {
-      $('.alert-warning').show(); // 음식점이 없는 경우 경고 표시
+      $('.alert-warning').show();
     } else {
-      $('.alert-warning').hide(); // 음식점이 있는 경우 경고 숨김
-      restaurants.slice(0, 10).forEach(function (restaurant) { // 최대 10개만 표시
+      $('.alert-warning').hide();
+      restaurants.slice(0, 10).forEach(function (restaurant) {
         list.append('<li class="list-group-item restaurant-info">' +
             '<h4>식당 이름: ' + restaurant.name + '</h4>' +
             '<p>카테고리: ' + restaurant.category + '</p>' +
