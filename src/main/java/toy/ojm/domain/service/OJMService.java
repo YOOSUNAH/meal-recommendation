@@ -74,7 +74,7 @@ public class OJMService {
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<Restaurant> recommendRestaurants = new ArrayList<>();
         Distance distanceCalculator = new Distance();
-        double maxDistance = 100;
+        double maxDistance = 500;
 
         // 조건 : 영업 중인 곳만 추천
         for (Restaurant restaurant : restaurants) {
