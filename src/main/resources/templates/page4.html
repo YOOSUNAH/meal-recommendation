@@ -36,8 +36,10 @@
       padding: 10px;
       border-radius: 5px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      width: 50%;
+      width: 50%; /* 너비 조정 */
+      max-width: 600px; /* 최대 너비 설정 */
       list-style: none;
+      text-align: center; /* 중앙 정렬 */
     }
 
     .list-group-item {
@@ -48,14 +50,19 @@
       font-size: 1.2em;
     }
 
-    @media screen and (max-width: 768px) {
+     @media screen and (max-width: 768px) {
       body {
         font-size: 14px; /* 모바일 모드 기본 글씨 크기 조정 */
+        margin: 0 auto;
+        padding: 0;
       }
 
       .restaurant-info {
         font-size: 0.9em; /* 모바일 모드에서 상대적으로 작은 글씨 크기 설정 */
-        width: 90%; /* 모바일 모드에서 너비 조정 */
+        width: 80%; /* 모바일 모드에서 너비 조정 */
+        max-width: 100%; /* 최대 너비를 100%로 제한 */
+        margin: 10px 45px 10px auto;
+        text-align: center; /* 중앙 정렬 */
       }
 
       .restaurant-info h4, .restaurant-info p {
@@ -64,21 +71,29 @@
 
       h1, h3, #category {
         font-size: 0.8em; /* 모바일 모드에서 제목 글씨 크기 조정 */
+        margin: 0 auto;
+        text-align: center; /* 중앙 정렬 */
       }
 
       .btn {
         font-size: 0.6em; /* 모바일 모드에서 버튼 글씨 크기 조정 */
         padding: 4px 8px; /* 모바일 모드에서 버튼 패딩 조정 */
+        margin: 10px auto; /* 가운데 정렬 */
+      }
+
+      .center-text {
+        max-width: 100%;
+        margin: 0 auto;
+        text-align: center; /* 중앙 정렬 */
       }
     }
-
   </style>
 </head>
 <body>
 <h1 class="center-text">오늘의 점심 메뉴</h1>
 <h3 class="center-text">오늘 뭐 먹지?</h3>
 
-<div>
+<div class="center-text">
   <hr class="my-4">
   <p id="category" class="center-text"></p> <!-- 카테고리 정보를 표시할 요소 -->
   <ol class="list-group list-group-numbered center-text" id="restaurantList">
