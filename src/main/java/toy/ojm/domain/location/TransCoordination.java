@@ -32,10 +32,9 @@ public class TransCoordination {
 
         // 좌표 변환 수행
         transformer.transform(beforeCoord, afterCoord);
-
         // 변환된 좌표 로그 출력
-        log.info("변환된 경도 : " + afterCoord.x);
-        log.info("변환된 위도 : " + afterCoord.y);
+//        log.info("변환된 경도 : " + afterCoord.x);
+//        log.info("변환된 위도 : " + afterCoord.y);
 
         return afterCoord;
     }
