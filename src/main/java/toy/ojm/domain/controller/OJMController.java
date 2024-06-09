@@ -17,7 +17,7 @@ import toy.ojm.domain.dto.RestaurantRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.service.CsvReaderService;
+import toy.ojm.infrastructure.csv_parser.CsvReaderService;
 import toy.ojm.domain.service.OJMService;
 import toy.ojm.global.ResponseDto;
 import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
@@ -55,14 +55,14 @@ public class OJMController {
         log.info("좌표 변환 요청 API 성공!");
     }
 
-    @PostMapping("/restaurant/crawl")
+    @GetMapping("/restaurant/crawl")
     public ResponseEntity<Path> saveRestaurantByCrawling(){
         Path path = publicDataDownloader.downloadCsvFile();
-        log.info("크롤링한  데이터 java로 불러와서 저장하기");
+        log.info("크롤링한  데이터 java로 불러와서 저장하기 : {}", path.toString());
         return ResponseEntity.ok(path);
     }
 
-    @PostMapping("/csv")
+    @GetMapping("/csv")
     public ResponseEntity<ResponseDto<Void>> csvReadAndSave() {
         csvReaderService.readAndSaveCSV();
         log.info("csv 읽어오기");
