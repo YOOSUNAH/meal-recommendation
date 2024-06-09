@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
+import toy.ojm.infrastructure.PublicDataConstants;
 
 
 @Slf4j
@@ -21,9 +22,6 @@ import org.springframework.stereotype.Component;
 public class PublicDataDownloader {
 
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
-    private static final String DESTINATION_DIRECTORY = "csv-data";
-    private static final String FILE_NAME = "data";
-    private static final String FILE_EXTENSION = "csv";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv.crdownload";
 
     public Path downloadCsvFile() {
@@ -58,7 +56,7 @@ public class PublicDataDownloader {
     private Path resolveDestinationPath()  {
         Path directoryPath;
         try {
-            directoryPath = Paths.get(new ClassPathResource(DESTINATION_DIRECTORY).getFile().getAbsolutePath());  // ClassPathResource :  Spring Framework에서 제공클래스, 클래스 경로에 있는 리소스에 접근할 때 사용, getAbsolutePath : 절대 경로를 문자열로 반환, Path.get() : 주어진 경로 문자열로부터 Path 객체를 생성
+            directoryPath = Paths.get(new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath());  // ClassPathResource :  Spring Framework에서 제공클래스, 클래스 경로에 있는 리소스에 접근할 때 사용, getAbsolutePath : 절대 경로를 문자열로 반환, Path.get() : 주어진 경로 문자열로부터 Path 객체를 생성
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
             }
@@ -71,7 +69,7 @@ public class PublicDataDownloader {
 
     private String destinationFilenameWithTime() {
 //        return FILE_NAME + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "." + FILE_EXTENSION;  // 파일이름을 생성
-        return FILE_NAME + "." + FILE_EXTENSION;  // 파일이름을 생성
+        return PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION;  // 파일이름을 생성
     }
 
     private void waitForFileDownload(Path downloadPath) throws InterruptedException {
