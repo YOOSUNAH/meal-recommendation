@@ -58,3 +58,27 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local-mysql
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${mysql.real.datasource.url}
+    username: ${mysql.real.datasource.username}
+    password: ${mysql.real.datasource.password}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+logging:
+  level:
+    toy.ojm: INFO
+    org.springframework.web: ERROR
