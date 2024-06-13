@@ -22,7 +22,7 @@ import toy.ojm.infrastructure.PublicDataConstants;
 public class PublicDataDownloader {
 
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
-    private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv.crdownload";
+    private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
 
     public Path downloadCsvFile() {
         Path downloadPath = resolveDownloadPath();
@@ -77,7 +77,7 @@ public class PublicDataDownloader {
         int waitedTime = 0;
         while (!Files.exists(downloadPath) && waitedTime < maxWaitTime) {
             log.info("Waiting for file to download...");
-            Thread.sleep(2000); // 1초 대기
+            Thread.sleep(2000); // 2초 대기
             waitedTime += 2;
         }
         if (Files.exists(downloadPath)) {
