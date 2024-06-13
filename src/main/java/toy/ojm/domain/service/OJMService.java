@@ -14,6 +14,7 @@ import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.Distance;
 import toy.ojm.domain.repository.CategoryRepository;
+import toy.ojm.domain.repository.RestaurantQueryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
 
 
@@ -24,6 +25,7 @@ public class OJMService {
 
     private final CategoryRepository categoryRepository;
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantQueryRepository restaurantQueryRepository;
 
 //    @Value("${kakao.rest-api-key}")
 //    private String kakaoApiKey;
@@ -71,24 +73,23 @@ public class OJMService {
         double currentLon,
         List<String> selectedCategories
     ) {
-        List<Restaurant> restaurants = restaurantRepository.findAll();
         List<Restaurant> recommendRestaurants = new ArrayList<>();
         Distance distanceCalculator = new Distance();
         double maxDistance = 200;
 
-        // 조건 : 영업 중인 곳만 추천
-        for (Restaurant restaurant : restaurants) {
-            if (restaurant.getBusinessStatus().contains("영업")) {
+        for (String category : selectedCategories) {
+            // 조건 : 해당 카테고리만 추천
+            List<Restaurant> restaurantsWithCategory = restaurantQueryRepository.findAllByCategory(category);
 
-                //  조건 : 200m 이내인 곳만 추천
-                double distance = distanceCalculator.distance(currentLat, currentLon,
-                    restaurant.getLatitude(), restaurant.getLongitude());
-                // 조건 : 해당 카테고리만 추천
-                if (distance <= maxDistance && categoryRestaurant(selectedCategories, restaurant)) {
-                    recommendRestaurants.add(restaurant);
-                    log.info("지정 거리 이내의 식당 : " + restaurant.getName());
-                }
-            }
+           for (Restaurant restaurant :restaurantsWithCategory ){
+               //  조건 : 100m 이내인 곳만 추천
+               double distance = distanceCalculator.distance(currentLat, currentLon,
+                   restaurant.getLatitude(), restaurant.getLongitude());
+               if(distance <= maxDistance){
+                   recommendRestaurants.add(restaurant);
+                   log.info("지정 거리 이내의 식당 : " + restaurant.getName());
+               }
+           }
         }
 
         // 랜덤 10개
