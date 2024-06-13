@@ -1,6 +1,7 @@
 package toy.ojm.infrastructure.restaurant_openapi;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,10 +31,20 @@ public class PublicDataDownloader {
 
         WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
+
         try {
             download(driver);
             waitForFileDownload(downloadPath);
+
+            // 기존 파일이 존재하면 삭제
+            File downloadFile = destinationPath.toFile();
+            if (downloadFile.exists()){
+                downloadFile.delete();
+                log.debug("기존 다운로드 파일 삭제 완료: {}", downloadPath);
+            }
+
             moveFile(downloadPath, destinationPath);  // downloadPath 에서 destinationPath으로 파일 위치 이동
+
         } catch (IOException | InterruptedException e) {
             log.error("Error downloading CSV file: ", e);
         } finally {
