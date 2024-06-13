@@ -79,7 +79,26 @@ public class OJMController {
     public ResponseEntity<ResponseDto<List<RestaurantResponseDto>>> AroundRestaurants(
         @RequestBody RestaurantRequestDto restaurantRequestDto
     ) {
-        List<RestaurantResponseDto> restaurants = ojmService.AroundRestaurants(
+        List<RestaurantResponseDto> restaurants = ojmService.getRandomRestaurants(
+            restaurantRequestDto.getCurrentLat(),
+            restaurantRequestDto.getCurrentLon(),
+            restaurantRequestDto.getSelectedCategories()
+        );
+
+        if (restaurants == null || restaurants.isEmpty()) {
+            return ResponseDto.notFound("근처에 식당이 없습니다.");
+        } else {
+            return ResponseDto.of(HttpStatus.OK, restaurants);
+        }
+    }
+
+
+    // Todo 실제 거리와 도보상 거리가 차이가 나서 , 결과가 상이함.
+    @PostMapping("/closeRestaurant")
+    public ResponseEntity<ResponseDto<List<RestaurantResponseDto>>> getClosestRestaurants(
+        @RequestBody RestaurantRequestDto restaurantRequestDto
+    ) {
+        List<RestaurantResponseDto> restaurants = ojmService.getClosestRestaurants(
             restaurantRequestDto.getCurrentLat(),
             restaurantRequestDto.getCurrentLon(),
             restaurantRequestDto.getSelectedCategories()
