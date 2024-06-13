@@ -37,8 +37,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	// MySQL
 	runtimeOnly 'com.mysql:mysql-connector-j'
-    // H2
-	runtimeOnly 'com.h2database:h2'
 
 	// Crawling
 	implementation 'org.jsoup:jsoup:1.15.4'
