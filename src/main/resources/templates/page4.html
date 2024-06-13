@@ -87,6 +87,17 @@
         text-align: center; /* 중앙 정렬 */
       }
     }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #reloadButton,
+    #selectCategoryButton {
+      margin: 10px;
+    }
   </style>
 </head>
 <body>
@@ -96,6 +107,12 @@
 <div class="center-text">
   <hr class="my-4">
   <p id="category" class="center-text"></p> <!-- 카테고리 정보를 표시할 요소 -->
+
+  <div class="button-group">
+    <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">카테고리 다시 선택하기</button>
+    <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
+  </div>
+
   <ol class="list-group list-group-numbered center-text" id="restaurantList">
     <!-- 여기에 음식점 목록 표시 -->
   </ol>
@@ -110,10 +127,7 @@
   근처에 식당이 없습니다.
 </div>
 
-<div class="center-text">
-  <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
-  <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">카테고리 다시 선택하기</button>
-</div>
+
 
 <script>
   $(document).ready(function() {
@@ -177,6 +191,7 @@
             '</li>');
       });
     }
+    $('.alert-danger').hide();
   }
 </script>
 </body>
