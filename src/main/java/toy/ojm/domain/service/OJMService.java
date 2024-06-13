@@ -92,13 +92,16 @@ public class OJMService {
         double currentLon,
         List<String> selectedCategories
     ) {
+
+        Distance distanceCalculator = new Distance();
+
         List<Restaurant> recommendRestaurants = getRecommendRestaurants(currentLat, currentLon, selectedCategories, 200);
 
         // 거리 순으로 정렬
         recommendRestaurants.sort((r1, r2) ->
             {
-                double distance1 = new Distance().distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
-                double distance2 = new Distance().distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
+                double distance1 = distanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
+                double distance2 = distanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
                 return Double.compare(distance1, distance2);
             }
             );
