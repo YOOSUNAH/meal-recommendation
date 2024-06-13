@@ -29,13 +29,17 @@ Java 17, Spring Boot 3.1.0, MySQL8.0.35
 
 
 ## 예시 화면
-<page1>  <br>
+1. 첫번째 화면 <br>
 <img width="300" alt="스크린샷 2024-06-04 오후 7 33 58" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/e9aa5c0c-75a6-4541-8eab-5ebaf3e52b44"><br>
-<page2> <br>
-<img width="300" alt="스크린샷 2024-06-04 오후 7 34 24" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/95f73855-999c-42ee-9bc9-b2bb7bf03660"><br>
-<page3> <br>
-<img width="300" alt="스크린샷 2024-06-04 오후 7 34 47" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/69f4f317-ba02-446d-a57c-4adcc4ea7966"><br>
-<page4> <br>
+---
+2. 두번째 화면 <br>
+<img width="300" alt="스크린샷 2024-06-13 오후 8 20 42" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/de05bc42-f8b7-4afb-b7bb-d1ecf3f31c8f"><br>
+---
+3. 세번째 화면 <br>
+<img width="300" alt="스크린샷 2024-06-13 오후 8 21 13" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/2afe6b35-9fea-45a7-8d7c-148df74ad9e2"><br>
+---
+4. 네번째 화면 <br>
 <img width="300" alt="스크린샷 2024-06-04 오후 7 35 04" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/19bc600c-f136-43d5-9150-17fd051aaf9e"><br>
-<page5> <br>
-<img width="300" alt="스크린샷 2024-06-04 오후 7 37 56" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/91ce5d49-165a-4d44-80b0-3986953146c0">
+---
+5. 다섯번째 화면 <br>
+<img width="300" alt="스크린샷 2024-06-13 오후 8 19 21" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/dcb9c2d7-51b9-4dbb-a5a2-b318d912f44d"><br>
