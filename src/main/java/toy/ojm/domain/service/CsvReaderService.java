@@ -35,6 +35,7 @@ public class CsvReaderService {
         BufferedReader br = null;
         InputStreamReader isr = null;
         FileInputStream fis = null;
+        int progressCounter = 0;
 
         try {
             csvFilePath = Paths.get(
@@ -53,6 +54,11 @@ public class CsvReaderService {
             List<Restaurant> restaurants = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
+                progressCounter++;
+                if (progressCounter % 100 == 0) {
+                    log.debug("progressCounter : {}", progressCounter);
+                }
+
                 List<String> aLine = Arrays.asList(
                     line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
 
@@ -82,11 +88,21 @@ public class CsvReaderService {
                 restaurant.setLatitude(transformed.y);
 
                 restaurants.add(restaurant);
+
+                // 10000개씩 끊어서 저장하기
+                if (restaurants.size() == 10000) {
+                    restaurantRepository.saveAll(restaurants);
+                    restaurants.clear();
+                }
             }
+
             restaurantRepository.saveAll(restaurants);
+
         } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
+            log.info(" {} 라인까지 완료 !!! ", progressCounter);
+
             if (br != null) {
                 try {
                     br.close();
@@ -115,8 +131,7 @@ public class CsvReaderService {
         try {
             return Double.parseDouble(removeDoubleQuote(coordinate));
         } catch (NumberFormatException e) {
-            log.error("Invalid number format for coordinate. {} - {}", aLine.get(18),
-                aLine.get(23));
+//            log.error("Invalid number format for coordinate. {} - {}", aLine.get(18), aLine.get(23));
         }
         return 0;
     }
