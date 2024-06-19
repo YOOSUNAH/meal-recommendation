@@ -1,10 +1,7 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.1.0'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'application' // application 플러그인 추가
-	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10' // QueryDSL 플러그인 추가
-
+	id 'java'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'toy'
@@ -12,20 +9,14 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
-    mavenCentral()
-
+	mavenCentral()
 	maven {
 		url 'https://repository.aspose.com/repo/'
 	}
 }
 
-bootJar {
-    // mainClassName 설정 제거
-}
-
-
 dependencies {
-	//  Aspose.Cells for Java
+	// Aspose.Cells for Java
 	implementation 'com.aspose:aspose-cells:20.8'
 
 	// proj4j를 이용한 좌표 변환
@@ -39,17 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	// MySQL
-	runtimeOnly 'com.mysql:mysql-connector-j'
-
-	//  QueryDSL 적용을 위한 의존성 (SpringBoot3.0 부터는 jakarta 사용해야함)
-	implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
-	// querydsl JPAAnnotationProcessor 사용 지정
-	annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
-	// java.lang.NoClassDefFoundError (javax.annotation.Generated) 발생 대응
-	annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
-	// java.lang.NoClassDefFoundError(javax.annotation.Entity) 발생 대응
-	annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
-
+	implementation 'com.mysql:mysql-connector-j'
 
 	// Crawling
 	implementation 'org.jsoup:jsoup:1.15.4'
@@ -60,17 +41,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
+	// Web and JDBC
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
+	// Lombok
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-	testImplementation 'org.projectlombok:lombok:1.18.28'
+	testCompileOnly 'org.projectlombok:lombok:1.18.22'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }

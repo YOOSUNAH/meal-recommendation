@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.Distance;
 import toy.ojm.domain.repository.CategoryRepository;
-import toy.ojm.domain.repository.RestaurantQueryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
 
 
@@ -25,7 +23,6 @@ public class OJMService {
 
     private final CategoryRepository categoryRepository;
     private final RestaurantRepository restaurantRepository;
-    private final RestaurantQueryRepository restaurantQueryRepository;
 
     public void recommend(CategoryRequestDto request, HttpSession session) {
         List<String> categoryList = request.getCategoryList();
@@ -69,7 +66,7 @@ public class OJMService {
         double currentLon,
         List<String> selectedCategories
     ) {
-        List<Restaurant> recommendRestaurants = getRecommendRestaurants(currentLat, currentLon, selectedCategories, 200);
+        List<Restaurant> recommendRestaurants = getRecommendRestaurants(currentLat, currentLon, selectedCategories, 300);
 
         // 랜덤 10개
         Collections.shuffle(recommendRestaurants);
@@ -123,7 +120,7 @@ public class OJMService {
 
         for (String category : selectedCategories) {
             // 조건 : 해당 카테고리만 추천
-            List<Restaurant> restaurantsWithCategory = restaurantQueryRepository.findAllByCategory(category);
+            List<Restaurant> restaurantsWithCategory = restaurantRepository.findAllByCategory(category);
 
             for (Restaurant restaurant :restaurantsWithCategory ){
                 //  조건 : maxDistance 이내인 곳만 추천
