@@ -64,7 +64,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: local-mysql
+      on-profile: live
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
