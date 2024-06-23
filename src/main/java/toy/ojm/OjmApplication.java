@@ -9,9 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class OjmApplication {
 
     public static void main(String[] args) {
-
-        log.info("시작 하기 전에 로그 남기기 ");
         SpringApplication.run(OjmApplication.class, args);
-
     }
 }

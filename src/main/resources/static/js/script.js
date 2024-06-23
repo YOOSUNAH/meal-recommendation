@@ -1,27 +1,3 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const swiper = new Swiper('.swiper-container', {
-        direction: 'horizontal',
-        loop: false,
-        slidesPerView: 1,
-        spaceBetween: 10, // Optional: Set space between slides to 0
-        centeredSlides: true,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true
-        },
-        // Navigation arrows
-        navigation: {
-            nextEl: '.swiper-button-next-custom',
-            prevEl: '.swiper-button-prev',
-        },
-        // And if we need scrollbar
-        scrollbar: {
-            el: '.swiper-scrollbar',
-            hide: true,
-        },
-    });
-});
-
 function selectAllCategory() {
     const koreanCheckbox = document.getElementById("Korean");
     const japaneseCheckbox = document.getElementById("Japanese");
