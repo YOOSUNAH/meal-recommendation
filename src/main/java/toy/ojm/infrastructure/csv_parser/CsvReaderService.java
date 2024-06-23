@@ -1,25 +1,22 @@
-package toy.ojm.domain.service;
+package toy.ojm.infrastructure.csv_parser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.locationtech.proj4j.ProjCoordinate;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Service;
+import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.location.TransCoordination;
+import toy.ojm.domain.repository.RestaurantRepository;
+import toy.ojm.infrastructure.PublicDataConstants;
+
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Service;
-import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.location.TransCoordination;
-import toy.ojm.domain.repository.RestaurantRepository;
-import org.locationtech.proj4j.ProjCoordinate;
-import toy.ojm.infrastructure.PublicDataConstants;
 
 @Slf4j
 @Service
@@ -35,32 +32,32 @@ public class CsvReaderService {
         BufferedReader br = null;
         InputStreamReader isr = null;
         FileInputStream fis = null;
-        int progressCounter = 0;
 
+        int progressCounter = 0;
         try {
             csvFilePath = Paths.get(
-                new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile()
-                    .getAbsolutePath()).resolve(PublicDataConstants.DESTINATION_FILE_NAME + "."
-                + PublicDataConstants.DESTINATION_FILE_EXTENSION);
+                new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath()).resolve(PublicDataConstants.DESTINATION_FILE_NAME +
+                "." +
+                PublicDataConstants.DESTINATION_FILE_EXTENSION
+            );
             csvFile = new File(csvFilePath.toString());
+
             fis = new FileInputStream(csvFile);
             isr = new InputStreamReader(fis, Charset.forName("EUC_KR"));
             br = new BufferedReader(isr);
+
             String line;
 
             // 첫 번째 행(제목 행)을 읽고 버림
             br.readLine();
 
             List<Restaurant> restaurants = new ArrayList<>();
-
             while ((line = br.readLine()) != null) {
                 progressCounter++;
                 if (progressCounter % 100 == 0) {
                     log.debug("progressCounter : {}", progressCounter);
                 }
-
-                List<String> aLine = Arrays.asList(
-                    line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
+                List<String> aLine = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
 
                 String businessStatus = aLine.get(7);
                 if (businessStatus != null && businessStatus.contains("폐업")) {
@@ -83,51 +80,49 @@ public class CsvReaderService {
 
                 // 좌표 변경
                 ProjCoordinate transformed = transCoordination.transformToWGS(
-                    restaurant.getLongitude(), restaurant.getLatitude());
+                    restaurant.getLongitude(),
+                    restaurant.getLatitude()
+                );
                 restaurant.setLongitude(transformed.x);
                 restaurant.setLatitude(transformed.y);
 
                 restaurants.add(restaurant);
-
-                // 10000개씩 끊어서 저장하기
                 if (restaurants.size() == 10000) {
                     restaurantRepository.saveAll(restaurants);
                     restaurants.clear();
                 }
             }
-
             restaurantRepository.saveAll(restaurants);
 
         } catch (Exception e) {
             log.error(e.getMessage());
         } finally {
-            log.info(" {} 라인까지 완료 !!! ", progressCounter);
-
+            log.info("##### {} 라인까지 완료", progressCounter);
             if (br != null) {
                 try {
                     br.close();
                 } catch (IOException ignore) {
-
                 }
             }
             if (isr != null) {
                 try {
                     isr.close();
                 } catch (IOException ignore) {
-
                 }
             }
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException ignore) {
-
                 }
             }
         }
     }
 
-    private double parseDouble(String coordinate, List<String> aLine) {
+    private double parseDouble(
+        String coordinate,
+        List<String> aLine
+    ) {
         try {
             return Double.parseDouble(removeDoubleQuote(coordinate));
         } catch (NumberFormatException e) {
@@ -136,7 +131,6 @@ public class CsvReaderService {
         return 0;
     }
 
-    // "" 제거 하기
     private String removeDoubleQuote(String value) {
         if (value == null || value.isBlank()) {
             return "";

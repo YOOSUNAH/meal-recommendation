@@ -17,7 +17,7 @@ import toy.ojm.domain.dto.RestaurantRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.service.CsvReaderService;
+import toy.ojm.infrastructure.csv_parser.CsvReaderService;
 import toy.ojm.domain.service.OJMService;
 import toy.ojm.global.ResponseDto;
 import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;

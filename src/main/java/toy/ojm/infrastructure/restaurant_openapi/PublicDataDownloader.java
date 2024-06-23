@@ -80,7 +80,7 @@ public class PublicDataDownloader {
 
     private String destinationFilenameWithTime() {
 //        return FILE_NAME + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "." + FILE_EXTENSION;  // 파일이름을 생성
-       return PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION;
+        return PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION;  // 파일이름을 생성
     }
 
     private void waitForFileDownload(Path downloadPath) throws InterruptedException {

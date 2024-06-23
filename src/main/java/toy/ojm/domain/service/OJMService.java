@@ -1,9 +1,6 @@
 package toy.ojm.domain.service;
 
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +11,10 @@ import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.Distance;
 import toy.ojm.domain.repository.CategoryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 @Service
@@ -101,7 +102,7 @@ public class OJMService {
                 double distance2 = distanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
                 return Double.compare(distance1, distance2);
             }
-            );
+        );
 
         return recommendRestaurants.stream()
             .map(r -> new RestaurantResponseDto(r.getName(), r.getCategory(), r.getAddress(), r.getNumber()))
@@ -122,11 +123,11 @@ public class OJMService {
             // 조건 : 해당 카테고리만 추천
             List<Restaurant> restaurantsWithCategory = restaurantRepository.findAllByCategory(category);
 
-            for (Restaurant restaurant :restaurantsWithCategory ){
+            for (Restaurant restaurant : restaurantsWithCategory) {
                 //  조건 : maxDistance 이내인 곳만 추천
                 double distance = distanceCalculator.distance(currentLat, currentLon,
                     restaurant.getLatitude(), restaurant.getLongitude());
-                if(distance <= maxDistance){
+                if (distance <= maxDistance) {
                     recommendRestaurants.add(restaurant);
                     log.info("지정 거리 이내의 식당 : " + restaurant.getName());
                 }
