@@ -80,5 +80,6 @@ spring:
 
 logging:
   level:
-    toy.ojm: INFO
-    org.springframework.web: ERROR
+    toy.ojm: DEBUG
+    org.springframework.web: DEBUG
+

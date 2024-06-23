@@ -15,9 +15,9 @@ public class TransCoordination {
 
     private final BasicCoordinateTransform transformer;
 
-    public TransCoordination() {
-        final CRSFactory factory = new CRSFactory();
+    public TransCoordination(){
         // CRS 객체 생성
+        final CRSFactory factory = new CRSFactory();
         // 중부원점 좌표계 정의
         CoordinateReferenceSystem grs80 = factory.createFromName("EPSG:2097");
         // WGS84 좌표계 정의
@@ -26,13 +26,11 @@ public class TransCoordination {
         transformer = new BasicCoordinateTransform(grs80, wgs84);
     }
 
-
     public ProjCoordinate transformToWGS(Double x, Double y){
         // 변환할 좌표계 정보 생성
         ProjCoordinate beforeCoord = new ProjCoordinate(x, y);
         // 변환된 좌표를 담을 객체 생성
         ProjCoordinate afterCoord = new ProjCoordinate();
-
         // 좌표 변환 수행
         transformer.transform(beforeCoord, afterCoord);
         return afterCoord;

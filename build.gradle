@@ -1,29 +1,23 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.1.0'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'application' // application 플러그인 추가
+	id 'java'
+	id 'org.springframework.boot' version '3.1.0'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
 group = 'toy'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+targetCompatibility = '17'
 
 repositories {
-    mavenCentral()
-
+	mavenCentral()
 	maven {
 		url 'https://repository.aspose.com/repo/'
 	}
 }
 
-bootJar {
-    // mainClassName 설정 제거
-}
-
-
 dependencies {
-	//  Aspose.Cells for Java
+	// Aspose.Cells for Java
 	implementation 'com.aspose:aspose-cells:20.8'
 
 	// proj4j를 이용한 좌표 변환
@@ -35,6 +29,7 @@ dependencies {
 
 	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
 	// MySQL
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	// H2
@@ -49,17 +44,20 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 
+	// Web and JDBC
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
+	// Lombok
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-	testImplementation 'org.projectlombok:lombok:1.18.28'
+	testCompileOnly 'org.projectlombok:lombok:1.18.22'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
