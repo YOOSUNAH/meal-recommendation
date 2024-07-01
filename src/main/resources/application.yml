@@ -12,6 +12,9 @@ logging:
     toy.ojm: DEBUG
     org.springframework.web: DEBUG
 
+kakao:
+  appKey: cf620856f46d903f5b7f04166e0f9ea3
+
 ---
 
 spring:
@@ -26,8 +29,6 @@ spring:
     password: 1234qwer
   jpa:
     show-sql: true
-    hibernate:
-      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -52,7 +53,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect

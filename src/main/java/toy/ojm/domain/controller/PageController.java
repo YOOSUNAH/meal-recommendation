@@ -1,11 +1,16 @@
 package toy.ojm.domain.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
 @Controller
 public class PageController {
+
+    @Value("${kakao.appkey}")
+    private String kakaoAppKey;
 
     @GetMapping("/")
     public String home() {
@@ -33,7 +38,8 @@ public class PageController {
     }
 
     @GetMapping("/page2")
-    public String page2() {
+    public String page2(Model model) {
+        model.addAttribute("kakaoAppKey", kakaoAppKey);
         return "page2";
     }
 
