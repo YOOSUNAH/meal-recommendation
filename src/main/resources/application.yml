@@ -13,7 +13,7 @@ logging:
     org.springframework.web: DEBUG
 
 kakao:
-  appKey: cf620856f46d903f5b7f04166e0f9ea3
+  appKey: ${KAKAO_REST_API_KEY}
 
 ---
 
