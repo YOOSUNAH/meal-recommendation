@@ -1,13 +1,15 @@
 package toy.ojm.domain.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
-public class PageController {
+public class PageController implements ErrorController {
 
     @Value("${kakao.appkey}")
     private String kakaoAppKey;
@@ -39,5 +41,13 @@ public class PageController {
     }
 
 
+    @RequestMapping("/error")
+    public String handleError() {
+        return "home";
+    }
+
+    public String getErrorPath() {
+        return "/error";
+    }
 
 }
