@@ -9,13 +9,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handle404(NoHandlerFoundException exception) {
-        String requestURL = exception.getRequestURL();
-
-        if (requestURL.contains("location")
-            || requestURL.contains("category")
-            || requestURL.contains("result")) {
-            return "redirect:/home";
-        }
         return "redirect:/home";
     }
 }
