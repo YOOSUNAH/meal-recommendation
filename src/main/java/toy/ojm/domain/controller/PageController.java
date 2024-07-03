@@ -43,14 +43,14 @@ public class PageController implements ErrorController {
     public String result() {
         return "result";
     }
-
-    @RequestMapping("/error")
-    public String handleError() {
-        return "redirect:/home";
-    }
-
-    public String getErrorPath() {
-        return "/error";
-    }
+// 리다이렉션 방법 1
+//    @RequestMapping("/error")
+//    public String handleError() {
+//        return "redirect:/home";
+//    }
+//
+//    public String getErrorPath() {
+//        return "/error";
+//    }
 
 }

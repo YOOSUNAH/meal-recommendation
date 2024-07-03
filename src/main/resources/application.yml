@@ -6,6 +6,11 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: none
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 logging:
   level:
@@ -14,7 +19,6 @@ logging:
 
 kakao:
   appKey: ${KAKAO_REST_API_KEY}
-
 ---
 
 spring:
