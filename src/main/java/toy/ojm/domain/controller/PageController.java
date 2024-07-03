@@ -1,18 +1,15 @@
 package toy.ojm.domain.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
+@Slf4j
 public class PageController implements ErrorController {
 
     @Value("${kakao.appkey}")
@@ -43,6 +40,12 @@ public class PageController implements ErrorController {
     public String result() {
         return "result";
     }
+
+    @GetMapping("/test")
+    public void test() {
+        log.info("info");
+    }
+
 // 리다이렉션 방법 1
 //    @RequestMapping("/error")
 //    public String handleError() {
@@ -52,5 +55,4 @@ public class PageController implements ErrorController {
 //    public String getErrorPath() {
 //        return "/error";
 //    }
-
 }
