@@ -104,5 +104,9 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: false
+
 logging:
+  level:
+    toy.ojm: INFO
+    org.springframework.web: INFO
   config: classpath:log/logback-live.xml
