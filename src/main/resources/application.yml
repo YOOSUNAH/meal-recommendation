@@ -16,6 +16,7 @@ logging:
   level:
     toy.ojm: DEBUG
     org.springframework.web: DEBUG
+  config: classpath:log/logback-local.xml
 
 kakao:
   appKey: ${KAKAO_REST_API_KEY}
@@ -39,14 +40,12 @@ spring:
         show_sql: true
         format_sql: true
 
-
 ---
 
 spring:
   config:
     activate:
       on-profile: local-mysql
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/shopl?useSSL=false&allowPublicKeyRetrieval=true&verifyServerCertificate=false&characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true
@@ -105,9 +104,5 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: false
-
 logging:
-  level:
-    toy.ojm: DEBUG
-    org.springframework.web: DEBUG
-
+  config: classpath:log/logback-live.xml
