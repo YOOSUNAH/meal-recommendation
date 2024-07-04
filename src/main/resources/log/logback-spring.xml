@@ -17,7 +17,6 @@
     <!-- 날짜별로 저장 TimeBasedRollingPolicy -->
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${LOGS_ABSOLUTE_PATH}/info.%d{yyyy-MM-dd}.log</fileNamePattern>
-      <maxFileSize>10MB</maxFileSize>
       <maxHistory>7</maxHistory>
     </rollingPolicy>
   </appender>
