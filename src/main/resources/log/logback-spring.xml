@@ -10,7 +10,7 @@
 
   <!-- 파일로 저장되는 로그 -->
   <appender name="INFO_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>./log/info.log</file>
+    <file>${LOGS_ABSOLUTE_PATH}/info.log</file>
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>INFO</level>
     </filter>
@@ -19,7 +19,7 @@
     </encoder>
     <!-- 날짜별로 저장 TimeBasedRollingPolicy -->
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>./log/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>${LOGS_ABSOLUTE_PATH}/%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
         <maxFileSize>10MB</maxFileSize>
       </timeBasedFileNamingAndTriggeringPolicy>
