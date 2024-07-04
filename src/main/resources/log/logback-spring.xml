@@ -1,5 +1,5 @@
 <configuration>
-  <property name="LOGS_ABSOLUTE_PATH" value="./logs"/>
+  <property name="LOGS_ABSOLUTE_PATH" value="/home/ebuild/Downloads/meal-recommendation/logs"/>
 
   <!-- 콘솔에 출력되는 로그 -->
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
