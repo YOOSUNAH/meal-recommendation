@@ -7,28 +7,10 @@
     </layout>
   </appender>
 
-  <springProfile name="local-h2">
-    <logger name="toy.ojm" level="DEBUG" />
-    <logger name="org.springframework.web" level="DEBUG" />
-    <root level="INFO">
-      <appender-ref ref="STDOUT" />
-    </root>
-  </springProfile>
-
-  <springProfile name="local-mysql">
-    <logger name="toy.ojm" level="DEBUG" />
-    <logger name="org.springframework.web" level="DEBUG" />
-    <root level="INFO">
-      <appender-ref ref="STDOUT" />
-    </root>
-  </springProfile>
-
-  <springProfile name="local-mysql-sun">
-    <logger name="toy.ojm" level="DEBUG" />
-    <logger name="org.springframework.web" level="DEBUG" />
-    <root level="INFO">
-      <appender-ref ref="STDOUT" />
-    </root>
-  </springProfile>
+  <logger name="toy.ojm" level="DEBUG" />
+  <logger name="org.springframework.web" level="DEBUG" />
+  <root level="INFO">
+    <appender-ref ref="STDOUT" />
+  </root>
 
 </configuration>

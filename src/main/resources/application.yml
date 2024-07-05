@@ -16,7 +16,7 @@ logging:
   config: classpath:log/logback-local.xml
 
 kakao:
-  appKey: ${KAKAO_REST_API_KEY}
+  appKey: ${KAKAO_REST_API_KEY:defaultDummyValue}
 ---
 
 spring:
