@@ -21,8 +21,12 @@
     </rollingPolicy>
   </appender>
 
-  <root level="INFO">
-    <appender-ref ref="STDOUT"/>
-    <appender-ref ref="LOG_FILE"/>
-  </root>
+  <springProfile name="live">
+    <logger name="toy.ojm" level="INFO" />
+    <logger name="org.springframework.web" level="INFO" />
+    <root level="INFO">
+      <appender-ref ref="STDOUT" />
+      <appender-ref ref="LOG_FILE" />
+    </root>
+  </springProfile>
 </configuration>

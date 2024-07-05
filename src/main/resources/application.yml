@@ -13,9 +13,6 @@ spring:
       add-mappings: false
 
 logging:
-  level:
-    toy.ojm: DEBUG
-    org.springframework.web: DEBUG
   config: classpath:log/logback-local.xml
 
 kakao:
@@ -106,7 +103,4 @@ spring:
         format_sql: false
 
 logging:
-  level:
-    toy.ojm: INFO
-    org.springframework.web: INFO
   config: classpath:log/logback-live.xml
