@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오점머</title>
+  <style>
+  </style>
+</head>
+<body>
+<h1 class="center-text">오늘의 점심 메뉴</h1>
+<h3 class="center-text">오늘 뭐 먹지?</h3>
+
+<div class="center-text">
+  <hr class="my-4">
+  <div class="button-group">
+      로그인 하기
+    <button  type="button" class="btn btn-secondary btn-lg">id </button>
+    <button  type="button" class="btn btn-secondary btn-lg">password </button>
+    <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">로그인하기 </button>
+  </div>
+
+
+<script>
+  $(document).ready(function() {
+    recommend();
+
+    $('#reloadButton').on('click', function() {
+      recommend();
+    });
+
+    $('#selectCategoryButton').on('click', function () {
+      window.location.href = '/category'; // 카테고리 선택 페이지로 이동
+    });
+  });
+
+  function recommend() {
+    $.ajax({
+      method: "POST",
+      url: "/v1/ojm/nearbyRestaurant",
+      contentType: "application/json",
+      data: JSON.stringify({
+        currentLat: latitude,
+        currentLon: longitude,
+        selectedCategories: category
+      }),
+      success: function (data) {
+        displayRestaurants(data);
+      },
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          $('.alert-danger').show();
+        } else {
+          console.error("Error occurred: " + error);
+        }
+      }
+    });
+  }
+
+
+</script>
+</body>
+</html>

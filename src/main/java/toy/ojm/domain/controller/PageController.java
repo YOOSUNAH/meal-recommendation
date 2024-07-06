@@ -41,10 +41,13 @@ public class PageController implements ErrorController {
         return "result";
     }
 
-    @GetMapping("/test")
-    public void test() {
-        log.info("info");
+    @GetMapping("/admin")
+    public String admin() {
+      return  "adminLogin";
     }
+
+
+
 
 // 리다이렉션 방법 1
 //    @RequestMapping("/error")
