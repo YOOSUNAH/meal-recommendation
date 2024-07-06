@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <!-- 필요한 CSS 파일 -->
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+</head>
+<body>
+<div id="login-form">
+  <div id="login-title">Log into OJM</div>
+
+  <div>
+    <div class="login-id-label">아이디</div>
+    <input type="text" name="id" id="id" class="login-input-box">
+
+    <div class="login-id-label">비밀번호</div>
+    <input type="password" name="password" id="password" class="login-input-box">
+
+    <button id="login-id-submit">로그인</button>
+  </div>
+
+  <!-- 로그인 실패 시 메시지 -->
+  <div id="login-failed" style="display:none" class="alert alert-danger" role="alert">로그인에 실패하였습니다.</div>
+</div>
+
+<!-- 필요한 JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+
+<script>
+  $(document).ready(function () {
+    // 에러 파라미터가 있으면 로그인 실패 메시지를 보여줍니다.
+    const href = location.href;
+    const queryString = href.substring(href.indexOf("?") + 1);
+    if (queryString === 'error') {
+      const errorDiv = document.getElementById('login-failed');
+      errorDiv.style.display = 'block';
+    }
+
+    const host = 'http://' + window.location.host;
+
+    $('#login-id-submit').click(function () {
+      let id = $('#id').val();
+      let password = $('#password').val();
+
+      // POST 요청을 통해 로그인을 시도합니다.
+      $.ajax({
+        type: "POST",
+        url: `/v1/admin/login`,
+        contentType: "application/json",
+        data: JSON.stringify({id: id, password: password}),
+        success: function () {
+          // 로그인 성공 시 admin 페이지로 이동합니다.
+          window.location.href = host + '/adminPage.html';
+        },
+        error: function () {
+          // 실패 시 경고 메시지를 띄우고 로그인 페이지에 에러 파라미터를 추가하여 리다이렉트합니다.
+          alert("Login Fail");
+          window.location.href = host + '/v1/admin?error';
+        }
+      });
+    });
+  });
+</script>
+</body>
+</html>

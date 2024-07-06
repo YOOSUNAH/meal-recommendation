@@ -11,10 +11,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handle404(NoHandlerFoundException exception) {
-        if (exception.getRequestURL().contains("/admin")){
+
+        if (exception.getRequestURL().contains("/admin/login")){
             log.debug("# exception 의 URL " + exception.getRequestURL());
-            return "adminLogin";
+            return "login";
+
+        }else if (exception.getRequestURL().contains("admin/get-session")) {
+            return "forward:/v1/admin/get-session";
+
+        }else if (exception.getRequestURL().contains("/adminPage")) {
+            return "adminPage";
         }
+
         return "redirect:/home";
     }
 }
