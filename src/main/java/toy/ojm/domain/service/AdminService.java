@@ -3,7 +3,6 @@ package toy.ojm.domain.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toy.ojm.domain.dto.LoginRequestDto;
 import toy.ojm.domain.entity.Users;
 import toy.ojm.domain.repository.UserRepository;
 
