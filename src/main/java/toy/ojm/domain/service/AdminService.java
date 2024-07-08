@@ -1,19 +1,17 @@
 package toy.ojm.domain.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toy.ojm.domain.dto.RestaurantPageableResponseDto;
-import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.entity.Users;
 import toy.ojm.domain.repository.RestaurantRepository;
 import toy.ojm.domain.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 
 @Service
@@ -44,7 +42,7 @@ public class AdminService {
             () -> new IllegalArgumentException("admin user 가 존재하지 않습니다."));
     }
 
-    public RestaurantPageableResponseDto getAllRestaurants(String id,int page, int size) {
+    public RestaurantPageableResponseDto getAllRestaurants(String id, int page, int size) {
         Users user = validateUser(id);
         Pageable pageable = PageRequest.of(page, size);
         Page<Restaurant> responseDtoPage = restaurantRepository.findAll(pageable);

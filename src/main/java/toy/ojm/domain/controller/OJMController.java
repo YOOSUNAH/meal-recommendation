@@ -56,7 +56,7 @@ public class OJMController {
     }
 
     @GetMapping("/restaurant/crawl")
-    public ResponseEntity<Path> saveRestaurantByCrawling(){
+    public ResponseEntity<Path> saveRestaurantByCrawling() {
         Path path = publicDataDownloader.downloadCsvFile();
         log.info("크롤링한  데이터 java로 불러와서 저장하기 : {}", path.toString());
         return ResponseEntity.ok(path);
