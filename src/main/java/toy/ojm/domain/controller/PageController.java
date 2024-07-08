@@ -52,6 +52,12 @@ public class PageController implements ErrorController {
     }
 
 
+    @GetMapping("/allRestaurants")
+    public String allRestaurants() {
+        return  "allRestaurants";
+    }
+
+
 // 리다이렉션 방법 1
 //    @RequestMapping("/error")
 //    public String handleError() {

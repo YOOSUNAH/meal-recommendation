@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>음식점 전체 조회</title>
+  <style>
+    .container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .pagination {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    .restaurant-item {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .pagination-controls {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .pagination-controls button {
+      margin: 0 5px;
+    }
+
+    .pagination-info {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>음식점 전체 조회</h1>
+  <div id="restaurants-list"></div>
+  <div class="pagination-info">
+    <div class="pagination-controls">
+      <button id="prevBtn" onclick="prevPage()" class="btn">&lt;</button>
+      <span id="pageIndicator"></span>
+      <button id="nextBtn" onclick="nextPage()" class="btn">&gt;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentPage = 1;  // 초기 currentPage를 1로 설정
+  let totalPages = 1;  // 초기값 설정
+  const pageSize = 5;  // 페이지 사이즈를 적절히 설정
+
+  function getRestaurants(page, size) {
+    fetch(`/v1/admin/restaurants?page=${page - 1}&size=${size}`, {  // 페이지 번호를 0부터 시작하도록 수정
+      method: 'GET',
+      credentials: 'same-origin',
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Received data:', data);
+      const restaurantsList = document.getElementById('restaurants-list');
+      restaurantsList.innerHTML = '';
+
+      data.data.responseDtoList.forEach(restaurant => {
+        const restaurantElement = document.createElement('div');
+        restaurantElement.classList.add('restaurant-item');
+        restaurantElement.innerHTML = `
+        <p><strong>이름:</strong> ${restaurant.name}</p>
+        <p><strong>카테고리:</strong> ${restaurant.category}</p>
+        <p><strong>주소:</strong> ${restaurant.address}</p>
+      `;
+        restaurantsList.appendChild(restaurantElement);
+      });
+
+      const pageIndicator = document.getElementById('pageIndicator');
+      pageIndicator.textContent = `${data.data.currentPage} / ${data.data.totalPage}`;  // 사용자에게는 1부터 시작하도록 표시
+
+      currentPage = data.data.currentPage;  // 현재 페이지 업데이트
+      totalPages = data.data.totalPage;  // 전체 페이지 수 업데이트
+      updatePaginationButtons();  // 페이지네이션 버튼 상태 업데이트
+    })
+    .catch(error => console.error('Error fetching data:', error));
+  }
+
+  function prevPage() {
+    if (currentPage > 1) {
+      getRestaurants(currentPage - 1, pageSize);
+    }
+  }
+
+  function nextPage() {
+    if (currentPage < totalPages) {
+      getRestaurants(currentPage + 1, pageSize);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    getRestaurants(currentPage, pageSize);
+  });
+
+  function updatePaginationButtons() {
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    prevBtn.disabled = (currentPage === 1);  // 첫 페이지에서는 이전 버튼 비활성화
+    nextBtn.disabled = (currentPage === totalPages);  // 마지막 페이지에서는 다음 버튼 비활성화
+  }
+</script>
+
+</body>
+</html>
