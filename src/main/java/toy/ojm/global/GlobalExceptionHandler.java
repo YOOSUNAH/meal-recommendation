@@ -16,14 +16,17 @@ public class GlobalExceptionHandler {
             log.debug("# exception 의 URL " + exception.getRequestURL());
             return "login";
 
+        }  else if (exception.getRequestURL().contains("/adminPage")) {
+            return "adminPage";
+
         } else if (exception.getRequestURL().contains("admin/get-session")) {
             return "forward:/v1/admin/get-session";
 
         } else if (exception.getRequestURL().contains("admin/encodePassword")) {
             return "forward:/v1/admin/encodePassword";
 
-        } else if (exception.getRequestURL().contains("/adminPage")) {
-            return "adminPage";
+        }else if (exception.getRequestURL().contains("admin/restaurants")) {
+            return "forward:/v1/admin/restaurants";
         }
 
         return "redirect:/home";

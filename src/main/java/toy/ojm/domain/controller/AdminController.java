@@ -6,17 +6,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.domain.dto.LoginRequestDto;
+import toy.ojm.domain.dto.RestaurantPageableResponseDto;
+import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.service.AdminService;
 import toy.ojm.global.ResponseDto;
 import toy.ojm.global.SessionManager;
@@ -39,16 +44,17 @@ public class AdminController {
         // id, pw 일치하는지 확인
         adminService.login(requestDto.getId(), requestDto.getPassword());
         // session 만들기
-        createSession(request);
+        createSession(request, requestDto.getId());
         return ResponseDto.of(HttpStatus.OK, null);
     }
 
     @GetMapping("/create-session")
-    public void createSession(HttpServletRequest request) {
+    public void createSession(HttpServletRequest request, String id) {
         // 세션이 존재할 경우 세션 반환, 없을 경우 새로운 세션을 생성한 후 반환
         HttpSession session = request.getSession(true);
         // 세션에 저장될 정보 Name - Value 를 추가합니다.
         session.setAttribute(AUTHORIZATION_HEADER, "OJM Auth");
+        session.setAttribute("Id", id); // userId 저장
         // 세션 만료시간 설정
         session.setMaxInactiveInterval(360000);  // 초 단위, 1시간
     }
@@ -71,44 +77,26 @@ public class AdminController {
         return ResponseDto.of(HttpStatus.OK, resultAlram);
     }
 
-    //
 
-    @GetMapping("/create-cookie")
-    public String createCookie(HttpServletResponse response) {
-        addCookie("Admin Auth", response);
-        return "createCookie";
-    }
-
-    @GetMapping("get-cookie")
-    public String getCookie(@CookieValue(AUTHORIZATION_HEADER) String value) {
-        return "get cookie + " + value;
-    }
-
-    public static void addCookie(String cookieValue, HttpServletResponse response) {
-        try {
-            cookieValue = URLEncoder.encode(cookieValue, "utf-8")
-                .replaceAll("\\+", "%20");  // cookie value 에는 공백이 불가능해 encoding해줘야 한다.
-
-            Cookie cookie = new Cookie(AUTHORIZATION_HEADER, cookieValue);
-            cookie.setPath("/");
-            cookie.setMaxAge(30 * 60);
-
-            response.addCookie(cookie);
-
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e.getMessage());
+    @GetMapping("/restaurants")
+    public ResponseEntity<ResponseDto<RestaurantPageableResponseDto>> getAllRestaurants(
+        HttpServletRequest request,
+        @RequestParam("page") int page,
+        @RequestParam("size") int size
+    ) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("Id") == null) {
+            throw new IllegalArgumentException("로그인 필요");
         }
-    }
+        String userId = (String) session.getAttribute("Id");
 
-    //  ===================================================
-//    @PostMapping("login")
-//    public String loginV2(
-//        @RequestBody LoginRequestDto requestDto,
-//        HttpServletResponse response
-//    ){
-//        sessionManager.createSession(requestDto.getId(), response);
-//        return "redirect:/";
-//    }
+        RestaurantPageableResponseDto allRestaurants = adminService.getAllRestaurants(
+            userId,
+            page,
+            size
+        );
+        return ResponseDto.of(HttpStatus.OK, allRestaurants);
+    }
 
     @PostMapping("/logout")
     public String logout(HttpServletResponse response, HttpServletRequest request) {

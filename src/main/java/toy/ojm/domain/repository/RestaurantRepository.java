@@ -7,5 +7,6 @@ import toy.ojm.domain.entity.Restaurant;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     List<Restaurant> findAllByCategoryIn(List<String> categories);
+
 }
 
