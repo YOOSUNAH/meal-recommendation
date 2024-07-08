@@ -40,7 +40,6 @@ public class AdminController {
         adminService.login(requestDto.getId(), requestDto.getPassword());
         // session 만들기
         createSession(request);
-
         return ResponseDto.of(HttpStatus.OK, null);
     }
 
@@ -48,20 +47,31 @@ public class AdminController {
     public void createSession(HttpServletRequest request) {
         // 세션이 존재할 경우 세션 반환, 없을 경우 새로운 세션을 생성한 후 반환
         HttpSession session = request.getSession(true);
-
         // 세션에 저장될 정보 Name - Value 를 추가합니다.
         session.setAttribute(AUTHORIZATION_HEADER, "OJM Auth");
+        // 세션 만료시간 설정
+        session.setMaxInactiveInterval(360000);  // 초 단위, 1시간
     }
 
     @GetMapping("/get-session")
-    public String getSession(HttpServletRequest request) {
+    public ResponseEntity<ResponseDto<String>> getSession(HttpServletRequest request) {
         // 세션이 존재할 경우 세션 반환, 없을 경우 null 반환
         HttpSession session = request.getSession(false);
 
-        String value = (String) session.getAttribute(AUTHORIZATION_HEADER); // 가져온 세션에 저장된 Value 를 Name 을 사용하여 가져옵니다.
-        log.info("value = " + value);
-        return value;
+        String value = (String) session.getAttribute(
+            AUTHORIZATION_HEADER); // 가져온 세션에 저장된 Value 를 Name 을 사용하여 가져옵니다.
+        return ResponseDto.of(HttpStatus.OK, value);
     }
+
+    @PostMapping("/encodePassword")
+    public ResponseEntity<ResponseDto<String>> encodePassword(
+        @RequestBody LoginRequestDto requestDto) {
+        adminService.encodePassword(requestDto.getId(), requestDto.getPassword());
+        String resultAlram = "password 암호화 성공";
+        return ResponseDto.of(HttpStatus.OK, resultAlram);
+    }
+
+    //
 
     @GetMapping("/create-cookie")
     public String createCookie(HttpServletResponse response) {
@@ -70,7 +80,7 @@ public class AdminController {
     }
 
     @GetMapping("get-cookie")
-    public String getCookie(@CookieValue(AUTHORIZATION_HEADER) String value){
+    public String getCookie(@CookieValue(AUTHORIZATION_HEADER) String value) {
         return "get cookie + " + value;
     }
 

@@ -18,4 +18,7 @@ public class Users {
 
     private String password;
 
+    public void updatePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }

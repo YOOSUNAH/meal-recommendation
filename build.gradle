@@ -56,6 +56,9 @@ dependencies {
 
 	// Testing
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// BcryptPasswordEncoder 를 쓰기 위해
+	implementation 'org.springframework.security:spring-security-core:5.8.1'
 }
 
 tasks.named('test') {
