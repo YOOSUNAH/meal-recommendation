@@ -3,7 +3,7 @@ package toy.ojm.domain.location;
 public class Distance {
 
     //  Haversine 공식 사용
-    public Double distance(double lat1, double lon1, double lat2, double lon2) {
+    public static Double distance(double lat1, double lon1, double lat2, double lon2) {
         Double theta = lon1 - lon2; // 경도 차이
         Double dist =
             Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
@@ -17,12 +17,12 @@ public class Distance {
     }
 
     // 10진수를 radian으로 변환
-    private Double deg2rad(Double deg) {
+    private static Double deg2rad(Double deg) {
         return deg * Math.PI / 180.0;
     }
 
     // radian을 10진수로 변환
-    private Double rad2deg(Double rad) {
+    private static Double rad2deg(Double rad) {
         return rad * 180 / Math.PI;
     }
 }

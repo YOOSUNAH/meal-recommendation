@@ -17,9 +17,9 @@ import toy.ojm.domain.dto.RestaurantRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.infrastructure.csv_parser.CsvReaderService;
 import toy.ojm.domain.service.OJMService;
 import toy.ojm.global.ResponseDto;
+import toy.ojm.infrastructure.csv_parser.CsvReaderService;
 import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
 
 @Slf4j
@@ -56,7 +56,7 @@ public class OJMController {
     }
 
     @GetMapping("/restaurant/crawl")
-    public ResponseEntity<Path> saveRestaurantByCrawling(){
+    public ResponseEntity<Path> saveRestaurantByCrawling() {
         Path path = publicDataDownloader.downloadCsvFile();
         log.info("크롤링한  데이터 java로 불러와서 저장하기 : {}", path.toString());
         return ResponseEntity.ok(path);

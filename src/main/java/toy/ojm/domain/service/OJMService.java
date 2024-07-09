@@ -1,6 +1,7 @@
 package toy.ojm.domain.service;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,6 @@ import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.Distance;
 import toy.ojm.domain.repository.CategoryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,16 +89,13 @@ public class OJMService {
         double currentLon,
         List<String> selectedCategories
     ) {
-
-        Distance distanceCalculator = new Distance();
-
         List<Restaurant> recommendRestaurants = getRecommendRestaurants(currentLat, currentLon, selectedCategories, 200);
 
         // 거리 순으로 정렬
         recommendRestaurants.sort((r1, r2) ->
             {
-                double distance1 = distanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
-                double distance2 = distanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
+                double distance1 = Distance.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
+                double distance2 = Distance.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
                 return Double.compare(distance1, distance2);
             }
         );
@@ -113,27 +109,20 @@ public class OJMService {
     public List<Restaurant> getRecommendRestaurants(
         double currentLat,
         double currentLon,
-        List<String> selectedCategories,
+        List<String> categories,
         double maxDistance
     ) {
-        List<Restaurant> recommendRestaurants = new ArrayList<>();
-        Distance distanceCalculator = new Distance();
+        List<Restaurant> restaurants = restaurantRepository.findAllByCategoryIn(
+            categories);
 
-        for (String category : selectedCategories) {
-            // 조건 : 해당 카테고리만 추천
-            List<Restaurant> restaurantsWithCategory = restaurantRepository.findAllByCategory(category);
-
-            for (Restaurant restaurant : restaurantsWithCategory) {
-                //  조건 : maxDistance 이내인 곳만 추천
-                double distance = distanceCalculator.distance(currentLat, currentLon,
-                    restaurant.getLatitude(), restaurant.getLongitude());
-                if (distance <= maxDistance) {
-                    recommendRestaurants.add(restaurant);
-                    log.info("지정 거리 이내의 식당 : " + restaurant.getName());
-                }
-            }
-        }
-        return recommendRestaurants;
+        // stream
+        return restaurants.stream()
+            .filter(restaurant -> Distance.distance(
+                currentLat,
+                currentLon,
+                restaurant.getLatitude(),
+                restaurant.getLongitude()) <= maxDistance)
+            .collect(Collectors.toList());
     }
 }
 
