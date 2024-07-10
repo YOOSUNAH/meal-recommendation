@@ -41,7 +41,7 @@ public class PageController implements ErrorController {
         return "result";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/boss")
     public String login() {
       return "login";
     }

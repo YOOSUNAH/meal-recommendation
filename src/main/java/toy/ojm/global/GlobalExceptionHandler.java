@@ -15,7 +15,8 @@ public class GlobalExceptionHandler {
         if (exception.getRequestURL().contains("login")) {
             log.debug("# exception 의 URL " + exception.getRequestURL());
             return "login";
-
+        } else if (exception.getRequestURL().contains("/boss")) {
+            return "login";
         } else if (exception.getRequestURL().contains("/adminPage")) {
             return "adminPage";
 
