@@ -19,6 +19,7 @@
     <input type="password" name="password" id="password" class="login-input-box">
 
     <button id="login-id-submit">로그인</button>
+    <button id="encrypt-password-submit">비밀번호 암호화</button>
   </div>
 
   <!-- 로그인 실패 시 메시지 -->
@@ -59,6 +60,27 @@
           // 실패 시 경고 메시지를 띄우고 로그인 페이지에 에러 파라미터를 추가하여 리다이렉트합니다.
           alert("Login Fail");
           window.location.href = host + '/v1/admin?error';
+        }
+      });
+    });
+
+    $('#encrypt-password-submit').click(function () {
+      let id = $('#id').val();
+      let password = $('#password').val();
+
+      // POST 요청을 통해 비밀번호 암호화를 시도합니다.
+      $.ajax({
+        type: "POST",
+        url: `/v1/admin/encodePassword`,
+        contentType: "application/json",
+        data: JSON.stringify({id: id, password: password}),
+        success: function (response) {
+          // 비밀번호 암호화 성공 시 팝업 알림을 띄웁니다.
+          alert("비밀번호가 암호화되었습니다");
+        },
+        error: function () {
+          // 실패 시 경고 메시지를 띄웁니다.
+          alert("비밀번호 암호화 실패");
         }
       });
     });
