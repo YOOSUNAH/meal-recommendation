@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,34 +32,29 @@
 
 <script>
   $(document).ready(function () {
-    // 에러 파라미터가 있으면 로그인 실패 메시지를 보여줍니다.
-    const href = location.href;
-    const queryString = href.substring(href.indexOf("?") + 1);
-    if (queryString === 'error') {
-      const errorDiv = document.getElementById('login-failed');
-      errorDiv.style.display = 'block';
+    const queryString = new URLSearchParams(window.location.search);
+    if (queryString.get('error')) {
+      $('#login-failed').show();
     }
 
-    const host = 'http://' + window.location.host;
+    const host = window.location.origin;
 
     $('#login-id-submit').click(function () {
       let id = $('#id').val();
       let password = $('#password').val();
 
-      // POST 요청을 통해 로그인을 시도합니다.
       $.ajax({
         type: "POST",
-        url: `/v1/admin/login`,
+        url: `${host}/v1/admin/login`,
         contentType: "application/json",
-        data: JSON.stringify({id: id, password: password}),
+        data: JSON.stringify({ id: id, password: password }),
         success: function () {
           // 로그인 성공 시 admin 페이지로 이동합니다.
-          window.location.href = host + '/adminPage.html';
+          window.location.href = `${host}/adminPage.html`;
         },
         error: function () {
-          // 실패 시 경고 메시지를 띄우고 로그인 페이지에 에러 파라미터를 추가하여 리다이렉트합니다.
           alert("Login Fail");
-          window.location.href = host + '/v1/admin?error';
+          window.location.href = `${host}/v1/admin?error`;
         }
       });
     });
@@ -68,18 +63,15 @@
       let id = $('#id').val();
       let password = $('#password').val();
 
-      // POST 요청을 통해 비밀번호 암호화를 시도합니다.
       $.ajax({
         type: "POST",
-        url: `/v1/admin/encodePassword`,
+        url: `${host}/v1/admin/encodePassword`,
         contentType: "application/json",
-        data: JSON.stringify({id: id, password: password}),
-        success: function (response) {
-          // 비밀번호 암호화 성공 시 팝업 알림을 띄웁니다.
+        data: JSON.stringify({ id: id, password: password }),
+        success: function () {
           alert("비밀번호가 암호화되었습니다");
         },
         error: function () {
-          // 실패 시 경고 메시지를 띄웁니다.
           alert("비밀번호 암호화 실패");
         }
       });

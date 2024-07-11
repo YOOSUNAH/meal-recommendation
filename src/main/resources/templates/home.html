@@ -2,25 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-<!--    <link th:href="@{/css/bootstrap.min.css}" href="../css/bootstrap.min.css" rel="stylesheet">-->
-    <link th:href="@{/css/styles.css}" rel="stylesheet"> <!-- CSS 파일 참조 추가 -->
-    <script th:src="@{/js/script.js}"></script>
+    <link href="/css/styles.css" rel="stylesheet"> <!-- CSS 파일 참조 추가 -->
+    <script src="/js/script.js"></script>
     <style>
         .container {
             max-width: 560px;
             text-align: center;
-            margin: 20px auto; /* 가운데 정렬 */
+            margin: 20px auto;
         }
 
-        /* 각 요소를 블록 요소로 설정하여 줄바꿈을 적용합니다. */
         h4, .btn {
             display: block;
-            margin-bottom: 20px; /* 간격 조절 */
-        //  font-family: "BM Jua", sans-serif; /* 폰트 적용 실패!*/
+            margin-bottom: 20px;
         }
         .btn {
             display: block;
-            margin: 20px auto; /* 가운데 정렬 */
+            margin: 20px auto;
             font-size: 1.0em;
             padding: 8px 16px;
             border-radius: 8px;

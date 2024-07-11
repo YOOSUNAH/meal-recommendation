@@ -10,11 +10,6 @@
       margin-top: 20px;
     }
 
-    .pagination {
-      margin-top: 20px;
-      font-size: 16px;
-    }
-
     .restaurant-item {
       border: 1px solid #ccc;
       padding: 10px;
@@ -52,12 +47,12 @@
 </div>
 
 <script>
-  let currentPage = 1;  // 초기 currentPage를 1로 설정
-  let totalPages = 1;  // 초기값 설정
-  const pageSize = 5;  // 페이지 사이즈를 적절히 설정
+  let currentPage = 1;
+  let totalPages = 1;
+  const pageSize = 5;
 
   function getRestaurants(page, size) {
-    fetch(`/v1/admin/restaurants?page=${page - 1}&size=${size}`, {  // 페이지 번호를 0부터 시작하도록 수정
+    fetch(`/v1/admin/restaurants?page=${page - 1}&size=${size}`, {
       method: 'GET',
       credentials: 'same-origin',
     })
@@ -71,19 +66,19 @@
         const restaurantElement = document.createElement('div');
         restaurantElement.classList.add('restaurant-item');
         restaurantElement.innerHTML = `
-        <p><strong>이름:</strong> ${restaurant.name}</p>
-        <p><strong>카테고리:</strong> ${restaurant.category}</p>
-        <p><strong>주소:</strong> ${restaurant.address}</p>
-      `;
+          <p><strong>이름:</strong> ${restaurant.name}</p>
+          <p><strong>카테고리:</strong> ${restaurant.category}</p>
+          <p><strong>주소:</strong> ${restaurant.address}</p>
+        `;
         restaurantsList.appendChild(restaurantElement);
       });
 
       const pageIndicator = document.getElementById('pageIndicator');
-      pageIndicator.textContent = `${data.data.currentPage} / ${data.data.totalPage}`;  // 사용자에게는 1부터 시작하도록 표시
+      pageIndicator.textContent = `${data.data.currentPage} / ${data.data.totalPage}`;
 
-      currentPage = data.data.currentPage;  // 현재 페이지 업데이트
-      totalPages = data.data.totalPage;  // 전체 페이지 수 업데이트
-      updatePaginationButtons();  // 페이지네이션 버튼 상태 업데이트
+      currentPage = data.data.currentPage;
+      totalPages = data.data.totalPage;
+      updatePaginationButtons();
     })
     .catch(error => console.error('Error fetching data:', error));
   }
@@ -108,8 +103,8 @@
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    prevBtn.disabled = (currentPage === 1);  // 첫 페이지에서는 이전 버튼 비활성화
-    nextBtn.disabled = (currentPage === totalPages);  // 마지막 페이지에서는 다음 버튼 비활성화
+    prevBtn.disabled = (currentPage === 1);
+    nextBtn.disabled = (currentPage === totalPages);
   }
 </script>
 

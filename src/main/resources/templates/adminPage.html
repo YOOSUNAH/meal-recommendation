@@ -1,13 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>로그인 성공</title>
+  <style>
+    .btn {
+      display: block;
+      margin: 20px auto;
+      font-size: 1.0em;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background-color: #007BFF;
+      color: #FFFFFF;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+  </style>
 </head>
 <body>
 <div>로그인에 성공했습니다.</div>
-<button th:onclick="|window.location.href='@{/allRestaurants}'|" class="btn">
-  button 음식점 전체 조회
+<button onclick="window.location.href='/allRestaurants'" class="btn">
+  음식점 전체 조회
 </button>
 </body>
 </html>
