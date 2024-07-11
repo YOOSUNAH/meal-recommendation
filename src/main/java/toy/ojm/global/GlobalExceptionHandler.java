@@ -28,6 +28,9 @@ public class GlobalExceptionHandler {
 
         } else if (exception.getRequestURL().contains("admin/restaurants")) {
             return "forward:/v1/admin/restaurants";
+
+        } else if (exception.getRequestURL().startsWith("css")  || exception.getRequestURL().startsWith("js") ) {
+             return "redirect:/error/404";
         }
 
         return "redirect:/home";
