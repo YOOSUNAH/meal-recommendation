@@ -12,6 +12,7 @@ import toy.ojm.domain.dto.RestaurantPageableResponseDto;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.entity.Users;
 import toy.ojm.domain.repository.RestaurantRepository;
+import toy.ojm.domain.repository.RestaurantSpecifications;
 import toy.ojm.domain.repository.UserRepository;
 
 

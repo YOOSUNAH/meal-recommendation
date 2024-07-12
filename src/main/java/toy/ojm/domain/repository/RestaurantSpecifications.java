@@ -1,4 +1,4 @@
-package toy.ojm.domain.service;
+package toy.ojm.domain.repository;
 
 import org.springframework.data.jpa.domain.Specification;
 import toy.ojm.domain.entity.Restaurant;
