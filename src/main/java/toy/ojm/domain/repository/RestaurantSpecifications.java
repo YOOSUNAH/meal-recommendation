@@ -8,4 +8,9 @@ public class RestaurantSpecifications {
     public static Specification<Restaurant> categoryEquals(String category) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("category"),category);
     }
+
+    public static Specification<Restaurant> nameContains(String keyword) {
+        return ((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("name"),"%" + keyword + "%"));
+    }
+
 }

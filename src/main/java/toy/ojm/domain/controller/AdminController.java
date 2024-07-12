@@ -76,7 +76,8 @@ public class AdminController {
         HttpServletRequest request,
         @RequestParam("page") int page,
         @RequestParam("size") int size,
-        @RequestParam(required = false) String category
+        @RequestParam(required = false) String category,
+        @RequestParam(required = false) String keyword
     ) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("Id") == null) {
@@ -88,7 +89,8 @@ public class AdminController {
             userId,
             page,
             size,
-            category
+            category,
+            keyword
         );
         return ResponseDto.of(HttpStatus.OK, allRestaurants);
     }

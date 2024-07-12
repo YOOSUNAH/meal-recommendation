@@ -1,6 +1,5 @@
 package toy.ojm.domain.service;
 
-import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,22 +49,21 @@ public class AdminService {
         String id,
         int page,
         int size,
-        String category)
+        String category,
+        String keyword)
     {
         Users user = validateUser(id);
         Pageable pageable = PageRequest.of(page, size);
 
-        Specification<Restaurant> specification = null;
+        Specification<Restaurant> specification = Specification.where(null);
         if(!StringUtils.isEmpty(category)){ //  category가 비어있지 않는 경우, 비어있으면 null 유지
-            specification = RestaurantSpecifications.categoryEquals(category);
+            specification = specification.and(RestaurantSpecifications.categoryEquals(category));
+        }
+        if(!StringUtils.isEmpty(keyword)){
+            specification = specification.and(RestaurantSpecifications.nameContains(keyword));
         }
 
-        Page<Restaurant> responseDtoPage;
-        if(specification != null){
-            responseDtoPage = restaurantRepository.findAll(specification, pageable);
-        }else{  // specification 이 Null이면 그냥 findAll
-            responseDtoPage = restaurantRepository.findAll(pageable);
-        }
+        Page<Restaurant> responseDtoPage = restaurantRepository.findAll(specification, pageable);
 
         int totalPage = responseDtoPage.getTotalPages();
         int totalElements = (int) responseDtoPage.getTotalElements();

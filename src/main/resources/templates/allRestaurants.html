@@ -11,13 +11,6 @@
       position: relative;
     }
 
-    .restaurant-item {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-      text-align: left;
-    }
-
     .pagination-controls {
       display: flex;
       justify-content: center;
@@ -67,14 +60,23 @@
     <button onclick="updateCategory()">적용</button>
   </div>
 
+  <!-- 키워드 검색 UI -->
+  <div class="category-input">
+    <label for="keywordInput">키워드 검색: </label>
+    <input type="text" id="keywordInput" placeholder="음식점 이름 검색">
+    <button onclick="updateKeyword()">검색</button>
+  </div>
+
   <div class="size-input">
     <label for="sizeInput">페이지 당 음식점 수: </label>
     <input type="number" id="sizeInput" min="1" value="5">
     <button onclick="updateSize()">적용</button>
-    <div class="total-count" id="totalCount">총 음식점 수: 0</div>
   </div>
 
+  <div class="total-count" id="totalCount">총 음식점 수: 0</div>
+
   <div id="restaurants-list"></div>
+
   <div class="pagination-info">
     <div class="pagination-controls">
       <button id="prevBtn" onclick="prevPage()" class="btn">&lt;</button>
@@ -91,9 +93,13 @@
   let totalPages = 1;
   let pageSize = 5;
   let selectedCategory = '';
+  let keyword = '';
 
-  function getRestaurants(page, size, category) {
-    fetch(`/v1/admin/restaurants?page=${page - 1}&size=${size}&category=${category}`, {
+  function getRestaurants(page, size, category, keyword) {
+    const url = `/v1/admin/restaurants?page=${page - 1}&size=${size}&category=${category}&keyword=${keyword}`;
+
+
+    fetch(url, {
       method: 'GET',
       credentials: 'same-origin',
     })
@@ -129,26 +135,32 @@
 
   function prevPage() {
     if (currentPage > 1) {
-      getRestaurants(currentPage - 1, pageSize, selectedCategory);
+      getRestaurants(currentPage - 1, pageSize, selectedCategory, keyword);
     }
   }
 
   function nextPage() {
     if (currentPage < totalPages) {
-      getRestaurants(currentPage + 1, pageSize, selectedCategory);
+      getRestaurants(currentPage + 1, pageSize, selectedCategory, keyword);
     }
   }
 
   function updateSize() {
     const sizeInput = document.getElementById('sizeInput').value;
     pageSize = parseInt(sizeInput) || pageSize;
-    getRestaurants(currentPage, pageSize, selectedCategory);
+    getRestaurants(currentPage, pageSize, selectedCategory, keyword);
   }
 
   function updateCategory() {
     const categorySelect = document.getElementById('categorySelect').value;
     selectedCategory = categorySelect;
-    getRestaurants(currentPage, pageSize, selectedCategory);
+    getRestaurants(currentPage, pageSize, selectedCategory, keyword);
+  }
+
+  function updateKeyword() {
+    const keywordInput = document.getElementById('keywordInput').value;
+    keyword = keywordInput.trim();
+    getRestaurants(currentPage, pageSize, selectedCategory, keyword);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -161,7 +173,7 @@
       success: function (response) {
         if (response.data === "OJM Auth") {
           $('#content').show();
-          getRestaurants(currentPage, pageSize, selectedCategory);
+          getRestaurants(currentPage, pageSize, selectedCategory, keyword);
         } else {
           window.location.href = `${host}/boss`;
         }
