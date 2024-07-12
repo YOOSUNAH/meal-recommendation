@@ -32,12 +32,27 @@
 
 <script>
   $(document).ready(function () {
+    const host = window.location.origin;
+
+    // 세션을 확인하여 로그인 상태를 체크
+    $.ajax({
+      type: "GET",
+      url: `${host}/v1/admin/get-session`,
+      success: function (response) {
+        if (response.data === "OJM Auth") {
+          window.location.href = `${host}/adminPage.html`;
+        }
+      },
+      error: function () {
+        // 세션이 없으면 로그인 페이지를 표시합니다.
+        $('#login-form').show();
+      }
+    });
+
     const queryString = new URLSearchParams(window.location.search);
     if (queryString.get('error')) {
       $('#login-failed').show();
     }
-
-    const host = window.location.origin;
 
     $('#login-id-submit').click(function () {
       let id = $('#id').val();

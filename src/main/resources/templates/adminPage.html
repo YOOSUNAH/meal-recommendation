@@ -19,9 +19,37 @@
   </style>
 </head>
 <body>
-<div>로그인에 성공했습니다.</div>
-<button onclick="window.location.href='/allRestaurants'" class="btn">
-  음식점 전체 조회
-</button>
+<div id="content" style="display: none;">
+  <div>로그인에 성공했습니다.</div>
+  <button onclick="window.location.href='/allRestaurants'" class="btn">
+    음식점 전체 조회
+  </button>
+</div>
+
+<!-- 필요한 JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+<script>
+  $(document).ready(function () {
+    const host = window.location.origin;
+
+    // 세션을 확인하여 로그인 상태를 체크
+    $.ajax({
+      type: "GET",
+      url: `${host}/v1/admin/get-session`,
+      success: function (response) {
+        if (response.data === "OJM Auth") {
+          $('#content').show();
+        } else {
+          window.location.href = `${host}/login.html`;
+        }
+      },
+      error: function () {
+        // 세션이 없으면 로그인 페이지로 리다이렉트합니다.
+        window.location.href = `${host}/login.html`;
+      }
+    });
+  });
+</script>
 </body>
 </html>

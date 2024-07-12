@@ -50,7 +50,7 @@ public class AdminController {
         session.setAttribute(AUTHORIZATION_HEADER, "OJM Auth");
         session.setAttribute("Id", id); // userId 저장
         // 세션 만료시간 설정
-        session.setMaxInactiveInterval(360000);  // 초 단위, 1시간
+        session.setMaxInactiveInterval(10800);  // 초 단위, 1시간
     }
 
     @GetMapping("/get-session")
