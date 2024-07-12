@@ -35,4 +35,6 @@ public class Restaurant {
     private Double longitude; //좌표정보(X) 경도
 
     private Double latitude; //좌표정보(Y) 위도
+
+
 }

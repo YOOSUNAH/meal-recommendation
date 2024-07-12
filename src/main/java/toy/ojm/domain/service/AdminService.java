@@ -47,12 +47,15 @@ public class AdminService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Restaurant> responseDtoPage = restaurantRepository.findAll(pageable);
         int totalPage = responseDtoPage.getTotalPages();
+        int totalElements = (int) responseDtoPage.getTotalElements();
 
         return new RestaurantPageableResponseDto(
             responseDtoPage.getContent(),
             size,
             page + 1,
-            totalPage);
+            totalPage,
+            totalElements
+        );
     }
 }
 

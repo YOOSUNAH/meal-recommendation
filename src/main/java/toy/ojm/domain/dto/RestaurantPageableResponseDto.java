@@ -8,8 +8,9 @@ import toy.ojm.domain.entity.Restaurant;
 @Getter
 @AllArgsConstructor
 public class RestaurantPageableResponseDto {
-     List<Restaurant> responseDtoList;
-     int pageSize;
-     int currentPage;
-     int totalPage;
+    private List<Restaurant> responseDtoList;
+    private int pageSize;
+    private int currentPage;
+    private int totalPage;
+    private int totalElements;
 }
