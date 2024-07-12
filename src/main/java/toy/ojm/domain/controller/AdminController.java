@@ -50,7 +50,7 @@ public class AdminController {
         session.setAttribute(AUTHORIZATION_HEADER, "OJM Auth");
         session.setAttribute("Id", id); // userId 저장
         // 세션 만료시간 설정
-        session.setMaxInactiveInterval(10800);  // 초 단위, 1시간
+        session.setMaxInactiveInterval(10800);  // 초 단위
     }
 
     @GetMapping("/get-session")
@@ -71,12 +71,12 @@ public class AdminController {
         return ResponseDto.of(HttpStatus.OK, resultAlram);
     }
 
-
     @GetMapping("/restaurants")
     public ResponseEntity<ResponseDto<RestaurantPageableResponseDto>> getAllRestaurants(
         HttpServletRequest request,
         @RequestParam("page") int page,
-        @RequestParam("size") int size
+        @RequestParam("size") int size,
+        @RequestParam(required = false) String category
     ) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("Id") == null) {
@@ -87,10 +87,12 @@ public class AdminController {
         RestaurantPageableResponseDto allRestaurants = adminService.getAllRestaurants(
             userId,
             page,
-            size
+            size,
+            category
         );
         return ResponseDto.of(HttpStatus.OK, allRestaurants);
     }
+
 
     @PostMapping("/logout")
     public String logout(HttpServletResponse response, HttpServletRequest request) {

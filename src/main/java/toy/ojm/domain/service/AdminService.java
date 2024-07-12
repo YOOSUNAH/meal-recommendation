@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +43,18 @@ public class AdminService {
             () -> new IllegalArgumentException("admin user 가 존재하지 않습니다."));
     }
 
-    public RestaurantPageableResponseDto getAllRestaurants(String id, int page, int size) {
+    public RestaurantPageableResponseDto getAllRestaurants(
+        String id,
+        int page,
+        int size,
+        String category)
+    {
         Users user = validateUser(id);
         Pageable pageable = PageRequest.of(page, size);
-        Page<Restaurant> responseDtoPage = restaurantRepository.findAll(pageable);
+
+        Specification<Restaurant> specification = RestaurantSpecifications.categoryEquals(category);
+        Page<Restaurant> responseDtoPage = restaurantRepository.findAll(specification, pageable);
+
         int totalPage = responseDtoPage.getTotalPages();
         int totalElements = (int) responseDtoPage.getTotalElements();
 
