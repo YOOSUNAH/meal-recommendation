@@ -40,7 +40,7 @@
       url: `${host}/v1/admin/get-session`,
       success: function (response) {
         if (response.data === "OJM Auth") {
-          window.location.href = `${host}/adminPage.html`;
+          window.location.href = `${host}/adminPage`;
         }
       },
       error: function () {
@@ -65,7 +65,7 @@
         data: JSON.stringify({ id: id, password: password }),
         success: function () {
           // 로그인 성공 시 admin 페이지로 이동합니다.
-          window.location.href = `${host}/adminPage.html`;
+          window.location.href = `${host}/adminPage`;
         },
         error: function () {
           alert("Login Fail");
