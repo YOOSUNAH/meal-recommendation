@@ -1,5 +1,6 @@
 package toy.ojm.domain.service;
 
+import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 import toy.ojm.domain.dto.RestaurantPageableResponseDto;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.entity.Users;
@@ -53,8 +55,17 @@ public class AdminService {
         Users user = validateUser(id);
         Pageable pageable = PageRequest.of(page, size);
 
-        Specification<Restaurant> specification = RestaurantSpecifications.categoryEquals(category);
-        Page<Restaurant> responseDtoPage = restaurantRepository.findAll(specification, pageable);
+        Specification<Restaurant> specification = null;
+        if(!StringUtils.isEmpty(category)){ //  category가 비어있지 않는 경우, 비어있으면 null 유지
+            specification = RestaurantSpecifications.categoryEquals(category);
+        }
+
+        Page<Restaurant> responseDtoPage;
+        if(specification != null){
+            responseDtoPage = restaurantRepository.findAll(specification, pageable);
+        }else{  // specification 이 Null이면 그냥 findAll
+            responseDtoPage = restaurantRepository.findAll(pageable);
+        }
 
         int totalPage = responseDtoPage.getTotalPages();
         int totalElements = (int) responseDtoPage.getTotalElements();

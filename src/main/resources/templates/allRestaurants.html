@@ -38,11 +38,10 @@
     }
 
     .total-count {
-      position: absolute;
-      top: 10px;
-      right: 10px;
       font-size: 14px;
       color: #555;
+      margin-bottom: 10px;
+      margin-top: 10px;
     }
 
     .category-input {
@@ -53,7 +52,6 @@
 <body>
 <div class="container" id="content" style="display: none;">
   <h1>음식점 전체 조회</h1>
-  <div class="total-count" id="totalCount">총 음식점 수: 0</div>
 
   <!-- 카테고리 선택 UI -->
   <div class="category-input">
@@ -73,7 +71,9 @@
     <label for="sizeInput">페이지 당 음식점 수: </label>
     <input type="number" id="sizeInput" min="1" value="5">
     <button onclick="updateSize()">적용</button>
+    <div class="total-count" id="totalCount">총 음식점 수: 0</div>
   </div>
+
   <div id="restaurants-list"></div>
   <div class="pagination-info">
     <div class="pagination-controls">
@@ -163,12 +163,12 @@
           $('#content').show();
           getRestaurants(currentPage, pageSize, selectedCategory);
         } else {
-          window.location.href = `${host}/login.html`;
+          window.location.href = `${host}/boss`;
         }
       },
       error: function () {
         // 세션이 없으면 로그인 페이지로 리다이렉트합니다.
-        window.location.href = `${host}/login.html`;
+        window.location.href = `${host}/boss`;
       }
     });
   });
