@@ -31,11 +31,20 @@
       font-size: 18px;
       margin-bottom: 10px;
     }
+
+    .size-input {
+      margin: 10px;
+    }
   </style>
 </head>
 <body>
 <div class="container">
   <h1>음식점 전체 조회</h1>
+  <div class="size-input">
+    <label for="sizeInput">페이지 당 음식점 수: </label>
+    <input type="number" id="sizeInput" min="1" value="5">
+    <button onclick="updateSize()">적용</button>
+  </div>
   <div id="restaurants-list"></div>
   <div class="pagination-info">
     <div class="pagination-controls">
@@ -49,7 +58,7 @@
 <script>
   let currentPage = 1;
   let totalPages = 1;
-  const pageSize = 5;
+  let pageSize = 5;
 
   function getRestaurants(page, size) {
     fetch(`/v1/admin/restaurants?page=${page - 1}&size=${size}`, {
@@ -93,6 +102,12 @@
     if (currentPage < totalPages) {
       getRestaurants(currentPage + 1, pageSize);
     }
+  }
+
+  function updateSize() {
+    const sizeInput = document.getElementById('sizeInput').value;
+    pageSize = parseInt(sizeInput) || pageSize;
+    getRestaurants(currentPage, pageSize);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
