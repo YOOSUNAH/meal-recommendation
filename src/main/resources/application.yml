@@ -8,6 +8,7 @@ spring:
       ddl-auto: none
   mvc:
     throw-exception-if-no-handler-found: true
+    static-path-pattern: /static/**
   web:
     resources:
       add-mappings: false
