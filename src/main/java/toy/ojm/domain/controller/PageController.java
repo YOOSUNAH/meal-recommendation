@@ -58,12 +58,12 @@ public class PageController implements ErrorController {
         return  "allRestaurants";
     }
 
-    @RequestMapping("/error")
-    public String handleError() {
-        return "redirect:/home";
-    }
-
-    public String getErrorPath() {
-        return "/error";
-    }
+//    @RequestMapping("/error")
+//    public String handleError() {
+//        return "redirect:/home";
+//    }
+//
+//    public String getErrorPath() {
+//        return "/error";
+//    }
 }
