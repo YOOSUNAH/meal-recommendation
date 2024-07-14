@@ -17,7 +17,7 @@
         <!-- 날짜별로 저장 TimeBasedRollingPolicy -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOGS_ABSOLUTE_PATH}/application.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>7</maxHistory>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
 
