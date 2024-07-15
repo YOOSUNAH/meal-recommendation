@@ -24,7 +24,7 @@
 <body>
 <div id="content" style="display: none;">
   <div>로그인에 성공했습니다.</div>
-  <button onclick="window.location.href='/allRestaurants'" class="btn">
+  <button onclick="window.location.href='/boss/allRestaurants'" class="btn">
     음식점 전체 조회
   </button>
 </div>
@@ -44,12 +44,12 @@
         if (response.data === "OJM Auth") {
           $('#content').show();
         } else {
-          window.location.href = `${host}/login.html`;
+          window.location.href = `${host}/login`;
         }
       },
       error: function () {
         // 세션이 없으면 로그인 페이지로 리다이렉트합니다.
-        window.location.href = `${host}/login.html`;
+        window.location.href = `${host}/login`;
       }
     });
   });

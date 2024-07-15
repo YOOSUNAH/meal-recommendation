@@ -6,7 +6,6 @@ import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
@@ -43,17 +42,22 @@ public class PageController implements ErrorController {
     }
 
     @GetMapping("/boss")
-    public String login() {
+    public String adminHome() {
       return "login";
     }
 
-    @GetMapping("/adminPage")
+    @GetMapping("/boss/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/boss/adminPage")
     public String adminPage() {
         return  "adminPage";
     }
 
 
-    @GetMapping("/allRestaurants")
+    @GetMapping("/boss/allRestaurants")
     public String allRestaurants() {
         return  "allRestaurants";
     }

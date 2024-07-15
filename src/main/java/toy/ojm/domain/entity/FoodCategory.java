@@ -36,5 +36,6 @@ public class FoodCategory {
         this.Western = western;
     }
 
-    public void setEtc(boolean etc) {this.etc = true;}
+    public void setEtc(boolean etc) {
+        this.etc = true;}
 }
