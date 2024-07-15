@@ -18,10 +18,6 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOGS_ABSOLUTE_PATH}/application.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
-            <!-- 파일 크기 기반 롤링 설정 추가 -->
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
 
