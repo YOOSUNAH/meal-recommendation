@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
+import toy.ojm.domain.entity.FoodCategoryName;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.Distance;
 import toy.ojm.domain.repository.CategoryRepository;
@@ -28,27 +29,15 @@ public class OJMService {
         List<String> categoryList = request.getCategoryList();
         FoodCategory category = new FoodCategory();
 
-        if (categoryList != null) {
-            for (String categoryElement : categoryList) {
-                switch (categoryElement) {
-                    case "한식":
-                        category.setKorean(true);
-                        break;
-                    case "일식":
-                        category.setJapanese(true);
-                        break;
-                    case "중식":
-                        category.setChinese(true);
-                        break;
-                    case "양식":
-                        category.setWestern(true);
-                        break;
-                    case "기타":
-                        category.setEtc(true);
-                        break;
-                    default:
-                        category.setEtc(true);
+        if(categoryList != null){
+            for(String categoryElement : categoryList){
+                try {
+                    FoodCategoryName categoryName = FoodCategoryName.fromString(categoryElement);
+                    category.setCategory(categoryName.name());
                 }
+               catch (IllegalArgumentException e){
+                    category.setCategory("기타");
+               }
             }
         }
         categoryRepository.save(category);

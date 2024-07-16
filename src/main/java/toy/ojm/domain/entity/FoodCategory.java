@@ -14,28 +14,13 @@ public class FoodCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    private boolean Korean = false;
-    private boolean Japanese = false;
-    private boolean Chinese = false;
-    private boolean Western = false;
-    private boolean etc = false;
+    private FoodCategoryName category;
 
-    public void setKorean(boolean korean) {
-        this.Korean = korean;
+    public void setCategory(String categoryName) {
+        try {
+            this.category = FoodCategoryName.fromString(categoryName);
+        } catch (IllegalArgumentException e) {
+            this.category = FoodCategoryName.ETC; // 한식, 일식, 중식, 양식에 해당하지 않으면 기타로 설정
+        }
     }
-
-    public void setJapanese(boolean japanese) {
-        this.Japanese = japanese;
-    }
-
-    public void setChinese(boolean chinese) {
-        this.Chinese = chinese;
-    }
-
-    public void setWestern(boolean western) {
-        this.Western = western;
-    }
-
-    public void setEtc(boolean etc) {
-        this.etc = true;}
 }

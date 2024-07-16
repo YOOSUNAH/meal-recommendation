@@ -1,5 +1,6 @@
 package toy.ojm.domain.service;
 
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,16 +51,23 @@ public class AdminService {
         int page,
         int size,
         String category,
-        String keyword)
-    {
+        String keyword) {
         Users user = validateUser(id);
         Pageable pageable = PageRequest.of(page, size);
 
-        Specification<Restaurant> specification = Specification.where(null);
-        if(!StringUtils.isEmpty(category)){ //  category가 비어있지 않는 경우, 비어있으면 null 유지
-            specification = specification.and(RestaurantSpecifications.categoryEquals(category));
+        Specification<Restaurant> specification = RestaurantSpecifications.alwaysTrue();
+
+        if ("기타".equals(category)) {
+            specification = specification.and(
+                RestaurantSpecifications.categoryNotIn(Arrays.asList("한식", "일식", "중식", "양식"))
+            );
+        } else if (!StringUtils.isEmpty(category)) {
+            specification = specification.and(
+                RestaurantSpecifications.categoryEquals(category)
+            );
         }
-        if(!StringUtils.isEmpty(keyword)){
+
+        if (!StringUtils.isEmpty(keyword)) {
             specification = specification.and(RestaurantSpecifications.nameContains(keyword));
         }
 
