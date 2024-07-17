@@ -30,9 +30,14 @@
             transition: background-color 0.3s;
         }
 
+        .btn-green {
+            background-color: #28a745; /* 초록색 배경 */
+        }
+
         .medium-text {
             font-size: 18px;
             line-height: 2;
+            text-align: center;
         }
 
         #map {
@@ -40,10 +45,51 @@
             height: 525px !important;
             margin: 0 auto;
         }
+        .center-text {
+            text-align: center;
+        }
 
+        @media screen and (max-width: 768px) {
+            body {
+                font-size: 14px; /* Mobile mode */
+                margin: 0 auto;
+                padding: 0;
+            }
+
+            .btn {
+                font-size: 0.6em; /* Adjust button font size */
+                padding: 4px 8px; /* Adjust button padding */
+                margin: 10px auto; /* Center align */
+            }
+
+            .center-text {
+                max-width: 100%;
+                margin: 0 auto;
+                text-align: center;
+            }
+        }
+        #homeButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #homeButton:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
+<button id="homeButton" onclick="goToHome()">Home</button>
+
 <div>
     <div class="containers">
         <h2></h2>
@@ -65,11 +111,23 @@
     <button th:onclick="|window.location.href='@{/category}'|" class="btn">
         현위치를 중심으로 메뉴 선택하러 가기
     </button>
+
+    <button id="previousSearchButton" class="btn btn-green" style="display:none;">
+        가장 최근에 선택한 카테고리로 바로 추천 받기
+    </button>
+    <p id="categoryInfo" class="medium-text" style="display:none;"></p>
+
+
+
 </div>
 
 <script type="text/javascript"
         th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${kakaoAppKey}"></script>
 <script>
+    function goToHome() {
+        window.location.href = '/home'; // 홈 페이지로 이동
+    }
+
     function showRecommend() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
@@ -93,11 +151,40 @@
                 });
 
                 marker.setMap(map);
+
+                // 이전 검색 정보 버튼 보이기
+                document.getElementById('previousSearchButton').style.display = 'block';
+
+                // 최근에 선택한 카테고리 표시
+                var category = localStorage.getItem('category');
+                if (category) {
+                    document.getElementById('categoryInfo').style.display = 'block';
+                    document.getElementById('categoryInfo').textContent = '가장 최근에 선택한 카테고리 : ' + category;
+                }
             });
         } else {
             alert("이 브라우저는 Geolocation을 지원하지 않습니다.");
         }
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        var latitude = localStorage.getItem('latitude');
+        var longitude = localStorage.getItem('longitude');
+        var category = localStorage.getItem('category');
+
+        if (latitude && longitude && category) {
+            document.getElementById('previousSearchButton').style.display = 'block';
+            document.getElementById('previousSearchButton').onclick = function() {
+                sessionStorage.setItem('latitude', latitude);
+                sessionStorage.setItem('longitude', longitude);
+                sessionStorage.setItem('category', category);
+                window.location.href = `/result`;
+            }
+
+            // 최근에 선택한 카테고리 표시
+            document.getElementById('categoryInfo').style.display = 'block';
+            document.getElementById('categoryInfo').textContent = '가장 최근에 선택한 카테고리 : ' + category;
+        }
+    });
 </script>
 </body>
 </html>

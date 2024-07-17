@@ -98,9 +98,29 @@
     #selectCategoryButton {
       margin: 10px;
     }
+
+    #homeButton {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 1em;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background-color: #007BFF;
+      color: #FFFFFF;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    #homeButton:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
+<button id="homeButton" onclick="goToHome()">Home</button>
+
 <h1 class="center-text">오늘의 점심 메뉴</h1>
 <h3 class="center-text">오늘 뭐 먹지?</h3>
 
@@ -130,6 +150,10 @@
 
 
 <script>
+  function goToHome() {
+    window.location.href = '/home'; // 홈 페이지로 이동
+  }
+
   $(document).ready(function() {
     recommend();
 
@@ -149,6 +173,11 @@
 
   $('#location').text('위도: ' + latitude + ', 경도: ' + longitude);
   $('#category').text('선택하신 카테고리: ' + category.join(', '));
+
+  // 로컬 스토리지에 위치 정보와 카테고리 정보 저장
+  localStorage.setItem('latitude', latitude);
+  localStorage.setItem('longitude', longitude);
+  localStorage.setItem('category', categoryString);
 
   function recommend() {
     $.ajax({
