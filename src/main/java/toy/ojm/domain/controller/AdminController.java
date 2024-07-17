@@ -85,7 +85,7 @@ public class AdminController {
         }
         String userId = (String) session.getAttribute("Id");
 
-        RestaurantPageableResponseDto allRestaurants = adminService.getAllRestaurants(
+        RestaurantPageableResponseDto allRestaurants = adminService.getAllRestaurantsV2(
             userId,
             page,
             size,

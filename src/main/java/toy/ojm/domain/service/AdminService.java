@@ -13,6 +13,7 @@ import org.thymeleaf.util.StringUtils;
 import toy.ojm.domain.dto.RestaurantPageableResponseDto;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.entity.Users;
+import toy.ojm.domain.repository.RestaurantQueryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
 import toy.ojm.domain.repository.RestaurantSpecifications;
 import toy.ojm.domain.repository.UserRepository;
@@ -24,6 +25,7 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
+    private final RestaurantQueryRepository restaurantQueryRepository;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
@@ -46,12 +48,13 @@ public class AdminService {
             () -> new IllegalArgumentException("admin user 가 존재하지 않습니다."));
     }
 
-    public RestaurantPageableResponseDto getAllRestaurants(
+    public RestaurantPageableResponseDto getAllRestaurantsV1(
         String id,
         int page,
         int size,
         String category,
-        String keyword) {
+        String keyword)
+    {
         Users user = validateUser(id);
         Pageable pageable = PageRequest.of(page, size);
 
@@ -72,6 +75,30 @@ public class AdminService {
         }
 
         Page<Restaurant> responseDtoPage = restaurantRepository.findAll(specification, pageable);
+
+        int totalPage = responseDtoPage.getTotalPages();
+        int totalElements = (int) responseDtoPage.getTotalElements();
+
+        return new RestaurantPageableResponseDto(
+            responseDtoPage.getContent(),
+            size,
+            page + 1,
+            totalPage,
+            totalElements
+        );
+    }
+
+    public RestaurantPageableResponseDto getAllRestaurantsV2(
+        String id,
+        int page,
+        int size,
+        String category,
+        String keyword)
+    {
+        Users user = validateUser(id);
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Restaurant> responseDtoPage = restaurantQueryRepository.findByCategoryAndKeyword(pageable, category, keyword);
 
         int totalPage = responseDtoPage.getTotalPages();
         int totalElements = (int) responseDtoPage.getTotalElements();
