@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy"content="upgrade-insecure-requests"/>
+    <link href="/css/styles.css" rel="stylesheet">
+    <script src="/js/script.js"></script>
+    <style>
+        .form-check {
+            font-size: 1.25rem;
+            text-align: center;
+            margin-bottom: 15px; /* 각 체크박스 요소 사이의 여백 추가 */
+        }
+
+        .btn {
+            display: block;
+            margin: 20px auto; /* 가운데 정렬 */
+            font-size: 1.0em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #homeButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #homeButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<button id="homeButton" onclick="goToHome()">Home</button>
+
+<div th:fragment="block">
+    <div class="form-check">
+        <h2>메뉴 선택하기</h2>
+    </div>
+    <div class="form-check">
+        <input type="checkbox" value="" id="All" onclick="selectAllCategory()">
+        <label for="All">
+            전체 선택
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Korean" checked onclick="updateSelectAllCheckbox()">
+        <label for="Korean">
+            한식
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Japanese" onclick="updateSelectAllCheckbox()">
+        <label for="Japanese">
+            일식
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Chinese" onclick="updateSelectAllCheckbox()">
+        <label for="Chinese">
+            중식
+        </label>
+    </div>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="Western" onclick="updateSelectAllCheckbox()">
+        <label for="Western">
+            양식
+        </label>
+    </div>
+    <br>
+    <br>
+    <div class="form-check">
+        <input type="checkbox" value="" id="ETC" onclick="updateSelectAllCheckbox()">
+        <label for="ETC">
+            기타
+        </label>
+    </div>
+    <br>
+
+    <button th:onclick="|window.location.href='@{/result}'|" class="btn">
+        식당 추천 받으러 가기
+    </button>
+
+</div>
+
+<script>
+    function goToHome() {
+        window.location.href = '/home'; // 홈 페이지로 이동
+    }
+
+    function selectAllCategory() {
+        const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
+        const allCheckbox = document.getElementById('All');
+        categories.forEach(category => {
+            document.getElementById(category).checked = allCheckbox.checked;
+        });
+    }
+
+    function updateSelectAllCheckbox() {
+        const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
+        const allCheckbox = document.getElementById('All');
+        const allChecked = categories.every(category => document.getElementById(category).checked);
+        allCheckbox.checked = allChecked;
+    }
+
+    function sendCategorySelection() {
+        const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
+        let selectedCategories = categories.filter(category => document.getElementById(category).checked).map(category => category === 'Korean' ? '한식' : category === 'Japanese' ? '일식' : category === 'Chinese' ? '중식' : category === 'Western' ? '양식' : '기타');
+
+        // 카테고리 선택 결과를 세션 스토리지에 저장합니다.
+        // 배열을 문자열로 변환하여 저장합니다.
+        sessionStorage.setItem('category', JSON.stringify(selectedCategories));
+    }
+
+    document.querySelector('.btn').addEventListener('click', sendCategorySelection);
+</script>
+</body>
+</html>

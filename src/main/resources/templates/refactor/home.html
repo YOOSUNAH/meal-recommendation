@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <title>OJM</title>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+    <script src="/js/script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-md text-center">
+        <h1 class="text-4xl font-bold tracking-tight text-foreground">
+            당신의 식사를 정해드려요
+        </h1>
+        <p class="mt-4 text-muted-foreground">
+            주변에 어떤 음식점이 있는 지 궁금하신가요? 저희가 알려드릴게요!
+        </p>
+        <div class="mt-6">
+            <a th:href="@{/refactor/location}"
+               class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+                추천 시작하기
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
