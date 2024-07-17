@@ -24,9 +24,28 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+        #homeButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #homeButton:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
+<button id="homeButton" onclick="goToHome()">Home</button>
+
 <div th:fragment="block">
     <div class="form-check">
         <h2>메뉴 선택하기</h2>
@@ -82,6 +101,10 @@
 </div>
 
 <script>
+    function goToHome() {
+        window.location.href = '/home'; // 홈 페이지로 이동
+    }
+
     function selectAllCategory() {
         const categories = ['Korean', 'Japanese', 'Chinese', 'Western', 'ETC'];
         const allCheckbox = document.getElementById('All');
