@@ -63,6 +63,8 @@ public class OJMService {
             .limit(10)
             .toList();
 
+        // TODO: 카카오 지도에 정확하게 핀 찍을 수 있도록 주소데이터 fetch(위경도 or 도로명 or 지번 or ...)
+//        requestKakakoMapCoordinateForRestaurants()
         return randomRestaurants.stream()
             .map(r -> new RestaurantResponseDto(
                 r.getName(),

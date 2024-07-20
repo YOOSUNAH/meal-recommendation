@@ -56,7 +56,7 @@
                 </div>
             </div>
             <div class="mt-6">
-                <button th:onclick="|sendCategorySelection('@{/result}')|"
+                <button th:onclick="|sendCategorySelection('@{/refactor/result}')|"
                         class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
                     결과 확인
                 </button>
@@ -82,12 +82,37 @@
     }
 
     function sendCategorySelection(redirectUrl) {
-        sessionStorage.setItem('categories', JSON.stringify(
-            resolveCategoryElementIds().filter(category => document.getElementById(category).checked))
-        )
+        // 현재 검색중 데이터 저장
+        let selectedCategories = resolveCategoryElementIds().filter(category => document.getElementById(category).checked);
+        sessionStorage.setItem('categories', JSON.stringify(selectedCategories))
 
+        // 로컬 스토리지 최근 검색 내역 저장
+        let previousSearchHistories = fetchSearchHistories();
+        previousSearchHistories.push({
+            coordinate: {
+                latitude: sessionStorage.getItem('latitude'),
+                longitude: sessionStorage.getItem('longitude'),
+            },
+            categories: selectedCategories
+        })
+        saveSearchHistories(previousSearchHistories)
+
+        // 페이지 이동
         window.location.href = redirectUrl
     }
+
+    function fetchSearchHistories() {
+        const previousSearchHistories = localStorage.getItem('previousSearchHistories')
+        if (previousSearchHistories == null) {
+            return []
+        }
+        return JSON.parse(previousSearchHistories)
+    }
+
+    function saveSearchHistories(searchHistories) {
+        localStorage.setItem('previousSearchHistories', JSON.stringify(searchHistories))
+    }
+
 </script>
 </body>
 </html>

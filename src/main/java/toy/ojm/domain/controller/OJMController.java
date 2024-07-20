@@ -1,5 +1,6 @@
 package toy.ojm.domain.controller;
 
+import com.google.common.collect.Lists;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,9 +85,8 @@ public class OJMController {
 
         if (restaurants == null || restaurants.isEmpty()) {
             return ResponseDto.notFound("근처에 식당이 없습니다.");
-        } else {
-            return ResponseDto.of(HttpStatus.OK, restaurants);
         }
+        return ResponseDto.of(HttpStatus.OK, restaurants);
     }
 
 

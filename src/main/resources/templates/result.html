@@ -1,122 +1,123 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy"content="upgrade-insecure-requests"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>오점머</title>
-  <link href="/css/styles.css" rel="stylesheet">
-  <script src="/js/script.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <style>
-    body {
-      font-size: 16px; /* PC 모드 기본 글씨 크기 */
-    }
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오점머</title>
+    <link href="/css/styles.css" rel="stylesheet">
+    <script src="/js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-size: 16px; /* PC 모드 기본 글씨 크기 */
+        }
 
-    .btn {
-      display: block;
-      margin: 20px auto; /* 가운데 정렬 */
-      font-size: 1.0em;
-      padding: 8px 16px;
-      border-radius: 8px;
-      background-color: #007BFF;
-      color: #FFFFFF;
-      text-align: center;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+        .btn {
+            display: block;
+            margin: 20px auto; /* 가운데 정렬 */
+            font-size: 1.0em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-    .center-text {
-      text-align: center;
-    }
+        .center-text {
+            text-align: center;
+        }
 
-    .restaurant-info {
-      border: 1px solid #ddd;
-      margin: 20px auto; /* 가운데 정렬 */
-      padding: 10px;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      width: 50%; /* 너비 조정 */
-      max-width: 600px; /* 최대 너비 설정 */
-      list-style: none;
-      text-align: center; /* 중앙 정렬 */
-    }
+        .restaurant-info {
+            border: 1px solid #ddd;
+            margin: 20px auto; /* 가운데 정렬 */
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 50%; /* 너비 조정 */
+            max-width: 600px; /* 최대 너비 설정 */
+            list-style: none;
+            text-align: center; /* 중앙 정렬 */
+        }
 
-    .list-group-item {
-      margin-bottom: 20px;
-    }
+        .list-group-item {
+            margin-bottom: 20px;
+        }
 
-    h1, h3, #category {
-      font-size: 1.2em;
-    }
+        h1, h3, #category {
+            font-size: 1.2em;
+        }
 
-     @media screen and (max-width: 768px) {
-      body {
-        font-size: 14px; /* 모바일 모드 기본 글씨 크기 조정 */
-        margin: 0 auto;
-        padding: 0;
-      }
+        @media screen and (max-width: 768px) {
+            body {
+                font-size: 14px; /* 모바일 모드 기본 글씨 크기 조정 */
+                margin: 0 auto;
+                padding: 0;
+            }
 
-      .restaurant-info {
-        font-size: 0.9em; /* 모바일 모드에서 상대적으로 작은 글씨 크기 설정 */
-        width: 80%; /* 모바일 모드에서 너비 조정 */
-        max-width: 100%; /* 최대 너비를 100%로 제한 */
-        margin: 10px 45px 10px auto;
-        text-align: center; /* 중앙 정렬 */
-      }
+            .restaurant-info {
+                font-size: 0.9em; /* 모바일 모드에서 상대적으로 작은 글씨 크기 설정 */
+                width: 80%; /* 모바일 모드에서 너비 조정 */
+                max-width: 100%; /* 최대 너비를 100%로 제한 */
+                margin: 10px 45px 10px auto;
+                text-align: center; /* 중앙 정렬 */
+            }
 
-      .restaurant-info h4, .restaurant-info p {
-        font-size: 0.9em; /* 모바일 모드에서 상대적으로 작은 글씨 크기 설정 */
-      }
+            .restaurant-info h4, .restaurant-info p {
+                font-size: 0.9em; /* 모바일 모드에서 상대적으로 작은 글씨 크기 설정 */
+            }
 
-      h1, h3, #category {
-        font-size: 0.8em; /* 모바일 모드에서 제목 글씨 크기 조정 */
-        margin: 0 auto;
-        text-align: center; /* 중앙 정렬 */
-      }
+            h1, h3, #category {
+                font-size: 0.8em; /* 모바일 모드에서 제목 글씨 크기 조정 */
+                margin: 0 auto;
+                text-align: center; /* 중앙 정렬 */
+            }
 
-      .btn {
-        font-size: 0.6em; /* 모바일 모드에서 버튼 글씨 크기 조정 */
-        padding: 4px 8px; /* 모바일 모드에서 버튼 패딩 조정 */
-        margin: 10px auto; /* 가운데 정렬 */
-      }
+            .btn {
+                font-size: 0.6em; /* 모바일 모드에서 버튼 글씨 크기 조정 */
+                padding: 4px 8px; /* 모바일 모드에서 버튼 패딩 조정 */
+                margin: 10px auto; /* 가운데 정렬 */
+            }
 
-      .center-text {
-        max-width: 100%;
-        margin: 0 auto;
-        text-align: center; /* 중앙 정렬 */
-      }
-    }
-    .button-group {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+            .center-text {
+                max-width: 100%;
+                margin: 0 auto;
+                text-align: center; /* 중앙 정렬 */
+            }
+        }
 
-    #reloadButton,
-    #selectCategoryButton {
-      margin: 10px;
-    }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    #homeButton {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      font-size: 1em;
-      padding: 8px 16px;
-      border-radius: 8px;
-      background-color: #007BFF;
-      color: #FFFFFF;
-      text-align: center;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
+        #reloadButton,
+        #selectCategoryButton {
+            margin: 10px;
+        }
 
-    #homeButton:hover {
-      background-color: #0056b3;
-    }
-  </style>
+        #homeButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 1em;
+            padding: 8px 16px;
+            border-radius: 8px;
+            background-color: #007BFF;
+            color: #FFFFFF;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #homeButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 <button id="homeButton" onclick="goToHome()">Home</button>
@@ -125,102 +126,103 @@
 <h3 class="center-text">오늘 뭐 먹지?</h3>
 
 <div class="center-text">
-  <hr class="my-4">
-  <p id="category" class="center-text"></p> <!-- 카테고리 정보를 표시할 요소 -->
+    <hr class="my-4">
+    <p id="category" class="center-text"></p> <!-- 카테고리 정보를 표시할 요소 -->
 
-  <div class="button-group">
-    <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">카테고리 다시 선택하기</button>
-    <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
-  </div>
+    <div class="button-group">
+        <button id="selectCategoryButton" type="button" class="btn btn-secondary btn-lg">카테고리 다시 선택하기</button>
+        <button id="reloadButton" type="button" class="btn btn-primary btn-lg">다시 추천 받기!</button>
+    </div>
 
-  <ol class="list-group list-group-numbered center-text" id="restaurantList">
-    <!-- 여기에 음식점 목록 표시 -->
-  </ol>
+    <ol class="list-group list-group-numbered center-text" id="restaurantList">
+        <!-- 여기에 음식점 목록 표시 -->
+    </ol>
 </div>
 
 <div class="alert alert-warning center-text" role="alert" style="display:none">
-  근처에 해당되는 음식점이 존재하지 않습니다.<br>
-  카테고리를 재선택하거나, 다른 곳으로 이동해주세요.
+    근처에 해당되는 음식점이 존재하지 않습니다.<br>
+    카테고리를 재선택하거나, 다른 곳으로 이동해주세요.
 </div>
 
 <div class="alert alert-danger center-text" role="alert" style="display:none">
-  근처에 식당이 없습니다.
+    근처에 식당이 없습니다.
 </div>
 
 
-
 <script>
-  function goToHome() {
-    window.location.href = '/home'; // 홈 페이지로 이동
-  }
-
-  $(document).ready(function() {
-    recommend();
-
-    $('#reloadButton').on('click', function() {
-      recommend();
-    });
-
-    $('#selectCategoryButton').on('click', function () {
-      window.location.href = '/category'; // 카테고리 선택 페이지로 이동
-    });
-  });
-
-  var latitude = sessionStorage.getItem('latitude');
-  var longitude = sessionStorage.getItem('longitude');
-  var categories = JSON.parse(sessionStorage.getItem('categories'));
-
-  $('#location').text('위도: ' + latitude + ', 경도: ' + longitude);
-  $('#category').text('선택하신 카테고리: ' + categories.join(', '));
-
-  // 로컬 스토리지에 위치 정보와 카테고리 정보 저장
-  // localStorage.setItem('latitude', latitude);
-  // localStorage.setItem('longitude', longitude);
-  // localStorage.setItem('category', categories);
-
-  function recommend() {
-    $.ajax({
-      method: "POST",
-      url: "/v1/ojm/nearbyRestaurant",
-      contentType: "application/json",
-      data: JSON.stringify({
-        currentLat: latitude,
-        currentLon: longitude,
-        selectedCategories: category
-      }),
-      success: function (data) {
-        displayRestaurants(data);
-      },
-      error: function (xhr, status, error) {
-        if (xhr.status === 404) {
-          $('.alert-danger').show();
-        } else {
-          console.error("Error occurred: " + error);
-        }
-      }
-    });
-  }
-
-  function displayRestaurants(data) {
-    var restaurants = data.data;
-    var list = $('#restaurantList');
-    list.empty();
-
-    if (restaurants.length === 0) {
-      $('.alert-warning').show();
-    } else {
-      $('.alert-warning').hide();
-      restaurants.slice(0, 10).forEach(function (restaurant) {
-        list.append('<li class="list-group-item restaurant-info">' +
-            '<h4>식당 이름: ' + restaurant.name + '</h4>' +
-            '<p>카테고리: ' + restaurant.category + '</p>' +
-            '<p>주소: ' + restaurant.address + '</p>' +
-            '<p>전화번호: ' + (restaurant.number ? restaurant.number : '정보 없음') + '</p>' +
-            '</li>');
-      });
+    function goToHome() {
+        window.location.href = '/home'; // 홈 페이지로 이동
     }
-    $('.alert-danger').hide();
-  }
+
+    $(document).ready(function () {
+        recommend();
+
+        $('#reloadButton').on('click', function () {
+            recommend();
+        });
+
+        $('#selectCategoryButton').on('click', function () {
+            window.location.href = '/category'; // 카테고리 선택 페이지로 이동
+        });
+    });
+
+    var latitude = sessionStorage.getItem('latitude');
+    var longitude = sessionStorage.getItem('longitude');
+    var categories = JSON.parse(sessionStorage.getItem('categories'));
+
+    $('#location').text('위도: ' + latitude + ', 경도: ' + longitude);
+    $('#category').text('선택하신 카테고리: ' + categories.join(', '));
+
+    // 로컬 스토리지에 위치 정보와 카테고리 정보 저장
+    // localStorage.setItem('latitude', latitude);
+    // localStorage.setItem('longitude', longitude);
+    // localStorage.setItem('category', categories);
+
+    function recommend() {
+        $.ajax({
+            method: "POST",
+            url: "/v1/ojm/nearbyRestaurant",
+            contentType: "application/json",
+            data: JSON.stringify({
+                currentLat: latitude,
+                currentLon: longitude,
+                selectedCategories: category
+            }),
+            success: function (data) {
+                displayRestaurants(data);
+            },
+            error: function (xhr, status, error) {
+                if (xhr.status === 404) {
+                    $('.alert-danger').show();
+                } else {
+                    console.error("Error occurred: " + error);
+                }
+            }
+        });
+    }
+
+    function displayRestaurants(data) {
+        var restaurants = data.data;
+        var list = $('#restaurantList');
+        list.empty();
+
+        if (restaurants.length === 0) {
+            $('.alert-warning').show();
+        } else {
+            $('.alert-warning').hide();
+            restaurants
+                .slice(0, 10)
+                .forEach(function (restaurant) {
+                    list.append('<li class="list-group-item restaurant-info">' +
+                        '<h4>식당 이름: ' + restaurant.name + '</h4>' +
+                        '<p>카테고리: ' + restaurant.category + '</p>' +
+                        '<p>주소: ' + restaurant.address + '</p>' +
+                        '<p>전화번호: ' + (restaurant.number ? restaurant.number : '정보 없음') + '</p>' +
+                        '</li>');
+                });
+        }
+        $('.alert-danger').hide();
+    }
 </script>
 </body>
 </html>

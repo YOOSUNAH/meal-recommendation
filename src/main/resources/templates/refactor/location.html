@@ -33,7 +33,7 @@
                 카테고리도 선택해주세요!
             </button>
         </div>
-        <div id="previousSearchArea">
+        <div id="previousSearchArea" class="hidden">
             <p class="mt-4 text-muted-foreground">
                 최근에 찾아봤던 내역이에요
             </p>
@@ -45,15 +45,22 @@
         th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${kakaoAppKey}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var previousSearchElements = ""
-        fetchSearchHistories().forEach(it => {
+        let searchHistories = fetchSearchHistories();
+        if (searchHistories.length === 0) {
+            return
+        }
+        document.getElementById('previousSearchArea').style.display = 'block';
+
+        var previousSearchElements = "";
+
+        searchHistories.forEach(it => {
             if (it.coordinate == null || it.categories == null) {
                 return
             }
             previousSearchElements +=
                 "<div class=\"previousSearchItem bg-card p-4 rounded-lg shadow-md\">\n" +
                 "    <h3 class=\"text-lg font-medium\">" + it.coordinate.latitude + " / " + it.coordinate.longitude + "</h3>\n" +
-                "    <p class=\"mt-2 text-muted-foreground\">" + it.categories.join(' ') + "</p>\n" +
+                "    <p class=\"mt-2 text-muted-foreground\">" + it.categories.map(c => displayCategoryText(c)).join(' ') + "</p>\n" +
                 "</div>";
         })
         document.getElementById('searchHistoryArea').innerHTML = previousSearchElements
@@ -96,14 +103,6 @@
 
                     // 검색 히스토리 추가
                     document.getElementById('previousSearchArea').style.display = 'none';
-                    var searchHistories = fetchSearchHistories();
-                    searchHistories.push({
-                        "coordinate": {
-                            latitude: latitude,
-                            longitude: longitude
-                        }
-                    })
-                    localStorage.setItem('previousSearchHistories', JSON.stringify(searchHistories))
 
                     // 현재 추천중인 검색
                     sessionStorage.setItem('latitude', latitude);
@@ -117,6 +116,22 @@
             console.error('Geolocation is not supported by this browser.');
         }
     });
+
+    function displayCategoryText(categoryType){
+        if(categoryType === 'Korean'){
+            return '한식'
+        }
+        if(categoryType === 'Japanese'){
+            return '일식'
+        }
+        if(categoryType === 'Chinese'){
+            return '중식'
+        }
+        if(categoryType === 'Western'){
+            return '양식'
+        }
+        return '기타'
+    }
 </script>
 </body>
 </html>
