@@ -168,16 +168,15 @@
 
   var latitude = sessionStorage.getItem('latitude');
   var longitude = sessionStorage.getItem('longitude');
-  var categoryString = sessionStorage.getItem('category');
-  var category = JSON.parse(categoryString);
+  var categories = JSON.parse(sessionStorage.getItem('categories'));
 
   $('#location').text('위도: ' + latitude + ', 경도: ' + longitude);
-  $('#category').text('선택하신 카테고리: ' + category.join(', '));
+  $('#category').text('선택하신 카테고리: ' + categories.join(', '));
 
   // 로컬 스토리지에 위치 정보와 카테고리 정보 저장
-  localStorage.setItem('latitude', latitude);
-  localStorage.setItem('longitude', longitude);
-  localStorage.setItem('category', categoryString);
+  // localStorage.setItem('latitude', latitude);
+  // localStorage.setItem('longitude', longitude);
+  // localStorage.setItem('category', categories);
 
   function recommend() {
     $.ajax({
