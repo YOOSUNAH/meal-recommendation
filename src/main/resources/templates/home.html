@@ -1,50 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
 <head>
+    <title>OJM</title>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy"content="upgrade-insecure-requests"/>
-    <link href="/css/styles.css" rel="stylesheet">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
     <script src="/js/script.js"></script>
-    <style>
-        .container {
-            max-width: 560px;
-            text-align: center;
-            margin: 20px auto;
-        }
-
-        h4, .btn {
-            display: block;
-            margin-bottom: 20px;
-        }
-        .btn {
-            display: block;
-            margin: 20px auto;
-            font-size: 1.0em;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background-color: #007BFF;
-            color: #FFFFFF;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div th:fragment="block">
-    <div class="container">
-        <div class="py-5 text-center">
-            <h2>오늘의 점심 메뉴</h2>
+<div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-md text-center">
+        <h1 class="text-4xl font-bold tracking-tight text-foreground">
+            당신의 식사를 정해드려요
+        </h1>
+        <p class="mt-4 text-muted-foreground">
+            주변에 어떤 음식점이 있는 지 궁금하신가요? 저희가 알려드릴게요!
+        </p>
+        <div class="mt-6">
+            <a th:href="@{/location}"
+               class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+                추천 시작하기
+            </a>
         </div>
     </div>
-
-    <button th:onclick="|window.location.href='@{/location}'|" class="btn">
-        오점머 시작하기!
-    </button>
 </div>
-
-<script>
-
-</script>
 </body>
 </html>

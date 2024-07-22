@@ -1,190 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
+    <title>OJM</title>
     <meta charset="utf-8">
-    <meta http-equiv="Content-Security-Policy"content="upgrade-insecure-requests"/>
-    <link href="/css/styles.css" rel="stylesheet">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
     <script src="/js/script.js"></script>
-    <style>
-        .containers {
-            max-width: 560px;
-            text-align: center;
-            margin-top: 90px;
-        }
-
-        h4, .btn {
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        .btn {
-            display: block;
-            margin: 20px auto;
-            font-size: 1.0em;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background-color: #007BFF;
-            color: #FFFFFF;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .btn-green {
-            background-color: #28a745; /* 초록색 배경 */
-        }
-
-        .medium-text {
-            font-size: 18px;
-            line-height: 2;
-            text-align: center;
-        }
-
-        #map {
-            width: 60% !important;
-            height: 525px !important;
-            margin: 0 auto;
-        }
-        .center-text {
-            text-align: center;
-        }
-
-        @media screen and (max-width: 768px) {
-            body {
-                font-size: 14px; /* Mobile mode */
-                margin: 0 auto;
-                padding: 0;
-            }
-
-            .btn {
-                font-size: 0.6em; /* Adjust button font size */
-                padding: 4px 8px; /* Adjust button padding */
-                margin: 10px auto; /* Center align */
-            }
-
-            .center-text {
-                max-width: 100%;
-                margin: 0 auto;
-                text-align: center;
-            }
-        }
-        #homeButton {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 1em;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background-color: #007BFF;
-            color: #FFFFFF;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #homeButton:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<button id="homeButton" onclick="goToHome()">Home</button>
-
-<div>
-    <div class="containers">
-        <h2></h2>
-    </div>
-    <div class="row">
-        <div style="text-align:center" class="medium-text">
-            1. 위치확인하기버튼 클릭! <br>
-            2. 상단에 위치 액세스 허용! <br>
-            아래에 지도가 보여질 예정입니다. 잠시만 기다려주세요!
+<div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-md text-center">
+        <h1 class="my-8 text-4xl font-bold tracking-tight text-foreground">
+            당신의 식사를 정해드려요
+        </h1>
+        <div id="location-section">
+            <p class="mt-4 text-muted-foreground">
+                위치에 접근할 수 있도록 브라우저 상단에 엑세스 권한을 허용해주세요!
+            </p>
+            <div class="mt-6">
+                <button class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                        onclick="clickCurrentLocation()">
+                    현재 위치를 알려주세요!
+                </button>
+            </div>
         </div>
-        <div class="col">
-            <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="showRecommend()">
-                위치 확인하기
+        <div id="map-container" class="hidden flex-col items-center gap-8">
+            <div class="relative w-full max-w-md rounded-lg overflow-hidden shadow-lg transition-all duration-300 ease-in-out transform-gpu">
+                <div id="map" class="w-full h-[300px] bg-gray-200"></div>
+            </div>
+            <p class="my-8 text-muted-foreground">
+                현재 위치한 곳이 맞는 지 확인해주세요
+            </p>
+            <button th:onclick="|window.location.href='@{/category}'|"
+                    class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+                카테고리도 선택해주세요!
             </button>
-            <p id="location"></p>
+        </div>
+        <div id="previousSearchArea" class="hidden">
+            <p class="mt-4 text-muted-foreground">
+                최근에 찾아봤던 내역이에요
+            </p>
+            <div id="searchHistoryArea" class="grid grid-cols-1 gap-8 sm:grid-cols-3" style="display:block;"></div>
         </div>
     </div>
-    <div id="map" style="width:100%;height:350px;"></div>
-    <button th:onclick="|window.location.href='@{/category}'|" class="btn">
-        현위치를 중심으로 메뉴 선택하러 가기
-    </button>
-
-    <button id="previousSearchButton" class="btn btn-green" style="display:none;">
-        가장 최근에 선택한 카테고리로 바로 추천 받기
-    </button>
-    <p id="categoryInfo" class="medium-text" style="display:none;"></p>
-
-
-
 </div>
-
 <script type="text/javascript"
         th:src="'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${kakaoAppKey}"></script>
 <script>
-    function goToHome() {
-        window.location.href = '/home'; // 홈 페이지로 이동
-    }
-
-    function showRecommend() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-
-                sessionStorage.setItem('latitude', latitude);
-                sessionStorage.setItem('longitude', longitude);
-
-                var mapContainer = document.getElementById('map');
-                var mapOption = {
-                    center: new kakao.maps.LatLng(latitude, longitude),
-                    level: 3
-                };
-
-                var map = new kakao.maps.Map(mapContainer, mapOption);
-
-                var markerPosition = new kakao.maps.LatLng(latitude, longitude);
-                var marker = new kakao.maps.Marker({
-                    position: markerPosition
-                });
-
-                marker.setMap(map);
-
-                // 이전 검색 정보 버튼 보이기
-                document.getElementById('previousSearchButton').style.display = 'block';
-
-                // 최근에 선택한 카테고리 표시
-                var category = localStorage.getItem('category');
-                if (category) {
-                    document.getElementById('categoryInfo').style.display = 'block';
-                    document.getElementById('categoryInfo').textContent = '가장 최근에 선택한 카테고리 : ' + category;
-                }
-            });
-        } else {
-            alert("이 브라우저는 Geolocation을 지원하지 않습니다.");
+    document.addEventListener('DOMContentLoaded', function () {
+        let searchHistories = fetchSearchHistories();
+        if (searchHistories.length === 0) {
+            return
         }
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        var latitude = localStorage.getItem('latitude');
-        var longitude = localStorage.getItem('longitude');
-        var category = localStorage.getItem('category');
+        document.getElementById('previousSearchArea').style.display = 'block';
 
-        if (latitude && longitude && category) {
-            document.getElementById('previousSearchButton').style.display = 'block';
-            document.getElementById('previousSearchButton').onclick = function() {
-                sessionStorage.setItem('latitude', latitude);
-                sessionStorage.setItem('longitude', longitude);
-                sessionStorage.setItem('category', category);
-                window.location.href = `/result`;
+        var previousSearchElements = "";
+
+        searchHistories.forEach(it => {
+            if (it.coordinate == null || it.categories == null) {
+                return
             }
-
-            // 최근에 선택한 카테고리 표시
-            document.getElementById('categoryInfo').style.display = 'block';
-            document.getElementById('categoryInfo').textContent = '가장 최근에 선택한 카테고리 : ' + category;
-        }
+            previousSearchElements +=
+                "<div class=\"previousSearchItem bg-card rounded-lg w-auto shadow-md\">\n" +
+                "    <h3 class=\"text-lg font-medium\">" + it.coordinate.latitude + " / " + it.coordinate.longitude + "</h3>\n" +
+                "    <p class=\"mt-2 text-muted-foreground\">" + it.categories.map(c => displayCategoryText(c)).join(' ') + "</p>\n" +
+                "</div>";
+        })
+        document.getElementById('searchHistoryArea').innerHTML = previousSearchElements
     });
+
+    function fetchSearchHistories() {
+        const previousSearchHistories = localStorage.getItem('previousSearchHistories')
+        if (previousSearchHistories == null) {
+            return []
+        }
+        return JSON.parse(previousSearchHistories)
+    }
+
+    function displayKakaoMap(latitude, longitude) {
+        let position = new kakao.maps.LatLng(latitude, longitude);
+        var map = new kakao.maps.Map(
+            document.getElementById('map'),
+            mapOption = {
+                center: position,
+                level: 3
+            }
+        );
+        var marker = new kakao.maps.Marker({
+            position: position
+        });
+        marker.setMap(map);
+    }
+
+    function clickCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    document.getElementById('location-section').style.display = 'none';
+                    document.getElementById('map-container').classList.remove('hidden');
+
+                    // 지도 그리기
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    displayKakaoMap(latitude, longitude);
+
+                    // 검색 히스토리 추가
+                    document.getElementById('previousSearchArea').style.display = 'none';
+
+                    // 현재 추천중인 검색
+                    sessionStorage.setItem('latitude', latitude);
+                    sessionStorage.setItem('longitude', longitude);
+                },
+                function (error) {
+                    console.error('Error getting location:', error);
+                }
+            );
+        } else {
+            console.error('Geolocation is not supported by this browser.');
+        }
+
+    }
+
+    function displayCategoryText(categoryType) {
+        if (categoryType === 'Korean') {
+            return '한식'
+        }
+        if (categoryType === 'Japanese') {
+            return '일식'
+        }
+        if (categoryType === 'Chinese') {
+            return '중식'
+        }
+        if (categoryType === 'Western') {
+            return '양식'
+        }
+        return '기타'
+    }
 </script>
 </body>
 </html>
