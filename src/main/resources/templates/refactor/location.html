@@ -10,7 +10,7 @@
 <body>
 <div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-md text-center">
-        <h1 class="text-4xl font-bold tracking-tight text-foreground">
+        <h1 class="my-8 text-4xl font-bold tracking-tight text-foreground">
             당신의 식사를 정해드려요
         </h1>
         <div id="location-section" >
@@ -20,7 +20,7 @@
             <div class="mt-6">
                 <button id="location-button"
                         class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-                    현재 위치를 알려주세요
+                    현재 위치를 알려주세요!
                 </button>
             </div>
         </div>
@@ -28,6 +28,9 @@
             <div class="relative w-full max-w-md rounded-lg overflow-hidden shadow-lg transition-all duration-300 ease-in-out transform-gpu">
                 <div id="map" class="w-full h-[300px] bg-gray-200"></div>
             </div>
+            <p class="my-8 text-muted-foreground">
+                현재 위치한 곳이 맞는 지 확인해주세요
+            </p>
             <button th:onclick="|window.location.href='@{/refactor/category}'|"
                     class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
                 카테고리도 선택해주세요!
