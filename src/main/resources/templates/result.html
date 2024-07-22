@@ -70,7 +70,7 @@
         var data = JSON.stringify({
             currentLat: sessionStorage.getItem('latitude'),
             currentLon: sessionStorage.getItem('longitude'),
-            selectedCategories: JSON.parse(sessionStorage.getItem('categories'))
+            selectedCategories: JSON.parse(sessionStorage.getItem('categories')).map(it => displayCategoryText(it))
         })
 
         xhr.open("POST", url, true)
