@@ -57,6 +57,18 @@
             font-size: 16px;
             margin-bottom: 8px;
         }
+
+        /* 모바일 화면에서의 스타일 */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: calc(1.5rem + 2vw); /* 화면 크기에 맞춰 글씨 크기 조정 */
+                white-space: nowrap; /* 줄넘김 방지 */
+                overflow: hidden; /* 넘치는 글씨 숨김 */
+                text-align: center; /* 중앙 정렬 */
+                margin: 0; /* 기본 여백 제거 */
+                padding: 0; /* 기본 패딩 제거 */
+            }
+        }
     </style>
 </head>
 <body>

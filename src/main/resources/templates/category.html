@@ -7,6 +7,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 모바일 화면에서의 스타일 */
+        @media (max-width: 640px) {
+            h1 {
+                font-size: calc(1.5rem + 2vw); /* 화면 크기에 맞춰 글씨 크기 조정 */
+                white-space: nowrap; /* 줄넘김 방지 */
+                overflow: hidden; /* 넘치는 글씨 숨김 */
+                text-align: center; /* 중앙 정렬 */
+                margin: 0; /* 기본 여백 제거 */
+                padding: 0; /* 기본 패딩 제거 */
+            }
+        }
+        </style>
 </head>
 <body>
 <div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
