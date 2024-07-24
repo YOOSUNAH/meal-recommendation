@@ -54,7 +54,9 @@
         </div>
         <div id="loading-container" class="hidden">
             <div class="spinner"></div>
-            <p class="loading-message">엑세스 권한을 허용하셨다면, 지도가 곧 나타납니다.
+            <p class="loading-message">
+                엑세스 권한을 허용하셨다면, <br>
+                지도가 곧 나타납니다.<br>
                 잠시만 기다려주세요.</p>
         </div>
         <div id="map-container" class="hidden flex-col items-center gap-8">
@@ -96,7 +98,7 @@
             previousSearchElements +=
                 "<div class=\"previousSearchItem bg-card rounded-lg w-auto shadow-md\">\n" +
                 "    <h3 class=\"text-lg font-medium\">" + it.coordinate.latitude + " / " + it.coordinate.longitude + "</h3>\n" +
-                "    <p class=\"mt-2 text-muted-foreground\">" + it.categories.map(c => displayCategoryText(c)).join(' ') + "</p>\n" +
+                "    <p class=\"mt-2 text-muted-foreground\"> 카테고리" + it.categories.map(c => displayCategoryText(c)).join(', ') + "</p>\n" +
                 "</div>";
         })
         document.getElementById('searchHistoryArea').innerHTML = previousSearchElements
