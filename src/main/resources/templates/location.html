@@ -8,21 +8,6 @@
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 2s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .hidden {
             display: none;
         }
@@ -46,6 +31,32 @@
         .previousSearchItem:hover {
             background-color: #f0f0f0;
         }
+
+        #loading-container {
+            display: none;
+        }
+
+        #searchHistoryArea {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        #previousSearchArea p {
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+
+        #previousSearchArea .section-divider-top {
+            border-top: 1px solid #ddd;
+            margin-top: 36px;
+            margin-bottom: 16px;
+        }
+
+        .previousSearchItem h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -55,18 +66,18 @@
             당신의 식사를 정해드려요
         </h1>
         <div id="location-section">
-            <p class="mt-4 text-muted-foreground">
-                위치에 접근할 수 있도록 브라우저 상단에 엑세스 권한을 허용해주세요!
-            </p>
             <div class="mt-6">
                 <button class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                         onclick="clickCurrentLocation()">
-                    현재 위치를 알려주세요!
+                    현재 위치 확인하기!
                 </button>
             </div>
+            <p class="mt-4 text-muted-foreground">
+                위치에 접근할 수 있도록 <br>
+                브라우저 상단에 엑세스 권한을 허용해주세요!
+            </p>
         </div>
         <div id="loading-container" class="hidden">
-            <div class="spinner"></div>
             <p class="loading-message">
                 엑세스 권한을 허용하셨다면, <br>
                 지도가 곧 나타납니다.<br>
@@ -86,10 +97,11 @@
             </button>
         </div>
         <div id="previousSearchArea" class="hidden">
-            <p class="mt-4 text-muted-foreground">
-                최근에 찾아봤던 내역이에요
+            <div class="section-divider-top"></div>
+            <p>
+                최근 추천 기록
             </p>
-            <div id="searchHistoryArea" class="flex flex-col gap-4"></div>
+            <div id="searchHistoryArea"></div>
         </div>
     </div>
 </div>
