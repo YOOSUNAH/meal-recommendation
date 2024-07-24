@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <title>OJM</title>
+    <title>오늘 점심 뭐먹지?</title>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -114,8 +114,8 @@
             const categories = encodeURIComponent(JSON.stringify(it.categories));
             previousSearchElements +=
                 `<div class="previousSearchItem" onclick="handleSearchHistoryClick(${latitude}, ${longitude}, '${categories}')">
-                    <h3 class="text-lg font-medium">${it.coordinate.latitude} / ${it.coordinate.longitude}</h3>
-                    <p class="mt-2 text-muted-foreground">카테고리: ${it.categories.map(c => displayCategoryText(c)).join(', ')}</p>
+                    <h3 class="text-lg font-medium">위도 / 경도 : ${it.coordinate.latitude} / ${it.coordinate.longitude}</h3>
+                    <p class="mt-2 text-muted-foreground">카테고리 : ${it.categories.map(c => displayCategoryText(c)).join(', ')}</p>
                 </div>`;
         });
         document.getElementById('searchHistoryArea').innerHTML = previousSearchElements;
