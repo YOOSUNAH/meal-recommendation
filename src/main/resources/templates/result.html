@@ -7,6 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading-message {
+            text-align: center;
+            margin-top: 10px;
+            color: #3498db;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
 <div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -30,20 +57,23 @@
             </p>
             <div id="searchResultArea">
                 <div id="searchResults" class="grid grid-cols-1 gap-8 sm:grid-cols-3" style="display:block"></div>
+                <div id="loading-container" class="hidden">
+                    <div class="spinner"></div>
+                    <p class="loading-message">잠시 후에 결과가 나타납니다, 잠시만 기다려주세요.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        displaySelectedCategories()
-        recommend()
-    })
+        displaySelectedCategories();
+        recommend();
+    });
 
     function displaySelectedCategories() {
-        const selectedCategories = JSON.parse(sessionStorage.getItem('categories'))
-        document.getElementById('selectedCategories').innerHTML = selectedCategories.map(c => displayCategoryText(c)).join(' ')
-
+        const selectedCategories = JSON.parse(sessionStorage.getItem('categories'));
+        document.getElementById('selectedCategories').innerHTML = selectedCategories.map(c => displayCategoryText(c)).join(' ');
     }
 
     function showInfoNoticeEmpty() {
@@ -62,31 +92,41 @@
         document.getElementById('info-empty-restaurant').style.display = 'none';
     }
 
-    function recommend() {
-        hideInfoNoticeEmpty()
-        hideInfoReRecommend()
+    function showLoading() {
+        document.getElementById('loading-container').classList.remove('hidden');
+    }
 
-        var xhr = new XMLHttpRequest()
-        var url = "/v1/ojm/nearbyRestaurant"
+    function hideLoading() {
+        document.getElementById('loading-container').classList.add('hidden');
+    }
+
+    function recommend() {
+        hideInfoNoticeEmpty();
+        hideInfoReRecommend();
+        showLoading();
+
+        var xhr = new XMLHttpRequest();
+        var url = "/v1/ojm/nearbyRestaurant";
         var data = JSON.stringify({
             currentLat: sessionStorage.getItem('latitude'),
             currentLon: sessionStorage.getItem('longitude'),
             selectedCategories: JSON.parse(sessionStorage.getItem('categories')).map(it => displayCategoryText(it))
-        })
+        });
 
-        xhr.open("POST", url, true)
-        xhr.setRequestHeader("Content-Type", "application/json")
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
+                hideLoading();
                 if (xhr.status === 200) {
-                    var data = JSON.parse(xhr.responseText)
-                    var restaurants = data.data
+                    var data = JSON.parse(xhr.responseText);
+                    var restaurants = data.data;
                     if (restaurants.length === 0) {
-                        showInfoNoticeEmpty()
-                        return
+                        showInfoNoticeEmpty();
+                        return;
                     }
-                    var searchResultElements = ""
+                    var searchResultElements = "";
                     restaurants.forEach(restaurant => {
                         searchResultElements +=
                             "<div class=\"previousSearchItem bg-card p-4 rounded-lg shadow-md\">\n" +
@@ -94,37 +134,37 @@
                             "    <p class=\"mt-2 text-muted-foreground\">카테고리: " + restaurant.category + "</p>\n" +
                             "    <p class=\"mt-2 text-muted-foreground\">주소: " + restaurant.address + "</p>\n" +
                             "    <p class=\"mt-2 text-muted-foreground\">전화번호: " + (restaurant.number ? restaurant.number : '정보 없음') + "</p>\n" +
-                            "</div>"
-                    })
-                    document.getElementById('searchResults').innerHTML = searchResultElements
-                    showInfoReRecommend()
+                            "</div>";
+                    });
+                    document.getElementById('searchResults').innerHTML = searchResultElements;
+                    showInfoReRecommend();
                 } else {
                     if (xhr.status === 404) {
-                        showInfoNoticeEmpty()
+                        showInfoNoticeEmpty();
                     } else {
-                        console.error("Error occurred: " + xhr.statusText)
+                        console.error("Error occurred: " + xhr.statusText);
                     }
                 }
             }
-        }
+        };
 
-        xhr.send(data)
+        xhr.send(data);
     }
 
-    function displayCategoryText(categoryType){
-        if(categoryType === 'Korean'){
-            return '한식'
+    function displayCategoryText(categoryType) {
+        if (categoryType === 'Korean') {
+            return '한식';
         }
-        if(categoryType === 'Japanese'){
-            return '일식'
+        if (categoryType === 'Japanese') {
+            return '일식';
         }
-        if(categoryType === 'Chinese'){
-            return '중식'
+        if (categoryType === 'Chinese') {
+            return '중식';
         }
-        if(categoryType === 'Western'){
-            return '양식'
+        if (categoryType === 'Western') {
+            return '양식';
         }
-        return '기타'
+        return '기타';
     }
 </script>
 </body>
