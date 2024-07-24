@@ -7,14 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 반응형 텍스트 크기 조정 */
+        @media (max-width: 640px) {
+            .text-responsive {
+                font-size: clamp(1rem, 4vw, 1.5rem); /* 모바일 화면에서 폰트 크기 조정 */
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-md text-center">
-        <h1 class="text-4xl font-bold tracking-tight text-foreground">
+        <h1 class="text-4xl font-bold tracking-tight text-foreground text-responsive">
             당신의 식사를 정해드려요
         </h1>
-        <p class="mt-4 text-muted-foreground">
+        <p class="mt-4 text-muted-foreground text-base text-responsive">
             주변에 어떤 음식점이 있는 지 궁금하신가요? 저희가 알려드릴게요!
         </p>
         <div class="mt-6">
