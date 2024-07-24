@@ -44,6 +44,14 @@
                 padding: 0; /* 기본 패딩 제거 */
             }
         }
+
+        #searchResults {
+            margin: 0 auto;
+            width: 100%;
+        }
+        .previousSearchItem {
+            margin-bottom: 16px; /* 항목 간격 조정 */
+        }
     </style>
 </head>
 <body>
@@ -56,10 +64,10 @@
             <p class="mt-4 text-muted-foreground">
                 카테고리 : <span id="selectedCategories"></span>
             </p>
-            <div id="recommend-section" class="hidden text-center">
+            <div id="recommend-section" class="text-center">
                 <button onclick="recommend()"
                         class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-                    다시 추천받을래요
+                    다시 추천받기
                 </button>
             </div>
             <p id="info-empty-restaurant" class="hidden mt-4 text-muted-foreground">
@@ -67,7 +75,7 @@
                 현재 위치를 기준으로 200M 이내의 음식점들을 추천해주는 서비스입니다.
             </p>
             <div id="searchResultArea">
-                <div id="searchResults" class="grid grid-cols-1 gap-8 sm:grid-cols-3" style="display:block"></div>
+                <div id="searchResults"></div>
                 <div id="loading-container" class="hidden">
                     <div class="spinner"></div>
                     <p class="loading-message">잠시 후에 결과가 나타납니다, 잠시만 기다려주세요.</p>
@@ -79,7 +87,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         displaySelectedCategories();
-        recommend();
+        recommend(); // 페이지 로드 시 추천받기 호출
     });
 
     function displaySelectedCategories() {
@@ -105,10 +113,12 @@
 
     function showLoading() {
         document.getElementById('loading-container').classList.remove('hidden');
+        document.getElementById('searchResults').classList.add('hidden'); // 검색 결과 숨기기
     }
 
     function hideLoading() {
         document.getElementById('loading-container').classList.add('hidden');
+        document.getElementById('searchResults').classList.remove('hidden'); // 검색 결과 표시
     }
 
     function recommend() {
@@ -129,7 +139,7 @@
 
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
-                hideLoading();
+                hideLoading(); // spinbar와 메시지 숨기기
                 if (xhr.status === 200) {
                     var data = JSON.parse(xhr.responseText);
                     var restaurants = data.data;
