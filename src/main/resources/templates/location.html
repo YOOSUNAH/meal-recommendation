@@ -7,6 +7,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading-message {
+            text-align: center;
+            margin-top: 10px;
+            color: #3498db;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
 <div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
@@ -24,6 +51,11 @@
                     현재 위치를 알려주세요!
                 </button>
             </div>
+        </div>
+        <div id="loading-container" class="hidden">
+            <div class="spinner"></div>
+            <p class="loading-message">브라우저 상단에 엑세스 권한을 허용하셨다면, 지도가 곧 나타납니다.
+                잠시만 기다려주세요.</p>
         </div>
         <div id="map-container" class="hidden flex-col items-center gap-8">
             <div class="relative w-full max-w-md rounded-lg overflow-hidden shadow-lg transition-all duration-300 ease-in-out transform-gpu">
@@ -75,7 +107,9 @@
         if (previousSearchHistories == null) {
             return []
         }
-        return JSON.parse(previousSearchHistories)
+        let histories = JSON.parse(previousSearchHistories);
+        histories.sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순으로 정렬
+        return histories.slice(0, 3); // 상위 3개만 선택
     }
 
     function displayKakaoMap(latitude, longitude) {
@@ -95,8 +129,10 @@
 
     function clickCurrentLocation() {
         if (navigator.geolocation) {
+            showLoading();
             navigator.geolocation.getCurrentPosition(
                 function (position) {
+                    hideLoading();
                     document.getElementById('location-section').style.display = 'none';
                     document.getElementById('map-container').classList.remove('hidden');
 
@@ -113,6 +149,7 @@
                     sessionStorage.setItem('longitude', longitude);
                 },
                 function (error) {
+                    hideLoading();
                     console.error('Error getting location:', error);
                 }
             );
@@ -120,6 +157,14 @@
             console.error('Geolocation is not supported by this browser.');
         }
 
+    }
+
+    function showLoading() {
+        document.getElementById('loading-container').classList.remove('hidden');
+    }
+
+    function hideLoading() {
+        document.getElementById('loading-container').classList.add('hidden');
     }
 
     function displayCategoryText(categoryType) {
