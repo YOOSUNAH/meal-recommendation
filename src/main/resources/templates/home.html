@@ -8,10 +8,22 @@
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 반응형 텍스트 크기 조정 */
+        /* 기본 스타일 */
+        h1 {
+            font-size: 2rem; /* 기본 화면에서의 글씨 크기 */
+            white-space: nowrap; /* 줄넘김 방지 */
+            overflow: hidden; /* 넘치는 글씨 숨김 */
+        }
+
+        /* 모바일 화면에서의 스타일 */
         @media (max-width: 640px) {
-            .text-responsive {
-                font-size: clamp(1rem, 4vw, 1.5rem); /* 모바일 화면에서 폰트 크기 조정 */
+            h1 {
+                font-size: calc(1.5rem + 2vw); /* 화면 크기에 맞춰 글씨 크기 조정 */
+                white-space: nowrap; /* 줄넘김 방지 */
+                overflow: hidden; /* 넘치는 글씨 숨김 */
+                text-align: center; /* 중앙 정렬 */
+                margin: 0; /* 기본 여백 제거 */
+                padding: 0; /* 기본 패딩 제거 */
             }
         }
     </style>
@@ -19,10 +31,10 @@
 <body>
 <div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-md text-center">
-        <h1 class="text-4xl font-bold tracking-tight text-foreground text-responsive">
+        <h1 class="text-4xl font-bold tracking-tight text-foreground">
             당신의 식사를 정해드려요
         </h1>
-        <p class="mt-4 text-muted-foreground text-base text-responsive">
+        <p class="mt-4 text-muted-foreground text-base">
             주변에 어떤 음식점이 있는 지 궁금하신가요?  <br>
             저희가 알려드릴게요!
         </p>
