@@ -30,16 +30,17 @@ Java 17, Spring Boot 3.1.0, MySQL8.0.35
 
 ## 예시 화면
 1. 첫번째 화면 <br>
-<img width="300" alt="스크린샷 2024-06-04 오후 7 33 58" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/e9aa5c0c-75a6-4541-8eab-5ebaf3e52b44"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 6 07 32" src="https://github.com/user-attachments/assets/d0ec3fca-e8be-4e74-a731-fbd014b3e73e"><br>
 ---
 2. 두번째 화면 <br>
-<img width="300" alt="스크린샷 2024-06-13 오후 8 20 42" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/de05bc42-f8b7-4afb-b7bb-d1ecf3f31c8f"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 6 07 37" src="https://github.com/user-attachments/assets/859837fe-f9ec-4558-8450-04b6b944fb88"><br>
 ---
 3. 세번째 화면 <br>
-<img width="300" alt="스크린샷 2024-06-13 오후 8 21 13" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/2afe6b35-9fea-45a7-8d7c-148df74ad9e2"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 6 07 47" src="https://github.com/user-attachments/assets/7c2826a9-6ebe-43d3-a718-78bf5bcab3c8"><br>
 ---
 4. 네번째 화면 <br>
-<img width="300" alt="스크린샷 2024-06-04 오후 7 35 04" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/19bc600c-f136-43d5-9150-17fd051aaf9e"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 6 08 00" src="https://github.com/user-attachments/assets/05f8bdf6-a43c-457b-8403-9921308eb14e"><br>
 ---
 5. 다섯번째 화면 <br>
-<img width="300" alt="스크린샷 2024-06-13 오후 8 19 21" src="https://github.com/YOOSUNAH/meal-recommendation/assets/120374640/dcb9c2d7-51b9-4dbb-a5a2-b318d912f44d"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 6 09 18" src="https://github.com/user-attachments/assets/c3f391d3-d145-46a8-8acb-22ca5578986b"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 6 08 07" src="https://github.com/user-attachments/assets/1225d704-9476-4c01-9a0d-56d0d17427f3"><br>
