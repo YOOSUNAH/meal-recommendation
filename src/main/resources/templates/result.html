@@ -19,7 +19,7 @@
             width: 60px;
             height: 60px;
             animation: spin 2s linear infinite;
-            margin: 0 auto;
+            margin: 20px auto;
         }
 
         @keyframes spin {
@@ -37,6 +37,7 @@
             color: #3498db;
             font-size: 16px;
         }
+
         /* 모바일 화면에서의 스타일 */
         @media (max-width: 640px) {
             h1 {
@@ -53,8 +54,31 @@
             margin: 0 auto;
             width: 100%;
         }
+
         .previousSearchItem {
-            margin-bottom: 16px; /* 항목 간격 조정 */
+            margin-bottom: 16px;
+            padding: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #1f2937;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-right: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .recommend-button {
+            margin-top: 24px;
+            margin-bottom: 24px;
+
         }
 
         .logo {
@@ -76,17 +100,17 @@
         </h1>
         <div>
             <p class="mt-4 text-muted-foreground">
-                카테고리 : <span id="selectedCategories"></span>
+                <span id="selectedCategories"></span>
             </p>
-            <div id="recommend-section" class="text-center">
+            <div id="recommend-section" class="text-center recommend-button">
                 <button onclick="recommend()"
                         class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
                     다시 추천받기
                 </button>
             </div>
             <p id="info-empty-restaurant" class="hidden mt-4 text-muted-foreground">
-                서울시 음식점만을 대상으로 하며,<br>
-                현재 위치를 기준으로 200M 이내의 음식점들을 추천해주는 서비스입니다.
+                현재는 서울시 음식점을 대상으로 제공하고 있습니다.<br>
+                현재 위치를 기준으로 200M 이내의 음식점들을 추천하는 서비스입니다.
             </p>
             <div id="searchResultArea">
                 <div id="searchResults"></div>
@@ -106,7 +130,7 @@
 
     function displaySelectedCategories() {
         const selectedCategories = JSON.parse(sessionStorage.getItem('categories'));
-        document.getElementById('selectedCategories').innerHTML = selectedCategories.map(c => displayCategoryText(c)).join(' ');
+        document.getElementById('selectedCategories').innerHTML = selectedCategories.map(c => `<span class="tag">${displayCategoryText(c)}</span>`).join(' ');
     }
 
     function showInfoNoticeEmpty() {
@@ -164,7 +188,7 @@
                     var searchResultElements = "";
                     restaurants.forEach(restaurant => {
                         searchResultElements +=
-                            "<div class=\"previousSearchItem bg-card p-4 rounded-lg shadow-md\">\n" +
+                            "<div class=\"previousSearchItem\">\n" +
                             "    <h3 class=\"text-lg font-medium\">음식점 : " + restaurant.name + "</h3>\n" +
                             "    <p class=\"mt-2 text-muted-foreground\">카테고리: " + restaurant.category + "</p>\n" +
                             "    <p class=\"mt-2 text-muted-foreground\">주소: " + restaurant.address + "</p>\n" +
