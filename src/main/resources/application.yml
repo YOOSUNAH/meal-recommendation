@@ -11,7 +11,7 @@ spring:
     static-path-pattern: /static/**
   web:
     resources:
-      add-mappings: false
+#      add-mappings: false
       static-locations: classpath:/static/
 
 logging:
