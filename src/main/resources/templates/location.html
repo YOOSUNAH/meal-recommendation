@@ -73,11 +73,21 @@
                 padding: 0; /* 기본 패딩 제거 */
             }
         }
+
+        .logo {
+            display: block;
+            margin: 0 auto 50px;
+            width: auto;
+            height: 80px;
+        }
     </style>
 </head>
 <body>
 <div class="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
     <div class="mx-auto max-w-md text-center">
+        <a href="/home">
+            <img src="/icons/favicon.png" alt="오늘 점심 뭐먹지? 로고" class="logo">
+        </a>
         <h1 class="my-8 text-4xl font-bold tracking-tight text-foreground">
             당신의 식사를 정해드려요
         </h1>
