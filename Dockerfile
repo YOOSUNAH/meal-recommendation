@@ -2,6 +2,8 @@ FROM openjdk:17
 
 ARG JAR_FILE=build/libs/meal-recommendation-0.0.1-SNAPSHOT.jar
 COPY ${JAR_FILE} app.jar
+COPY src/main/resources/static /app/static
+
 ENTRYPOINT ["java","-jar","/app.jar", \
       "--spring.profiles.active=live", \
       "--database.url=${DATABASE_URL}", \
