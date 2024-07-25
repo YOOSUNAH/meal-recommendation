@@ -12,6 +12,7 @@ spring:
   web:
     resources:
       add-mappings: false
+      static-locations: classpath:/static/
 
 logging:
   config: classpath:log/logback-local.xml
