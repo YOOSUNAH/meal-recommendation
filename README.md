@@ -42,5 +42,5 @@ Java 17, Spring Boot 3.1.0, MySQL8.0.35
 <img width="300" alt="스크린샷 2024-07-25 오후 6 08 00" src="https://github.com/user-attachments/assets/05f8bdf6-a43c-457b-8403-9921308eb14e"><br>
 ---
 5. 다섯번째 화면 <br>
-<img width="300" alt="스크린샷 2024-07-25 오후 6 09 18" src="https://github.com/user-attachments/assets/c3f391d3-d145-46a8-8acb-22ca5578986b"><br>
-<img width="300" alt="스크린샷 2024-07-25 오후 6 08 07" src="https://github.com/user-attachments/assets/1225d704-9476-4c01-9a0d-56d0d17427f3"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 7 17 52" src="https://github.com/user-attachments/assets/a554291d-1769-4551-a54f-cf6f63df34da"><br>
+<img width="300" alt="스크린샷 2024-07-25 오후 7 17 30" src="https://github.com/user-attachments/assets/512df1e1-190f-45db-9de1-4cd77a6da9c8"><br>
