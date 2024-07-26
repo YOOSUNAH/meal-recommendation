@@ -28,19 +28,5 @@ Java 17, Spring Boot 3.1.0, MySQL8.0.35
     - 사용자는 ‘다시 추천받기’ 버튼을 눌러 새로운 10개의 식당을 재추천 받기
 
 
-## 예시 화면
-1. 첫번째 화면 <br>
-<img width="300" alt="스크린샷 2024-07-25 오후 6 07 32" src="https://github.com/user-attachments/assets/d0ec3fca-e8be-4e74-a731-fbd014b3e73e"><br>
----
-2. 두번째 화면 <br>
-<img width="300" alt="스크린샷 2024-07-25 오후 6 07 37" src="https://github.com/user-attachments/assets/859837fe-f9ec-4558-8450-04b6b944fb88"><br>
----
-3. 세번째 화면 <br>
-<img width="300" alt="스크린샷 2024-07-25 오후 6 07 47" src="https://github.com/user-attachments/assets/7c2826a9-6ebe-43d3-a718-78bf5bcab3c8"><br>
----
-4. 네번째 화면 <br>
-<img width="300" alt="스크린샷 2024-07-25 오후 6 08 00" src="https://github.com/user-attachments/assets/05f8bdf6-a43c-457b-8403-9921308eb14e"><br>
----
-5. 다섯번째 화면 <br>
-<img width="300" alt="스크린샷 2024-07-25 오후 7 17 52" src="https://github.com/user-attachments/assets/a554291d-1769-4551-a54f-cf6f63df34da"><br>
-<img width="300" alt="스크린샷 2024-07-25 오후 7 17 30" src="https://github.com/user-attachments/assets/512df1e1-190f-45db-9de1-4cd77a6da9c8"><br>
+## 링크
+https://lunch.picksay.com/
