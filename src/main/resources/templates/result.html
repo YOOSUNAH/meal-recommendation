@@ -14,12 +14,12 @@
     <style>
         .spinner {
             border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
+            border-top: 8px solid #555555;
             border-radius: 50%;
             width: 60px;
             height: 60px;
             animation: spin 2s linear infinite;
-            margin: 20px auto;
+            margin: 50px auto;
         }
 
         @keyframes spin {
@@ -34,7 +34,7 @@
         .loading-message {
             text-align: center;
             margin-top: 10px;
-            color: #3498db;
+            color: #555555;
             font-size: 16px;
         }
 
@@ -51,8 +51,14 @@
         }
 
         #searchResults {
-            margin: 0 auto;
+            margin: 20px auto 0;
             width: 100%;
+        }
+
+        #loading-container {
+            margin: 20px 0;
+            padding: 20px;
+            text-align: center;
         }
 
         .previousSearchItem {
@@ -110,13 +116,13 @@
             </div>
             <p id="info-empty-restaurant" class="hidden mt-4 text-muted-foreground">
                 현재는 서울시 음식점을 대상으로 제공하고 있습니다.<br>
-                현재 위치를 기준으로 200M 이내의 음식점들을 추천하는 서비스입니다.
+                현위치를 기준으로 200M 이내의 음식점이 존재하지 않습니다.
             </p>
             <div id="searchResultArea">
                 <div id="searchResults"></div>
                 <div id="loading-container" class="hidden">
                     <div class="spinner"></div>
-                    <p class="loading-message">잠시 후에 결과가 나타납니다, 잠시만 기다려주세요.</p>
+                    <p class="loading-message">잠시만 기다려주세요.</p>
                 </div>
             </div>
         </div>

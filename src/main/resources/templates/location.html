@@ -12,6 +12,21 @@
     <script src="/js/script.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #555555;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .hidden {
             display: none;
         }
@@ -19,16 +34,18 @@
         .loading-message {
             text-align: center;
             margin-top: 10px;
-            color: #3498db;
+            color: #555555;
             font-size: 16px;
         }
 
         .previousSearchItem {
-            cursor: pointer;
-            background-color: #ffffff;
-            border-radius: 8px;
+            margin-bottom: 16px;
             padding: 16px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            cursor: pointer;
             transition: background-color 0.3s;
         }
 
@@ -36,24 +53,59 @@
             background-color: #f0f0f0;
         }
 
-        #loading-container {
-            display: none;
+        .tag {
+            display: inline-block;
+            background-color: #e2e8f0;
+            color: #1f2937;
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin-right: 8px;
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        #searchHistoryArea {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+        #loading-container {
+            display: none;
+            margin: 20px 0; /* 상단 및 하단 여백 조정 */
+            padding: 20px; /* 내부 패딩 조정 */
+            text-align: center; /* 중앙 정렬 */
+        }
+
+        #location-section {
+            margin-top: 20px;
+        }
+
+        #previousSearchArea {
+            margin-top: 40px; /* 상단 여백 조정 */
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 2px 2px 2px rgba(0.1, 0.1, 0.1, 0.1);
         }
 
         #previousSearchArea p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        #searchHistoryArea {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        #map-container {
+            margin-top: 10px;
+        }
+
+        h1 {
             margin-top: 16px;
             margin-bottom: 16px;
         }
 
-        #previousSearchArea .section-divider-top {
-            border-top: 1px solid #ddd;
-            margin-top: 36px;
+        .my-8 {
+            margin-top: 16px;
             margin-bottom: 16px;
         }
 
@@ -62,15 +114,14 @@
             margin-bottom: 8px;
         }
 
-        /* 모바일 화면에서의 스타일 */
         @media (max-width: 640px) {
             h1 {
-                font-size: calc(1.5rem + 2vw); /* 화면 크기에 맞춰 글씨 크기 조정 */
-                white-space: nowrap; /* 줄넘김 방지 */
-                overflow: hidden; /* 넘치는 글씨 숨김 */
-                text-align: center; /* 중앙 정렬 */
-                margin: 0; /* 기본 여백 제거 */
-                padding: 0; /* 기본 패딩 제거 */
+                font-size: calc(1.5rem + 2vw);
+                white-space: nowrap;
+                overflow: hidden;
+                text-align: center;
+                margin: 0;
+                padding: 0;
             }
         }
 
@@ -103,13 +154,6 @@
                 브라우저 상단에 엑세스 권한을 허용해주세요!
             </p>
         </div>
-        <div id="loading-container" class="hidden">
-            <p class="loading-message">
-                엑세스 권한을 허용하셨다면, <br>
-                지도가 곧 나타납니다.<br>
-                잠시만 기다려주세요.
-            </p>
-        </div>
         <div id="map-container" class="hidden flex-col items-center gap-8">
             <div class="relative w-full max-w-md rounded-lg overflow-hidden shadow-lg transition-all duration-300 ease-in-out transform-gpu">
                 <div id="map" class="w-full h-[300px] bg-gray-200"></div>
@@ -122,10 +166,19 @@
                 카테고리 선택하러 가기!
             </button>
         </div>
+
+        <div id="loading-container">
+            <div class="spinner"></div>
+            <p class="loading-message">
+                엑세스 권한을 허용하셨다면, <br>
+                지도가 곧 나타납니다.<br>
+                잠시만 기다려주세요.</p>
+        </div>
+
         <div id="previousSearchArea" class="hidden">
             <div class="section-divider-top"></div>
             <p>
-                최근 추천 기록
+                최근에 추천받으신 내용이에요.
             </p>
             <div id="searchHistoryArea"></div>
         </div>
@@ -153,7 +206,7 @@
             previousSearchElements +=
                 `<div class="previousSearchItem" onclick="handleSearchHistoryClick(${latitude}, ${longitude}, '${categories}')">
                     <h3 class="text-lg font-medium">위도 / 경도 : ${it.coordinate.latitude} / ${it.coordinate.longitude}</h3>
-                    <p class="mt-2 text-muted-foreground">카테고리 : ${it.categories.map(c => displayCategoryText(c)).join(', ')}</p>
+                    <p class="mt-2 text-muted-foreground">  ${it.categories.map(c => `<span class="tag">${displayCategoryText(c)}</span>`).join(' ')}</p>
                 </div>`;
         });
         document.getElementById('searchHistoryArea').innerHTML = previousSearchElements;
@@ -165,6 +218,8 @@
             return [];
         }
         let histories = JSON.parse(previousSearchHistories);
+        // 위도와 경도가 null이 아닌 기록만 필터링
+        histories = histories.filter(item => item.coordinate != null && item.coordinate.latitude != null && item.coordinate.longitude != null);
         histories.sort((a, b) => new Date(b.date) - new Date(a.date)); // 최신순으로 정렬
         return histories.slice(0, 3); // 상위 3개만 선택
     }
@@ -189,7 +244,7 @@
             showLoading();
             navigator.geolocation.getCurrentPosition(
                 function (position) {
-                    hideLoading();
+                    // 지도가 로드되기 전에 스피너를 표시합니다.
                     document.getElementById('location-section').style.display = 'none';
                     document.getElementById('map-container').classList.remove('hidden');
 
@@ -200,40 +255,42 @@
 
                     // 검색 히스토리 추가
                     document.getElementById('previousSearchArea').style.display = 'none';
-
+                    // 지도 로딩 후 스피너 숨기기
+                    hideLoading();
                     // 현재 추천중인 검색
                     sessionStorage.setItem('latitude', latitude);
                     sessionStorage.setItem('longitude', longitude);
                 },
+
                 function (error) {
                     hideLoading();
-                    console.error('Error getting location:', error);
+                    alert('현재 위치를 찾을 수 없습니다. 위치 권한을 허용했는지 확인해주세요.');
                 }
             );
         } else {
-            console.error('Geolocation is not supported by this browser.');
+            alert('Geolocation을 사용할 수 없습니다. 다른 방법으로 위치를 입력해주세요.');
         }
     }
 
     function showLoading() {
-        document.getElementById('loading-container').classList.remove('hidden');
+        document.getElementById('loading-container').style.display = 'block';
     }
 
     function hideLoading() {
-        document.getElementById('loading-container').classList.add('hidden');
+        document.getElementById('loading-container').style.display = 'none';
     }
 
-    function displayCategoryText(categoryType) {
-        if (categoryType === 'Korean') {
+    function displayCategoryText(category) {
+        if (category === 'Korean') {
             return '한식';
         }
-        if (categoryType === 'Japanese') {
+        if (category === 'Japanese') {
             return '일식';
         }
-        if (categoryType === 'Chinese') {
+        if (category === 'Chinese') {
             return '중식';
         }
-        if (categoryType === 'Western') {
+        if (category === 'Western') {
             return '양식';
         }
         return '기타';
@@ -247,6 +304,7 @@
         // 결과 페이지로 이동
         window.location.href = '/result';
     }
+
 </script>
 </body>
 </html>

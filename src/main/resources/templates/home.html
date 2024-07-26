@@ -37,6 +37,9 @@
             width: auto;
             height: 80px;
         }
+        .mt-4{
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +54,10 @@
         <p class="mt-4 text-muted-foreground text-base">
             주변에 어떤 음식점이 있는 지 궁금하신가요?  <br>
             저희가 알려드릴게요!
+            <br> <br>
+            본 서비스는 현위치를 기준으로 200M 이내의 음식점들을 추천하는 서비스에요.
         </p>
+
         <div class="mt-6">
             <a th:href="@{/location}"
                class="inline-flex h-10 items-center justify-center rounded-md bg-black px-8 text-sm font-medium text-white shadow transition-colors hover:bg-black/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
