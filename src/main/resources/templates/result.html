@@ -129,10 +129,22 @@
     </div>
 </div>
 <script>
+
     document.addEventListener('DOMContentLoaded', function () {
-        displaySelectedCategories();
-        recommend(); // 페이지 로드 시 추천받기 호출
-    });
+        // 세션 스토리지에 필요한 데이터가 있는지 확인
+        const latitude = sessionStorage.getItem('latitude');
+        const longitude = sessionStorage.getItem('longitude');
+        const categories = sessionStorage.getItem('categories');
+
+        if (!latitude || !longitude || !categories) {
+            // 데이터가 없으면 홈으로 리디렉트
+            window.location.href = '/home';
+        } else {
+            displaySelectedCategories();
+            recommend(); // 페이지 로드 시 추천받기 호출
+        }
+    })
+
 
     function displaySelectedCategories() {
         const selectedCategories = JSON.parse(sessionStorage.getItem('categories'));
