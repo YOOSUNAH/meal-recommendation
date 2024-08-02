@@ -6,5 +6,4 @@ import toy.ojm.domain.entity.FoodCategory;
 
 public interface CategoryRepository extends JpaRepository<FoodCategory, Long>{
 
-
 }

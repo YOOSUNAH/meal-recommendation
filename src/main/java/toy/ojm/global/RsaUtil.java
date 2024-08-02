@@ -1,7 +1,6 @@
 package toy.ojm.global;
 
 import java.security.KeyFactory;
-import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import javax.crypto.Cipher;
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ public class RsaUtil {
 
     private KeyPairGenerator generator;
     private KeyFactory keyFactory;
-    private KeyPair keyPair;
     private Cipher cipher;
 
     // 1024 비트 RSA 키쌍을 생성
@@ -28,8 +26,5 @@ public class RsaUtil {
         } catch (Exception e) {
             log.debug("");
         }
-
-
     }
-
 }

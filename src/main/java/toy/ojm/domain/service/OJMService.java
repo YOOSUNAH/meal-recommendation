@@ -41,13 +41,11 @@ public class OJMService {
             }
         }
         categoryRepository.save(category);
-
-        // 사용자 선택을 세션에 저장
         session.setAttribute("selectedCategory", category);
     }
 
     public FoodCategory getLastCategory() {
-        return categoryRepository.findAll().stream().findFirst().orElse(null); // 단일 객체 반환
+        return categoryRepository.findAll().stream().findFirst().orElse(null);
     }
 
     public List<RestaurantResponseDto> getRandomRestaurants(
@@ -57,7 +55,6 @@ public class OJMService {
     ) {
         List<Restaurant> recommendRestaurants = getRecommendRestaurants(currentLat, currentLon, selectedCategories, 300);
 
-        // 랜덤 10개
         Collections.shuffle(recommendRestaurants);
         List<Restaurant> randomRestaurants = recommendRestaurants.stream()
             .limit(10)
@@ -106,7 +103,6 @@ public class OJMService {
         List<Restaurant> restaurants = restaurantRepository.findAllByCategoryIn(
             categories);
 
-        // stream
         return restaurants.stream()
             .filter(restaurant -> Distance.distance(
                 currentLat,

@@ -1,8 +1,6 @@
 package toy.ojm.domain.controller;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -85,7 +83,7 @@ public class AdminController {
         }
         String userId = (String) session.getAttribute("Id");
 
-        RestaurantPageableResponseDto allRestaurants = adminService.getAllRestaurantsV2(
+        RestaurantPageableResponseDto allRestaurants = adminService.getAllRestaurants(
             userId,
             page,
             size,
@@ -97,15 +95,8 @@ public class AdminController {
 
 
     @PostMapping("/logout")
-    public String logout(HttpServletResponse response, HttpServletRequest request) {
-        sessionManager.expire(request);  // 방법 1 , 방법 2는 아래 expiredCookie 이용하는 것
+    public String logout(HttpServletRequest request) {
+        sessionManager.expire(request);
         return "redirect:/";
     }
-
-    private void expiredCookie(HttpServletResponse response, String cookieName) {
-        Cookie cookie = new Cookie(cookieName, null);
-        cookie.setMaxAge(0);
-        response.addCookie(cookie);
-    }
-
 }

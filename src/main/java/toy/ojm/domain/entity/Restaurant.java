@@ -36,5 +36,4 @@ public class Restaurant {
 
     private Double latitude; //좌표정보(Y) 위도
 
-
 }

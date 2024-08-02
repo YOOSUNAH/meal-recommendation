@@ -43,7 +43,7 @@ public class PageController implements ErrorController {
 
     @GetMapping("/boss")
     public String adminHome() {
-      return "login";
+        return "login";
     }
 
     @GetMapping("/boss/login")
@@ -53,21 +53,12 @@ public class PageController implements ErrorController {
 
     @GetMapping("/boss/adminPage")
     public String adminPage() {
-        return  "adminPage";
+        return "adminPage";
     }
 
 
     @GetMapping("/boss/allRestaurants")
     public String allRestaurants() {
-        return  "allRestaurants";
+        return "allRestaurants";
     }
-
-//    @RequestMapping("/error")
-//    public String handleError() {
-//        return "redirect:/home";
-//    }
-//
-//    public String getErrorPath() {
-//        return "/error";
-//    }
 }

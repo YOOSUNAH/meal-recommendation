@@ -20,7 +20,7 @@ public class FoodCategory {
         try {
             this.category = FoodCategoryName.fromString(categoryName);
         } catch (IllegalArgumentException e) {
-            this.category = FoodCategoryName.ETC; // 한식, 일식, 중식, 양식에 해당하지 않으면 기타로 설정
+            this.category = FoodCategoryName.ETC;
         }
     }
 }

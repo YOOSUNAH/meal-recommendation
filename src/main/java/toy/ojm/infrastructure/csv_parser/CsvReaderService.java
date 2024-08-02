@@ -126,7 +126,7 @@ public class CsvReaderService {
         try {
             return Double.parseDouble(removeDoubleQuote(coordinate));
         } catch (NumberFormatException e) {
-//            log.error("Invalid number format for coordinate. {} - {}", aLine.get(18), aLine.get(23));
+            log.error("Invalid number format for coordinate. {} - {}", aLine.get(18), aLine.get(23));
         }
         return 0;
     }
