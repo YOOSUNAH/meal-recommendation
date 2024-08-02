@@ -30,3 +30,8 @@ Java 17, Spring Boot 3.1.0, MySQL8.0.35
 
 ## 링크
 https://lunch.picksay.com/
+
+## 미리 보기 
+<img width="667" alt="스크린샷 2024-08-02 오후 8 11 33" src="https://github.com/user-attachments/assets/3780b4f2-8e13-4b7e-9a32-9bdec4403668">
+
+
