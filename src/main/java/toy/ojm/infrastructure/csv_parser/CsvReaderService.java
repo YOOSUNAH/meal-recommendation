@@ -1,5 +1,6 @@
 package toy.ojm.infrastructure.csv_parser;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
@@ -26,6 +27,7 @@ public class CsvReaderService {
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
 
+    @Transactional
     public void readAndSaveCSV() {
         Path csvFilePath;
         File csvFile;
@@ -40,6 +42,9 @@ public class CsvReaderService {
                 "." +
                 PublicDataConstants.DESTINATION_FILE_EXTENSION
             );
+
+            log.debug("## readAndSaveCSV 메서드 중 Resolved CSV file path: {}", csvFilePath.toString());
+
             csvFile = new File(csvFilePath.toString());
 
             fis = new FileInputStream(csvFile);
