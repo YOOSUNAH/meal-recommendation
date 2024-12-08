@@ -14,30 +14,38 @@ spring:
       static-locations: classpath:/static/
 #      add-mappings: false
 
-logging:
-  config: classpath:log/logback-local.xml
+#logging:
+#  config: classpath:log/logback-local.xml
+#  level:
+#    root: DEBUG
 
 kakao:
   appKey: ${KAKAO_REST_API_KEY:defaultDummyValue}
 ---
-
 spring:
   config:
     activate:
-      on-profile: local-mysql-sun
-
+      on-profile: local-real
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/${database.name}
     username: ${database.username}
-    password: ${database.password}
+    password:
+      ${database.password}
+
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        show_sql: true
         format_sql: true
+        use_sql_comments: true
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 ---
 
@@ -57,7 +65,6 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         show_sql: true
         format_sql: true
-
 ---
 
 spring:
