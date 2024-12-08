@@ -42,10 +42,10 @@ public class PublicDataDownloader {
         WebDriver driver = new ChromeDriver();
 
         try {
-            download(driver);
+            download(driver); // 데이터 크롤링
             waitForFileDownload(downloadPath);
 
-            // 기존 파일이 존재하면 삭제
+            // 저장할 위치에, 기존 파일이 존재하면 삭제
             File downloadFile = destinationPath.toFile();
             if (downloadFile.exists()) {
                 downloadFile.delete();
@@ -87,7 +87,7 @@ public class PublicDataDownloader {
         }
 
         Path destinationPath = directoryPath.resolve(destinationFilenameWithTime());
-        log.debug("Resolved destination path: {}", destinationPath.toAbsolutePath()); // 여기 추가
+        log.debug("Resolved destination path: {}", destinationPath.toAbsolutePath());
 
         return destinationPath;   //directoryPath 특정 디렉토리의 경로를 나타내는 Path 객체, resolve() : 기존의 경로에 다른 경로를 결합하여 새로운 경로를 생성, destinationFilenameWithTime : 파일이름을 생성하는 메서드
         // csv-data 디렉토리 내에 시간을 포함한 고유한 파일 이름으로 새로운 파일 경로를 생성하고, 그 경로를 나타내는 Path 객체를 반환
@@ -121,7 +121,7 @@ public class PublicDataDownloader {
 
         try {
             Files.move(sourcePath, destinationPath); // 파일 이동 시도
-            log.debug("Move operation executed.");
+            log.info("Move operation executed.");
         } catch (IOException e) {
             log.error("IOException occurred while moving file from {} to {}: {}",
                     sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
