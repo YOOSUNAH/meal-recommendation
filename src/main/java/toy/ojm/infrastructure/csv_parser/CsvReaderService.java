@@ -33,6 +33,7 @@ public class CsvReaderService {
     @Transactional
     public void readAndSaveCSV() {
         log.info("readAndSaveCSV 진행 - 현재 시간 : " + new Date().toString());
+        long startTime = System.currentTimeMillis();
 
         Path csvFilePath;
         File csvFile;
@@ -97,12 +98,19 @@ public class CsvReaderService {
                 restaurant.setLatitude(transformed.y);
 
                 restaurants.add(restaurant);
+
+                // 삭제 후 추가로 시간 확인하기
+//                restaurantRepository.deleteAll();
+
                 if (restaurants.size() == 10000) {
                     restaurantRepository.saveAll(restaurants);
                     restaurants.clear();
                 }
             }
             restaurantRepository.saveAll(restaurants);
+            long finishTime = System.currentTimeMillis();
+            long takeTime = finishTime - startTime;
+            log.info("2번 update 방식 : {}", takeTime);
 
         } catch (Exception e) {
             log.error(e.getMessage());

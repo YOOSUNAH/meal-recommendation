@@ -1,6 +1,5 @@
 package toy.ojm.domain.controller;
 
-import com.google.common.collect.Lists;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
