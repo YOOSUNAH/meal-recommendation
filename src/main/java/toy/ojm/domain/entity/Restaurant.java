@@ -1,28 +1,29 @@
 package toy.ojm.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.checkerframework.common.aliasing.qual.Unique;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "restaurants")
+@Builder
 public class Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
+    private String managementNumber; //관리 번호
+
     private String businessStatus; //상세영업상태명
 
-    private String number; // 전화번호
+    private String number; //전화번호
 
     private String address;  //지번주소
 

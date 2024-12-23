@@ -28,6 +28,7 @@ public class CsvReaderService {
 
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
+    private final int BATCH_SIZE = 5000;
 
     @Scheduled(cron = "0 55 23 * * *")
     @Transactional
@@ -44,7 +45,8 @@ public class CsvReaderService {
         int progressCounter = 0;
         try {
             csvFilePath = Paths.get(
-                new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath()).resolve(PublicDataConstants.DESTINATION_FILE_NAME +
+                new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath())
+                    .resolve(PublicDataConstants.DESTINATION_FILE_NAME +
                 "." +
                 PublicDataConstants.DESTINATION_FILE_EXTENSION
             );
@@ -62,7 +64,8 @@ public class CsvReaderService {
             // 첫 번째 행(제목 행)을 읽고 버림
             br.readLine();
 
-            List<Restaurant> restaurants = new ArrayList<>();
+            List<Restaurant> restaurantList = new ArrayList<>();
+
             while ((line = br.readLine()) != null) {
                 progressCounter++;
                 if (progressCounter % 100 == 0) {
@@ -70,50 +73,30 @@ public class CsvReaderService {
                 }
                 List<String> aLine = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
 
-                String businessStatus = aLine.get(7);
-                if (businessStatus != null && businessStatus.contains("폐업")) {
-                    continue;
-                }
+                // 폐업한 곳은 skip
+                if (closedBusiness(aLine)) continue;
 
-                Restaurant restaurant = new Restaurant();
-                restaurant.setBusinessStatus(removeDoubleQuote(aLine.get(7)));
-                restaurant.setNumber(removeDoubleQuote(aLine.get(12)));
-                restaurant.setAddress(removeDoubleQuote(aLine.get(15)));
-                restaurant.setRoadAddress(removeDoubleQuote(aLine.get(16)));
-                restaurant.setName(removeDoubleQuote(aLine.get(18)));
-                restaurant.setCategory(removeDoubleQuote(aLine.get(22)));
+                // 기존에있으면 update, 기존에 없으면 새로 저장 (orElse문으로 새로운 객체 생성)
+                String ManagementNumber = removeDoubleQuote(aLine.get(1));
+                Restaurant restaurant = restaurantRepository.findByManagementNumber(ManagementNumber).orElse(new Restaurant());
+                setRestaurantInfo(restaurant, aLine, restaurantList);
 
-                String beforeLongitude = aLine.get(23);
-                String beforeLatitude = aLine.get(24);
-
-                restaurant.setLongitude(parseDouble(beforeLongitude, aLine));
-                restaurant.setLatitude(parseDouble(beforeLatitude, aLine));
-
-                // 좌표 변경
-                ProjCoordinate transformed = transCoordination.transformToWGS(
-                    restaurant.getLongitude(),
-                    restaurant.getLatitude()
-                );
-                restaurant.setLongitude(transformed.x);
-                restaurant.setLatitude(transformed.y);
-
-                restaurants.add(restaurant);
-
-                // 삭제 후 추가로 시간 확인하기
-//                restaurantRepository.deleteAll();
-
-                if (restaurants.size() == 10000) {
-                    restaurantRepository.saveAll(restaurants);
-                    restaurants.clear();
+                // BATCH_SIZE 씩 저장
+                if(restaurantList.size() >= BATCH_SIZE){
+                    restaurantRepository.saveAll(restaurantList);
+                    restaurantList.clear();
                 }
             }
-            restaurantRepository.saveAll(restaurants);
-            long finishTime = System.currentTimeMillis();
-            long takeTime = finishTime - startTime;
-            log.info("2번 update 방식 : {}", takeTime);
+
+            if(!restaurantList.isEmpty()){
+                restaurantRepository.saveAll(restaurantList);
+            }
+
+
+            log.info("걸린 시간 : {}", System.currentTimeMillis() - startTime);
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("readAndSaveCSV 중 오류 발생 : {}" ,e.getMessage());
         } finally {
             log.info("##### {} 라인까지 완료", progressCounter);
             if (br != null) {
@@ -137,7 +120,38 @@ public class CsvReaderService {
         }
     }
 
-    private double parseDouble(
+    private static boolean closedBusiness(List<String> aLine) {
+        String businessStatus = aLine.get(7);
+        return businessStatus != null && businessStatus.contains("폐업");
+    }
+
+    private void setRestaurantInfo(Restaurant restaurant, List<String> aLine, List<Restaurant> restaurantList) {
+        restaurant.setManagementNumber(removeDoubleQuote(aLine.get(1)));
+        restaurant.setBusinessStatus(removeDoubleQuote(aLine.get(7)));
+        restaurant.setNumber(removeDoubleQuote(aLine.get(12)));
+        restaurant.setAddress(removeDoubleQuote(aLine.get(15)));
+        restaurant.setRoadAddress(removeDoubleQuote(aLine.get(16)));
+        restaurant.setName(removeDoubleQuote(aLine.get(18)));
+        restaurant.setCategory(removeDoubleQuote(aLine.get(22)));
+
+        // 좌표 변경
+        Double beforeLongitude = parseDouble(aLine.get(23), aLine);
+        Double beforeLatitude = parseDouble(aLine.get(24), aLine);
+
+        if(beforeLongitude == null || beforeLatitude == null){
+            // 좌표가 정확하지 않은 가게는 skip
+            log.warn(" 좌표가 정확하지 않은 가게 : {}", aLine.get(18));
+            return;
+        }
+
+        ProjCoordinate transformed = transCoordination.transformToWGS(beforeLongitude, beforeLatitude);
+        restaurant.setLongitude(transformed.x);
+        restaurant.setLatitude(transformed.y);
+
+        restaurantList.add(restaurant);
+    }
+
+    private Double parseDouble(
         String coordinate,
         List<String> aLine
     ) {
@@ -145,8 +159,9 @@ public class CsvReaderService {
             return Double.parseDouble(removeDoubleQuote(coordinate));
         } catch (NumberFormatException e) {
             log.error("Invalid number format for coordinate. {} - {}", aLine.get(18), aLine.get(23));
+            log.error("Invalid coordinate format: {}, {}", aLine.get(18), coordinate);
         }
-        return 0;
+        return null;
     }
 
     private String removeDoubleQuote(String value) {

@@ -1,14 +1,6 @@
 package toy.ojm.infrastructure.restaurant_openapi;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +9,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import toy.ojm.infrastructure.PublicDataConstants;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 
 
 @Slf4j
@@ -30,7 +28,6 @@ public class PublicDataDownloader {
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
 
-    @Scheduled(cron = "0 50 23 * * *")
     @Transactional
     public Path downloadCsvFile() {
         log.info("downloadCsvFile 진행 - 현재 시간 : " + new Date().toString());
