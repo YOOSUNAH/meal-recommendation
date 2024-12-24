@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.TransCoordination;
@@ -30,7 +29,6 @@ public class CsvReaderService {
     private final TransCoordination transCoordination;
     private final int BATCH_SIZE = 5000;
 
-    @Scheduled(cron = "0 55 23 * * *")
     @Transactional
     public void readAndSaveCSV() {
         log.info("readAndSaveCSV 진행 - 현재 시간 : " + new Date().toString());

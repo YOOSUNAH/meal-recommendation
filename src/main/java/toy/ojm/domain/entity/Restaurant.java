@@ -1,17 +1,13 @@
 package toy.ojm.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.checkerframework.common.aliasing.qual.Unique;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "restaurants")
-@Builder
 public class Restaurant {
 
     @Id
