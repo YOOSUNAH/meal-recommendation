@@ -25,7 +25,7 @@ public class CsvReaderService {
 
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
-    private final int BATCH_SIZE = 5000;
+    private final int BATCH_SIZE = 5000; //
 
     @Transactional
     public void readAndSaveCSV() {

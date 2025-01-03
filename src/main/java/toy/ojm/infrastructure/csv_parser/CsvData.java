@@ -31,8 +31,6 @@ public class CsvData {
 
     private Double parseDouble(String value) {
         try {
-
-
             return Double.parseDouble(removeDoubleQuote(value));
         } catch (NumberFormatException e) {
             return null;
