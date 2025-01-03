@@ -104,13 +104,8 @@ public class CsvReaderService {
             // 첫 번째 행(제목 행)을 읽고 버림
             br.readLine();
 
-            List<Restaurant> restaurantList = new ArrayList<>();
-
             while ((line = br.readLine()) != null) {
                 progressCounter++;
-                if (progressCounter % 100 == 0) {
-
-                }
                 List<String> columns = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
                 csvDataList.add(new CsvData(columns));
             }
