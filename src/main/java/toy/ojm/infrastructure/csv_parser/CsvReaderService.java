@@ -15,10 +15,8 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,6 +32,51 @@ public class CsvReaderService {
         log.info("readAndSaveCSV 진행 - 현재 시간 : " + new Date().toString());
         long startTime = System.currentTimeMillis();
 
+        try {
+
+            // 1. csv 읽기
+            List<CsvData> csvDataList = readAllFromCsv();
+
+            // 2. DB 데이터 조회
+            Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
+                    .collect(Collectors.toMap(
+                            Restaurant::getManagementNumber,
+                            restaurant -> restaurant));
+
+            // 3. 데이터 처리 및 저장
+            List<Restaurant> restaurantsToSave = new ArrayList<>();
+            for(CsvData csvdata : csvDataList){
+                if(csvdata.isClosedBusiness()){
+                    continue;
+                }
+
+                Restaurant restaurant = existingRestaurant.getOrDefault(csvdata.getManagementNumber(), new Restaurant());
+
+                updateRestaurantInfo(restaurant, csvdata);
+
+                restaurantsToSave.add(restaurant);
+
+                // BATCH_SIZE 씩 저장
+                if(restaurantsToSave.size() >= BATCH_SIZE){
+                    restaurantRepository.saveAll(restaurantsToSave);
+                    restaurantsToSave.clear();
+                }
+            }
+
+            if(!csvDataList.isEmpty()){
+                restaurantRepository.saveAll(restaurantsToSave);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+            log.info("걸린 시간 : {}", System.currentTimeMillis() - startTime);
+    }
+
+    private List<CsvData> readAllFromCsv() throws IOException {
+
+        List<CsvData> csvDataList = new ArrayList<>();
+
         Path csvFilePath;
         File csvFile;
         BufferedReader br = null;
@@ -43,13 +86,12 @@ public class CsvReaderService {
         int progressCounter = 0;
         try {
             csvFilePath = Paths.get(
-                new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath())
+                            new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath())
                     .resolve(PublicDataConstants.DESTINATION_FILE_NAME +
-                "." +
-                PublicDataConstants.DESTINATION_FILE_EXTENSION
-            );
+                            "." +
+                            PublicDataConstants.DESTINATION_FILE_EXTENSION
+                    );
 
-            log.debug("## readAndSaveCSV 메서드 중 Resolved CSV file path: {}", csvFilePath.toString());
 
             csvFile = new File(csvFilePath.toString());
 
@@ -67,115 +109,70 @@ public class CsvReaderService {
             while ((line = br.readLine()) != null) {
                 progressCounter++;
                 if (progressCounter % 100 == 0) {
-                    log.debug("progressCounter : {}", progressCounter);
+
                 }
-                List<String> aLine = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
-
-                // 폐업한 곳은 skip
-                if (closedBusiness(aLine)) continue;
-
-                // 기존에있으면 update, 기존에 없으면 새로 저장 (orElse문으로 새로운 객체 생성)
-                String ManagementNumber = removeDoubleQuote(aLine.get(1));
-                Restaurant restaurant = restaurantRepository.findByManagementNumber(ManagementNumber).orElse(new Restaurant());
-                setRestaurantInfo(restaurant, aLine, restaurantList);
-
-                // BATCH_SIZE 씩 저장
-                if(restaurantList.size() >= BATCH_SIZE){
-                    restaurantRepository.saveAll(restaurantList);
-                    restaurantList.clear();
-                }
+                List<String> columns = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
+                csvDataList.add(new CsvData(columns));
             }
-
-            if(!restaurantList.isEmpty()){
-                restaurantRepository.saveAll(restaurantList);
+          } catch (Exception e) {
+        log.error("readAndSaveCSV 중 오류 발생 : {}" ,e.getMessage());
+    } finally {
+        log.info("##### {} 라인까지 완료", progressCounter);
+        if (br != null) {
+            try {
+                br.close();
+            } catch (IOException ignore) {
             }
-
-
-            log.info("걸린 시간 : {}", System.currentTimeMillis() - startTime);
-
-        } catch (Exception e) {
-            log.error("readAndSaveCSV 중 오류 발생 : {}" ,e.getMessage());
-        } finally {
-            log.info("##### {} 라인까지 완료", progressCounter);
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException ignore) {
-                }
+        }
+        if (isr != null) {
+            try {
+                isr.close();
+            } catch (IOException ignore) {
             }
-            if (isr != null) {
-                try {
-                    isr.close();
-                } catch (IOException ignore) {
-                }
-            }
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException ignore) {
-                }
+        }
+        if (fis != null) {
+            try {
+                fis.close();
+            } catch (IOException ignore) {
             }
         }
     }
-
-    private static boolean closedBusiness(List<String> aLine) {
-        String businessStatus = aLine.get(7);
-        return businessStatus != null && businessStatus.contains("폐업");
+        return csvDataList;
     }
 
-    private void setRestaurantInfo(Restaurant restaurant, List<String> aLine, List<Restaurant> restaurantList) {
-        restaurant.setManagementNumber(removeDoubleQuote(aLine.get(1)));
-        restaurant.setBusinessStatus(removeDoubleQuote(aLine.get(7)));
-        restaurant.setNumber(removeDoubleQuote(aLine.get(12)));
-        restaurant.setAddress(removeDoubleQuote(aLine.get(15)));
-        restaurant.setRoadAddress(removeDoubleQuote(aLine.get(16)));
-        restaurant.setName(removeDoubleQuote(aLine.get(18)));
-        restaurant.setCategory(removeDoubleQuote(aLine.get(22)));
+    private void updateRestaurantInfo(Restaurant restaurant, CsvData csvdata) {
+        restaurant.setManagementNumber(csvdata.getManagementNumber());
+        restaurant.setBusinessStatus(csvdata.getBusinessStatus());
+        restaurant.setNumber(csvdata.getNumber());
+        restaurant.setAddress(csvdata.getAddress());
+        restaurant.setRoadAddress(csvdata.getRoadAddress());
+        restaurant.setName(csvdata.getName());
+        restaurant.setCategory(csvdata.getCategory());
 
         // 좌표 변경
-        Double beforeLongitude = parseDouble(aLine.get(23), aLine);
-        Double beforeLatitude = parseDouble(aLine.get(24), aLine);
+        Double beforeLongitude = csvdata.getLongitude();
+        Double beforeLatitude = csvdata.getLatitude();
 
         if(beforeLongitude == null || beforeLatitude == null){
             // 좌표가 정확하지 않은 가게는 skip
-            log.warn(" 좌표가 정확하지 않은 가게 : {}", aLine.get(18));
+            log.warn(" 좌표가 정확하지 않은 가게 : {}", csvdata.getName());
             return;
         }
 
         ProjCoordinate transformed = transCoordination.transformToWGS(beforeLongitude, beforeLatitude);
         restaurant.setLongitude(transformed.x);
         restaurant.setLatitude(transformed.y);
-
-        restaurantList.add(restaurant);
     }
 
-    private Double parseDouble(
-        String coordinate,
-        List<String> aLine
-    ) {
-        try {
-            return Double.parseDouble(removeDoubleQuote(coordinate));
-        } catch (NumberFormatException e) {
-            log.error("Invalid number format for coordinate. {} - {}", aLine.get(18), aLine.get(23));
-            log.error("Invalid coordinate format: {}, {}", aLine.get(18), coordinate);
-        }
-        return null;
-    }
-
-    private String removeDoubleQuote(String value) {
-        if (value == null || value.isBlank()) {
-            return "";
-        }
-        return value.replaceAll("\"", "");
-    }
-
+    // api 용
     public List<Restaurant> getAllRestaurants() {
         return restaurantRepository.findAll();
     }
 
     // 좌표 변경하기
+    @Transactional
     public void transCoordinate() {
-        List<Restaurant> newRestaurant = getAllRestaurants();
+        List<Restaurant> newRestaurant = restaurantRepository.findAll();
         for (Restaurant restaurant : newRestaurant) {
             ProjCoordinate coordinate = transCoordination.transformToWGS(restaurant.getLongitude(),
                 restaurant.getLatitude());
