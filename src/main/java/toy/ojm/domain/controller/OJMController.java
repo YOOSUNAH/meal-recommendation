@@ -62,7 +62,7 @@ public class OJMController {
     @GetMapping("/csv")
     public ResponseEntity<ResponseDto<Void>> csvReadAndSave() {
         csvReaderService.readAndSaveCSV();
-        log.info("csv 읽어오기");
+        log.info("csv 읽어오기 완료");
         return ResponseDto.of(HttpStatus.OK, null);
     }
 

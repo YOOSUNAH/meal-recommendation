@@ -24,12 +24,15 @@ public class CsvData {
         this.roadAddress = removeDoubleQuote(columns.get(16));
         this.name = removeDoubleQuote(columns.get(18));
         this.category = removeDoubleQuote(columns.get(22));
+
         this.longitude = parseDouble(columns.get(23));
         this.latitude = parseDouble(columns.get(24));
     }
 
     private Double parseDouble(String value) {
         try {
+
+
             return Double.parseDouble(removeDoubleQuote(value));
         } catch (NumberFormatException e) {
             return null;
@@ -46,5 +49,6 @@ public class CsvData {
     public boolean isClosedBusiness() {
         return businessStatus != null && businessStatus.contains("폐업");
     }
+
 
 }

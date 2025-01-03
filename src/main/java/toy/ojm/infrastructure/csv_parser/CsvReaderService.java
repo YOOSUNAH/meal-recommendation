@@ -33,7 +33,6 @@ public class CsvReaderService {
         long startTime = System.currentTimeMillis();
 
         try {
-
             // 1. csv 읽기
             List<CsvData> csvDataList = readAllFromCsv();
 
@@ -47,6 +46,11 @@ public class CsvReaderService {
             List<Restaurant> restaurantsToSave = new ArrayList<>();
             for(CsvData csvdata : csvDataList){
                 if(csvdata.isClosedBusiness()){
+                    continue;
+                }
+
+                // 좌표가 없는 가게는 skip
+                if(csvdata.getLongitude() == null || csvdata.getLatitude() == null){
                     continue;
                 }
 
@@ -70,22 +74,16 @@ public class CsvReaderService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-            log.info("걸린 시간 : {}", System.currentTimeMillis() - startTime);
+            log.info("걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
     }
 
     private List<CsvData> readAllFromCsv() throws IOException {
 
         List<CsvData> csvDataList = new ArrayList<>();
 
-        Path csvFilePath;
-        File csvFile;
-        BufferedReader br = null;
-        InputStreamReader isr = null;
-        FileInputStream fis = null;
-
         int progressCounter = 0;
         try {
-            csvFilePath = Paths.get(
+            Path csvFilePath = Paths.get(
                             new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath())
                     .resolve(PublicDataConstants.DESTINATION_FILE_NAME +
                             "." +
@@ -93,11 +91,10 @@ public class CsvReaderService {
                     );
 
 
-            csvFile = new File(csvFilePath.toString());
-
-            fis = new FileInputStream(csvFile);
-            isr = new InputStreamReader(fis, Charset.forName("EUC_KR"));
-            br = new BufferedReader(isr);
+            File csvFile = new File(csvFilePath.toString());
+            FileInputStream fis = new FileInputStream(csvFile);
+            InputStreamReader isr = new InputStreamReader(fis, Charset.forName("EUC_KR"));
+            BufferedReader br = new BufferedReader(isr);
 
             String line;
 
@@ -113,24 +110,6 @@ public class CsvReaderService {
         log.error("readAndSaveCSV 중 오류 발생 : {}" ,e.getMessage());
     } finally {
         log.info("##### {} 라인까지 완료", progressCounter);
-        if (br != null) {
-            try {
-                br.close();
-            } catch (IOException ignore) {
-            }
-        }
-        if (isr != null) {
-            try {
-                isr.close();
-            } catch (IOException ignore) {
-            }
-        }
-        if (fis != null) {
-            try {
-                fis.close();
-            } catch (IOException ignore) {
-            }
-        }
     }
         return csvDataList;
     }
@@ -145,16 +124,7 @@ public class CsvReaderService {
         restaurant.setCategory(csvdata.getCategory());
 
         // 좌표 변경
-        Double beforeLongitude = csvdata.getLongitude();
-        Double beforeLatitude = csvdata.getLatitude();
-
-        if(beforeLongitude == null || beforeLatitude == null){
-            // 좌표가 정확하지 않은 가게는 skip
-            log.warn(" 좌표가 정확하지 않은 가게 : {}", csvdata.getName());
-            return;
-        }
-
-        ProjCoordinate transformed = transCoordination.transformToWGS(beforeLongitude, beforeLatitude);
+        ProjCoordinate transformed = transCoordination.transformToWGS(csvdata.getLongitude(), csvdata.getLatitude());
         restaurant.setLongitude(transformed.x);
         restaurant.setLatitude(transformed.y);
     }
