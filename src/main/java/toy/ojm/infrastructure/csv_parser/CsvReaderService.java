@@ -25,11 +25,11 @@ public class CsvReaderService {
 
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
-    private final int BATCH_SIZE = 5000; //
+    private final int BATCH_SIZE = 5000; 
 
     @Transactional
     public void readAndSaveCSV() {
-        log.info("readAndSaveCSV 진행 - 현재 시간 : " + new Date().toString());
+        log.info("readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
         long startTime = System.currentTimeMillis();
 
         try {
@@ -45,6 +45,7 @@ public class CsvReaderService {
             // 3. 데이터 처리 및 저장
             List<Restaurant> restaurantsToSave = new ArrayList<>();
             for(CsvData csvdata : csvDataList){
+                // 폐업한 가게는 skip
                 if(csvdata.isClosedBusiness()){
                     continue;
                 }
@@ -106,6 +107,7 @@ public class CsvReaderService {
                 List<String> columns = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
                 csvDataList.add(new CsvData(columns));
             }
+
           } catch (Exception e) {
         log.error("readAndSaveCSV 중 오류 발생 : {}" ,e.getMessage());
     } finally {
