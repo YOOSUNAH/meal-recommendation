@@ -8,6 +8,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Component;
 import toy.ojm.infrastructure.PublicDataConstants;
 
@@ -34,7 +35,15 @@ public class PublicDataDownloader {
         Path destinationPath = resolveDestinationPath();
 
         WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
+
+        // Chrome 옵션 설정
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
+        options.addArguments("--no-sandbox");              // Chrome 브라우저의 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
+        options.addArguments("--disable-dev-shm-usage");   // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
+
+
+        WebDriver driver = new ChromeDriver(options);
 
         try {
             download(driver); // 데이터 크롤링
