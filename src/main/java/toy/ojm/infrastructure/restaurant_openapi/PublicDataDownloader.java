@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import toy.ojm.infrastructure.PublicDataConstants;
 
@@ -66,24 +65,25 @@ public class PublicDataDownloader {
     }
 
     private Path resolveDownloadPath() {
-        return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);  // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
+        return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);
+        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
+        // user.home: 사용자의 홈 디렉토리
     }
 
     private Path resolveDestinationPath() {
-        Path directoryPath;
+            Path directoryPath = Paths.get(System.getProperty("user.dir"), PublicDataConstants.DESTINATION_DIRECTORY);
+            // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
         try {
-            directoryPath = Paths.get(new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath());  // ClassPathResource :  Spring Framework에서 제공클래스, 클래스 경로에 있는 리소스에 접근할 때 사용, getAbsolutePath : 절대 경로를 문자열로 반환, Path.get() : 주어진 경로 문자열로부터 Path 객체를 생성
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
             }
-
-            log.debug("Resolved destination directory path: {}", directoryPath.toAbsolutePath());
+            log.debug("## Resolved destination directory path: {}", directoryPath.toAbsolutePath());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("## Failed to create directory", e);
         }
 
         Path destinationPath = directoryPath.resolve(destinationFilenameWithTime());
-        log.debug("Resolved destination path: {}", destinationPath.toAbsolutePath());
+        log.debug("## Resolved destination path: {}", destinationPath.toAbsolutePath());
 
         return destinationPath;   //directoryPath 특정 디렉토리의 경로를 나타내는 Path 객체, resolve() : 기존의 경로에 다른 경로를 결합하여 새로운 경로를 생성, destinationFilenameWithTime : 파일이름을 생성하는 메서드
         // csv-data 디렉토리 내에 시간을 포함한 고유한 파일 이름으로 새로운 파일 경로를 생성하고, 그 경로를 나타내는 Path 객체를 반환
