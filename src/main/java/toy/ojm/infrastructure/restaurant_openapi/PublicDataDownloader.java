@@ -52,7 +52,7 @@ public class PublicDataDownloader {
                 options.addArguments("--disable-dev-shm-usage");   // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
                 driver = new ChromeDriver(options);
             } else if ("FIREFOX".equalsIgnoreCase(browser)) {
-                WebDriverManager.firefoxdriver().setup();
+                WebDriverManager.firefoxdriver().driverVersion("0.35.0").setup();
                 FirefoxOptions options = new FirefoxOptions();
                 options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
                 options.addArguments("--no-sandbox");              // 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
