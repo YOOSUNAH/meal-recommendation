@@ -5,10 +5,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.By;
+import org.openqa.selenium.SessionNotCreatedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import toy.ojm.infrastructure.PublicDataConstants;
 
@@ -27,6 +31,9 @@ public class PublicDataDownloader {
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
 
+    @Value("${ webdriver.browser-type:CHROME}")
+    private String browser;
+
     @Transactional
     public Path downloadCsvFile() {
         log.info("downloadCsvFile 진행 - 현재 시간 : " + new Date().toString());
@@ -34,18 +41,28 @@ public class PublicDataDownloader {
         Path downloadPath = resolveDownloadPath();
         Path destinationPath = resolveDestinationPath();
 
-        WebDriverManager.chromedriver().setup();
-
-        // Chrome 옵션 설정
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
-        options.addArguments("--no-sandbox");              // Chrome 브라우저의 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
-        options.addArguments("--disable-dev-shm-usage");   // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
-
-
-        WebDriver driver = new ChromeDriver(options);
-
+        WebDriver driver = null;
         try {
+            if ("CHROME".equalsIgnoreCase(browser)) {
+                // Chrome 옵션 설정
+                WebDriverManager.chromedriver().setup();
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
+                options.addArguments("--no-sandbox");              // Chrome 브라우저의 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
+                options.addArguments("--disable-dev-shm-usage");   // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
+                driver = new ChromeDriver(options);
+            } else if ("FIREFOX".equalsIgnoreCase(browser)) {
+                WebDriverManager.firefoxdriver().setup();
+                FirefoxOptions options = new FirefoxOptions();
+                options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
+                options.addArguments("--no-sandbox");              // 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
+                options.addArguments("--disable-dev-shm-usage");  // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
+                options.setAcceptInsecureCerts(true);
+                driver = new FirefoxDriver(options);
+            } else {
+                throw new IllegalStateException("Unsupported browser :" + browser);
+            }
+
             download(driver); // 데이터 크롤링
             waitForFileDownload(downloadPath);
 
@@ -57,13 +74,17 @@ public class PublicDataDownloader {
             }
 
             moveFile(downloadPath, destinationPath);  // downloadPath 에서 destinationPath으로 파일 위치 이동
-
+        } catch(SessionNotCreatedException e){
+            log.error("fail to create browser session: ", e);
         } catch (IOException | InterruptedException e) {
             log.error("Error downloading CSV file: ", e);
+        } catch (Exception e) {
+            log.error("Unexpected Error: ", e);
         } finally {
-            driver.close();
+            if (driver != null) {
+                driver.quit();
+            }
         }
-
         return destinationPath;
     }
 
@@ -80,8 +101,8 @@ public class PublicDataDownloader {
     }
 
     private Path resolveDestinationPath() {
-            Path directoryPath = Paths.get(System.getProperty("user.dir"), PublicDataConstants.DESTINATION_DIRECTORY);
-            // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
+        Path directoryPath = Paths.get(System.getProperty("user.dir"), PublicDataConstants.DESTINATION_DIRECTORY);
+        // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
         try {
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
