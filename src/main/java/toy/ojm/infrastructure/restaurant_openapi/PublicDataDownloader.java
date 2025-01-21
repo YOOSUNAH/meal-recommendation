@@ -31,7 +31,7 @@ public class PublicDataDownloader {
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
 
-    @Value("${ webdriver.browser-type:CHROME}")
+    @Value("${webdriver.browser-type:FIREFOX}")
     private String browser;
 
     @Transactional
@@ -95,15 +95,16 @@ public class PublicDataDownloader {
     }
 
     private Path resolveDownloadPath() {
-        if ("CHROME".equalsIgnoreCase(browser)) {
+        if ("FIREFOX".equalsIgnoreCase(browser)) {
+            return Paths.get("/tmp", DOWNLOAD_FILE_NAME);
+        }else {
             return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
             // user.home: 사용자의 홈 디렉토리
-        }else {
-            return Paths.get("/tmp", DOWNLOAD_FILE_NAME);
         }
     }
 
     private Path resolveDestinationPath() {
+
         Path directoryPath = Paths.get(System.getProperty("user.dir"), PublicDataConstants.DESTINATION_DIRECTORY);
         // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
         try {
