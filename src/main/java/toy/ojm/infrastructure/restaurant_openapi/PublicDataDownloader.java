@@ -95,9 +95,12 @@ public class PublicDataDownloader {
     }
 
     private Path resolveDownloadPath() {
-        return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);
-        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
-        // user.home: 사용자의 홈 디렉토리
+        if ("CHROME".equalsIgnoreCase(browser)) {
+            return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
+            // user.home: 사용자의 홈 디렉토리
+        }else {
+            return Paths.get("/tmp", DOWNLOAD_FILE_NAME);
+        }
     }
 
     private Path resolveDestinationPath() {
