@@ -109,6 +109,7 @@ public class OJMController {
 
     @GetMapping("/health")
     public ResponseEntity<String> healthCheck() {
+        log.info(" ## === 테스트 로그 출력!");
         return ResponseEntity.ok("OK");
     }
 }
