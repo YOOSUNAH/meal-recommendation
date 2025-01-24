@@ -15,7 +15,11 @@ RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list && \
     add-apt-repository ppa:mozillateam/ppa && \
     apt-get update && \
     apt-get install -y \
-    openjdk-17-jdk wget gnupg2 tar locales \
+    openjdk-17-jdk \
+    wget \
+    gnupg2 \
+    tar \
+    locales \
     xvfb \
     firefox-esr \
     xorg \

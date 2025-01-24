@@ -80,15 +80,20 @@ public class PublicDataDownloader {
             driver = new ChromeDriver(options);
         } else {
             FirefoxOptions options = new FirefoxOptions();
-            options.addArguments("-headless");               // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
+            options.addArguments("-headless");
+            options.setBinary("/usr/bin/firefox-esr");  // Firefox 바이너리 경로 명시적 설정
 
             // Xvfb 설정 개선
             ProcessBuilder processBuilder = new ProcessBuilder("Xvfb", ":99", "-ac", "-screen", "0", "1920x1080x24");
-            processBuilder.redirectErrorStream(true);
-            processBuilder.start();
+            Process xvfbProcess = processBuilder.start();
+            log.info("Xvfb started with PID: {}", xvfbProcess.pid());
+
+            System.setProperty("java.awt.headless", "true"); // Java AWT가 GUI를 사용하지 않도록 설정
+//            System.setProperty("xorg.server.display", ":99"); // Xvfb가 사용할 디스플레이를 지정
 
             driver = new FirefoxDriver(options);
         }
+        log.info("createWebDriver");
         return driver;
     }
 
