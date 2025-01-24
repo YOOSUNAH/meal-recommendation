@@ -1,17 +1,15 @@
 package toy.ojm.infrastructure.restaurant_openapi;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.By;
-import org.openqa.selenium.SessionNotCreatedException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import toy.ojm.infrastructure.PublicDataConstants;
@@ -21,7 +19,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -40,29 +40,10 @@ public class PublicDataDownloader {
 
         Path downloadPath = resolveDownloadPath();
         Path destinationPath = resolveDestinationPath();
-
         WebDriver driver = null;
-        try {
-            if ("CHROME".equalsIgnoreCase(browser)) {
-                // Chrome 옵션 설정
-                WebDriverManager.chromedriver().setup();
-                ChromeOptions options = new ChromeOptions();
-                options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
-                options.addArguments("--no-sandbox");              // Chrome 브라우저의 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
-                options.addArguments("--disable-dev-shm-usage");   // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
-                driver = new ChromeDriver(options);
-            } else if ("FIREFOX".equalsIgnoreCase(browser)) {
-                WebDriverManager.firefoxdriver().driverVersion("0.35.0").setup();
-                FirefoxOptions options = new FirefoxOptions();
-                options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
-                options.addArguments("--no-sandbox");              // 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
-                options.addArguments("--disable-dev-shm-usage");  // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
-                options.setAcceptInsecureCerts(true);
-                driver = new FirefoxDriver(options);
-            } else {
-                throw new IllegalStateException("Unsupported browser :" + browser);
-            }
 
+        try {
+            driver = createWebDriver();
             download(driver); // 데이터 크롤링
             waitForFileDownload(downloadPath);
 
@@ -74,7 +55,7 @@ public class PublicDataDownloader {
             }
 
             moveFile(downloadPath, destinationPath);  // downloadPath 에서 destinationPath으로 파일 위치 이동
-        } catch(SessionNotCreatedException e){
+        } catch (SessionNotCreatedException e) {
             log.error("fail to create browser session: ", e);
         } catch (IOException | InterruptedException e) {
             log.error("Error downloading CSV file: ", e);
@@ -88,23 +69,67 @@ public class PublicDataDownloader {
         return destinationPath;
     }
 
-    private void download(WebDriver driver) {
-        driver.get(SEOUL_PUBLIC_OPEN_DATA_URL);
-        WebElement csvButton = driver.findElement(By.id("btnCsv"));
-        csvButton.click();
+    private WebDriver createWebDriver() throws IOException {
+        WebDriver driver;
+        if ("CHROME".equalsIgnoreCase(browser)) {
+            // Chrome 옵션 설정
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--headless");                 // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
+            options.addArguments("--no-sandbox");              // Chrome 브라우저의 샌드박스 기능을 비활성화하는 옵션, 리눅스에서 셀레니움이 적절히 동작하지 않을 때 사용
+            options.addArguments("--disable-dev-shm-usage");   // 공유 메모리 파일 시스템 크기를 제한하지 않게 설정
+            driver = new ChromeDriver(options);
+        } else {
+            FirefoxOptions options = new FirefoxOptions();
+            options.addArguments("-headless");               // Headless 모드 : 웹 브라우저를 열지 않고 크롤링을 진행할 때 사용하는 옵션
+
+            // Xvfb 설정 개선
+            ProcessBuilder processBuilder = new ProcessBuilder("Xvfb", ":99", "-ac", "-screen", "0", "1920x1080x24");
+            processBuilder.redirectErrorStream(true);
+            processBuilder.start();
+
+            driver = new FirefoxDriver(options);
+        }
+        return driver;
     }
 
-    private Path resolveDownloadPath() {
-        if ("FIREFOX".equalsIgnoreCase(browser)) {
-            return Paths.get("/tmp", DOWNLOAD_FILE_NAME);
-        }else {
-            return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
-            // user.home: 사용자의 홈 디렉토리
+    private void download(WebDriver driver) {
+        try {
+            driver.get(SEOUL_PUBLIC_OPEN_DATA_URL);
+
+            // JavaScript 로드 대기 시간 확장
+            driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
+
+            // 페이지 완전 로드 대기
+            wait.until(webDriver -> ((JavascriptExecutor) webDriver)
+                    .executeScript("return document.readyState")
+                    .equals("complete"));
+
+            WebElement csvButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("btnCsv")));
+            csvButton.click();
+
+            // 파일 다운로드 대기
+            Thread.sleep(15000); // 15초 대기
+        } catch (Exception e) {
+            log.error("파일 다운로드 중 오류 발생", e);
+            throw new RuntimeException("파일 다운로드 실패", e);
         }
     }
 
-    private Path resolveDestinationPath() {
+    private Path resolveDownloadPath() {
+        Path downloadPath;
+        if ("FIREFOX".equalsIgnoreCase(browser)) {
+            downloadPath = Paths.get("/tmp", DOWNLOAD_FILE_NAME);
+        } else {
+            downloadPath = Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
+            // user.home: 사용자의 홈 디렉토리
+        }
+        log.info("Resolved download path: {}", downloadPath.toAbsolutePath());
+        return downloadPath;
+    }
 
+    private Path resolveDestinationPath() {
         Path directoryPath = Paths.get(System.getProperty("user.dir"), PublicDataConstants.DESTINATION_DIRECTORY);
         // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
         try {
@@ -127,23 +152,18 @@ public class PublicDataDownloader {
         return PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION;  // 파일이름을 생성
     }
 
-    private void waitForFileDownload(Path downloadPath) throws InterruptedException {
-        int maxWaitTime = 200; // 최대 대기 시간
-        int waitedTime = 0;
-        while (!Files.exists(downloadPath) && waitedTime < maxWaitTime) {
-            log.info("Waiting for file to download...");
-            Thread.sleep(2000); // 2초 대기
-            waitedTime += 2;
+    private void waitForFileDownload(Path downloadPath) throws InterruptedException, IOException {
+        for (int attempt = 0; attempt < 120; attempt++) {
+            if (Files.exists(downloadPath) && Files.size(downloadPath) > 0) {
+                log.info("## 파일 다운로드 성공");
+                return;
+            }
+            Thread.sleep(5000); // 5초 대기
         }
-        if (Files.exists(downloadPath)) {
-            log.info("File downloaded successfully.");
-        } else {
-            log.warn("File download timed out.");
-        }
+        throw new InterruptedException("## 파일 다운로드 실패");
     }
 
     private void moveFile(Path sourcePath, Path destinationPath) throws IOException {
-
         if (!Files.exists(sourcePath)) {
             log.warn("Source file not found: {}", sourcePath.toAbsolutePath());
             return;
@@ -160,7 +180,6 @@ public class PublicDataDownloader {
             log.error("Unexpected error occurred during file move: {}", e.getMessage(), e);
             throw e;
         }
-
 
         if (Files.exists(destinationPath)) {
             log.info("CSV file moved successfully to {}", destinationPath.toAbsolutePath());

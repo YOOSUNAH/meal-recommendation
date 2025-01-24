@@ -17,9 +17,10 @@ RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list && \
     apt-get install -y \
     openjdk-17-jdk wget gnupg2 tar locales \
     xvfb \
-    firefox \
+    firefox-esr \
     xorg \
     dbus-x11 \
+    libpci-dev \
     libgtk-3-0 \
     libdbus-glib-1-2 && \
     locale-gen ko_KR.UTF-8 && \
@@ -27,6 +28,7 @@ RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list && \
     rm -rf /var/lib/apt/lists/*
 
 ENV LANG=ko_KR.UTF-8
+ENV DISPLAY=:99
 
 COPY --from=build app.jar /app.jar
 
