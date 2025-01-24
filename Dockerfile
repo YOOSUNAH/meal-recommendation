@@ -18,6 +18,7 @@ RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list && \
     openjdk-17-jdk wget gnupg2 tar locales \
     xvfb \
     firefox \
+    xorg \
     dbus-x11 \
     libgtk-3-0 \
     libdbus-glib-1-2 && \
