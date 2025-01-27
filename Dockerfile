@@ -1,40 +1,39 @@
 # 첫 번째 스테이지: JAR 파일 빌드
 FROM openjdk:17-slim AS build
 
-ARG JAR_FILE=build/libs/meal-recommendation-0.0.1-SNAPSHOT.jar
-COPY ${JAR_FILE} app.jar
-
-# 두 번째 스테이지: OpenJDK 및 Firefox 설치
-FROM ubuntu:20.04
-
-ENV DEBIAN_FRONTEND=noninteractive
-
-RUN sed -i 's/# deb/deb/g' /etc/apt/sources.list && \
-    apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:mozillateam/ppa && \
-    apt-get update && \
-    apt-get install -y \
-    openjdk-17-jdk \
+# 필수 패키지 설치 (curl, wget, gnupg 등)
+RUN apt-get update && apt-get install -y \
     wget \
-    gnupg2 \
-    tar \
-    locales \
-    xvfb \
-    firefox-esr \
-    xorg \
-    dbus-x11 \
-    libpci-dev \
-    libgtk-3-0 \
-    libdbus-glib-1-2 && \
-    locale-gen ko_KR.UTF-8 && \
-    apt-get clean && \
+    curl \
+    unzip \
+    gnupg \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxi6 \
+    libxtst6 \
+    fonts-liberation \
+    --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-ENV LANG=ko_KR.UTF-8
-ENV DISPLAY=:99
+# Google Chrome 설치
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
+    apt-get update && apt-get install -y google-chrome-stable && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY --from=build app.jar /app.jar
+# ChromeDriver 설치
+RUN CHROME_DRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
+    wget -q https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    mv chromedriver /usr/bin/chromedriver && \
+    chmod +x /usr/bin/chromedriver && \
+    rm chromedriver_linux64.zip
+
+ARG JAR_FILE=build/libs/meal-recommendation-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} app.jar
 
 ENTRYPOINT ["java", "-Dfile.encoding=UTF-8", "-jar", "/app.jar", \
       "--spring.profiles.active=live", \

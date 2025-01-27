@@ -14,11 +14,11 @@ public class Scheduling {
     private final PublicDataDownloader publicDataDownloader;
     private final CsvReaderService csvReaderService;
 
-    @Transactional
-    @Scheduled(cron = "0 30 23 * * *")
-    public void schedulingService(){
-        publicDataDownloader.downloadCsvFile();
-        csvReaderService.readAndSaveCSV();
-    }
+//    @Transactional
+//    @Scheduled(cron = "0 30 23 * * *")
+//    public void schedulingService(){
+//        publicDataDownloader.downloadCsvFile();
+//        csvReaderService.readAndSaveCSV();
+//    }
 
 }
