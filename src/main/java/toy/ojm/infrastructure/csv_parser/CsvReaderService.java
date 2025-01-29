@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.entity.Restaurant;
@@ -28,9 +27,6 @@ public class CsvReaderService {
     private final TransCoordination transCoordination;
     private final int BATCH_SIZE = 1000;
 
-    @Value("${csv.file.path}")
-    private String csvFilePath;
-
     @Transactional
     public void readAndSaveCSV() {
         log.info("readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
@@ -42,20 +38,20 @@ public class CsvReaderService {
 
             // 2. DB 데이터 조회
             Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
-                    .collect(Collectors.toMap(
-                            Restaurant::getManagementNumber,
-                            restaurant -> restaurant));
+                .collect(Collectors.toMap(
+                    Restaurant::getManagementNumber,
+                    restaurant -> restaurant));
 
             // 3. 데이터 처리 및 저장
             List<Restaurant> restaurantsToSave = new ArrayList<>();
-            for(CsvData csvdata : csvDataList){
+            for (CsvData csvdata : csvDataList) {
                 // 폐업한 가게는 skip
-                if(csvdata.isClosedBusiness()){
+                if (csvdata.isClosedBusiness()) {
                     continue;
                 }
 
                 // 좌표가 없는 가게는 skip
-                if(csvdata.getLongitude() == null || csvdata.getLatitude() == null){
+                if (csvdata.getLongitude() == null || csvdata.getLatitude() == null) {
                     continue;
                 }
 
@@ -64,29 +60,31 @@ public class CsvReaderService {
                 restaurantsToSave.add(restaurant);
 
                 // BATCH_SIZE 씩 저장
-                if(restaurantsToSave.size() >= BATCH_SIZE){
+                if (restaurantsToSave.size() >= BATCH_SIZE) {
                     restaurantRepository.saveAll(restaurantsToSave);
                     restaurantsToSave.clear();
                 }
             }
 
-            if(!csvDataList.isEmpty()){
+            if (!csvDataList.isEmpty()) {
                 restaurantRepository.saveAll(restaurantsToSave);
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-            log.info("걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
+        log.info("걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
     }
 
     private List<CsvData> readAllFromCsv() throws IOException {
         List<CsvData> csvDataList = new ArrayList<>();
         int progressCounter = 0;
         try {
-            log.info("##### csvFilePath : {} ", csvFilePath);
+            Path csvFilePath = PublicDataConstants.DESTINATION_DIRECTORY.resolve(
+                PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION
+            );
 
-            File csvFile = new File(csvFilePath);
+            File csvFile = new File(csvFilePath.toString());
             log.info("##### CSV 파일을 찾았습니다: {}", csvFile.getAbsolutePath());
 
             FileInputStream fis = new FileInputStream(csvFile);
@@ -103,11 +101,11 @@ public class CsvReaderService {
                 csvDataList.add(new CsvData(columns));
             }
 
-          } catch (Exception e) {
-        log.error("readAndSaveCSV 중 오류 발생 : {}" ,e.getMessage());
-    } finally {
-        log.info("##### {} 라인까지 완료", progressCounter);
-    }
+        } catch (Exception e) {
+            log.error("readAndSaveCSV 중 오류 발생 : {}", e.getMessage());
+        } finally {
+            log.info("##### {} 라인까지 완료", progressCounter);
+        }
         return csvDataList;
     }
 

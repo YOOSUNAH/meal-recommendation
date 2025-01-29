@@ -80,8 +80,8 @@ public class PublicDataDownloader {
     }
 
     private Path resolveDestinationPath() {
-        Path directoryPath = Paths.get(System.getProperty("user.dir"), PublicDataConstants.DESTINATION_DIRECTORY);
         // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
+        Path directoryPath = PublicDataConstants.DESTINATION_DIRECTORY;
         try {
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
