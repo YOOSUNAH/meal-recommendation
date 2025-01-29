@@ -42,3 +42,10 @@ ENTRYPOINT ["java", "-Dfile.encoding=UTF-8", "-jar", "/app.jar", \
       "--database.username=${DATABASE_USERNAME}", \
       "--database.password=${DATABASE_PASSWORD}", \
       "--kakao.appKey=${KAKAO_REST_API_KEY}"]
+
+
+
+
+
+
+
