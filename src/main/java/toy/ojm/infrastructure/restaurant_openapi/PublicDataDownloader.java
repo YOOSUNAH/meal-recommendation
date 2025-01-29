@@ -1,16 +1,13 @@
 package toy.ojm.infrastructure.restaurant_openapi;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import toy.ojm.infrastructure.PublicDataConstants;
 
@@ -21,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -31,8 +27,9 @@ public class PublicDataDownloader {
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
 
-    @Value("${webdriver.browser-type:FIREFOX}")
-    private String browser;
+    static {
+        WebDriverManager.chromedriver().setup();
+    }
 
     @Transactional
     public Path downloadCsvFile() {
@@ -42,27 +39,26 @@ public class PublicDataDownloader {
         Path destinationPath = resolveDestinationPath();
         WebDriver driver = null;
 
-        log.info("downloadPath : {}", downloadPath );
-        log.info("destinationPath : {}", destinationPath );
+        log.debug("downloadPath : {}", downloadPath);
+        log.debug("destinationPath : {}", destinationPath);
 
         try {
             driver = createWebDriver();
-            log.info("########## 1111111111111111111111111111");
+            log.debug("########## 1111111111111111111111111111");
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-            log.info("########## 2222222222222222222222222222");
+            log.debug("########## 2222222222222222222222222222");
             wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-                    .executeScript("return document.readyState").equals("complete"));
+                .executeScript("return document.readyState").equals("complete"));
 
-            log.info("########## 3333333333333333333333333333");
+            log.debug("########## 3333333333333333333333333333");
 
             download(driver);
-            log.info("########## 4444444444444444444444444444");
+            log.debug("########## 4444444444444444444444444444");
             waitForFileDownload(downloadPath);
-            log.info("########## 5555555555555555555555555555");
+            log.debug("########## 5555555555555555555555555555");
 
             deleteIfExists(destinationPath, downloadPath);
             moveFile(downloadPath, destinationPath);
-
 
         } catch (SessionNotCreatedException e) {
             log.error("fail to create browser session: ", e);
@@ -80,15 +76,7 @@ public class PublicDataDownloader {
 
 
     private Path resolveDownloadPath() {
-        Path downloadPath;
-        if ("FIREFOX".equalsIgnoreCase(browser)) {
-            downloadPath = Paths.get("/tmp", DOWNLOAD_FILE_NAME);
-        } else {
-            downloadPath = Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로
-            // user.home: 사용자의 홈 디렉토리
-        }
-        log.info("Resolved download path: {}", downloadPath.toAbsolutePath());
-        return downloadPath;
+        return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로;
     }
 
     private Path resolveDestinationPath() {
@@ -112,7 +100,6 @@ public class PublicDataDownloader {
 
     private WebDriver createWebDriver() throws IOException {
         ChromeOptions options = new ChromeOptions();
-//        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
         options.addArguments("--headless");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
@@ -150,9 +137,9 @@ public class PublicDataDownloader {
         int maxRetries = 100;
         int retryCount = 0;
 
-        while(retryCount < maxRetries){
+        while (retryCount < maxRetries) {
             if (Files.exists(downloadPath) && Files.size(downloadPath) > 0) {
-                log.info("########## 파일 다운로드 성공");
+                log.debug("########## 파일 다운로드 성공");
                 return;
             }
             Thread.sleep(5000); // 5초 대기
@@ -182,10 +169,10 @@ public class PublicDataDownloader {
 
         try {
             Files.move(sourcePath, destinationPath); // 파일 이동 시도
-            log.info("Move operation executed.");
+            log.debug("Move operation executed.");
         } catch (IOException e) {
             log.error("IOException occurred while moving file from {} to {}: {}",
-                    sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
+                sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
             throw e; // 상위로 예외 전달
         } catch (Exception e) {
             log.error("Unexpected error occurred during file move: {}", e.getMessage(), e);
