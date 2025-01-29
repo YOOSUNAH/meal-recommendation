@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.entity.Restaurant;
@@ -25,7 +26,10 @@ public class CsvReaderService {
 
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
-    private final int BATCH_SIZE = 5000; 
+    private final int BATCH_SIZE = 1000;
+
+    @Value("${csv.file.path}")
+    private String csvFilePath;
 
     @Transactional
     public void readAndSaveCSV() {
@@ -56,9 +60,7 @@ public class CsvReaderService {
                 }
 
                 Restaurant restaurant = existingRestaurant.getOrDefault(csvdata.getManagementNumber(), new Restaurant());
-
                 updateRestaurantInfo(restaurant, csvdata);
-
                 restaurantsToSave.add(restaurant);
 
                 // BATCH_SIZE 씩 저장
@@ -79,29 +81,22 @@ public class CsvReaderService {
     }
 
     private List<CsvData> readAllFromCsv() throws IOException {
-
         List<CsvData> csvDataList = new ArrayList<>();
-
         int progressCounter = 0;
         try {
-            Path csvFilePath = Paths.get(
-                            new ClassPathResource(PublicDataConstants.DESTINATION_DIRECTORY).getFile().getAbsolutePath())
-                    .resolve(PublicDataConstants.DESTINATION_FILE_NAME +
-                            "." +
-                            PublicDataConstants.DESTINATION_FILE_EXTENSION
-                    );
+            log.info("##### csvFilePath : {} ", csvFilePath);
 
+            File csvFile = new File(csvFilePath);
+            log.info("##### CSV 파일을 찾았습니다: {}", csvFile.getAbsolutePath());
 
-            File csvFile = new File(csvFilePath.toString());
             FileInputStream fis = new FileInputStream(csvFile);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("EUC_KR"));
             BufferedReader br = new BufferedReader(isr);
 
-            String line;
-
             // 첫 번째 행(제목 행)을 읽고 버림
             br.readLine();
 
+            String line;
             while ((line = br.readLine()) != null) {
                 progressCounter++;
                 List<String> columns = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
