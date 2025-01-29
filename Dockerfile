@@ -1,6 +1,8 @@
 # 첫 번째 스테이지: JAR 파일 빌드
 FROM openjdk:17-slim AS build
 
+COPY csv-data/data.csv /csv-data/data.csv
+
 # 필수 패키지 설치 (curl, wget, gnupg 등)
 RUN apt-get update && apt-get install -y \
     wget \
@@ -15,14 +17,19 @@ RUN apt-get update && apt-get install -y \
     libxi6 \
     libxtst6 \
     fonts-liberation \
-    --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
+    libxrandr2 \
+    libgbm1 \
+    libgtk-3-0 \
+    ca-certificates \
+    apt-transport-https \
+    dpkg \
+    --no-install-recommends
 
 # Google Chrome 설치
-RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list && \
-    apt-get update && apt-get install -y google-chrome-stable && \
-    rm -rf /var/lib/apt/lists/*
+RUN wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get update && \
+    dpkg -i /tmp/chrome.deb || apt-get -f install -y && \
+    rm /tmp/chrome.deb
 
 # ChromeDriver 설치
 RUN CHROME_DRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
