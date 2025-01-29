@@ -52,20 +52,6 @@ public class OJMController {
         log.info("좌표 변환 요청 API 성공!");
     }
 
-    @GetMapping("/restaurant/crawl")
-    public ResponseEntity<Path> saveRestaurantByCrawling() {
-        Path path = publicDataDownloader.downloadCsvFile();
-        log.info("크롤링한 데이터 java로 불러와서 저장하기 | 저장위치  : {}", path.toString());
-        return ResponseEntity.ok(path);
-    }
-
-    @GetMapping("/csv")
-    public ResponseEntity<ResponseDto<Void>> csvReadAndSave() {
-        csvReaderService.readAndSaveCSV();
-        log.info("csv 읽어오기 완료");
-        return ResponseDto.of(HttpStatus.OK, null);
-    }
-
     @GetMapping("/restaurant")
     public ResponseEntity<List<Restaurant>> saveRestaurant() {
         List<Restaurant> restaurants = csvReaderService.getAllRestaurants();
