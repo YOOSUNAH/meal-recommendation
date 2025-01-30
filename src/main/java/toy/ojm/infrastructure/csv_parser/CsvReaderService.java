@@ -90,8 +90,11 @@ public class CsvReaderService {
             );
 
             File csvFile = new File(csvFilePath.toString());
-            log.info("##### CSV 파일을 찾았습니다: {}", csvFile.getAbsolutePath());
-
+            if (csvFile.exists()) {
+                log.info("##### CSV 파일을 찾았습니다");
+            } else {
+                throw new IllegalStateException("##### CSV 파일이 존재하지 않습니다. - " + csvFile.getAbsolutePath());
+            }
             FileInputStream fis = new FileInputStream(csvFile);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("EUC_KR"));
             BufferedReader br = new BufferedReader(isr);
@@ -105,6 +108,7 @@ public class CsvReaderService {
                 List<String> columns = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
                 csvDataList.add(new CsvData(columns));
             }
+
 
         } catch (Exception e) {
             log.error("readAndSaveCSV 중 오류 발생 : {}", e.getMessage());
