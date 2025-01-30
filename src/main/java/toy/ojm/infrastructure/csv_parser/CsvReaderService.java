@@ -25,7 +25,7 @@ public class CsvReaderService {
 
     private final RestaurantRepository restaurantRepository;
     private final TransCoordination transCoordination;
-    private final int BATCH_SIZE = 1000;
+    private final int BATCH_SIZE = 5000;
 
     @Transactional
     public void readAndSaveCSV() {
@@ -75,7 +75,7 @@ public class CsvReaderService {
             if (!csvDataList.isEmpty()) {
                 restaurantRepository.saveAll(restaurantsToSave);
             }
-            log.info("##### 3. db restaurant update - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
+            log.info("##### 3. db restaurant save - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
