@@ -3,8 +3,8 @@ package toy.ojm.infrastructure.csv_parser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.locationtech.proj4j.ProjCoordinate;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.TransCoordination;
@@ -14,8 +14,8 @@ import toy.ojm.infrastructure.PublicDataConstants;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,18 +29,25 @@ public class CsvReaderService {
 
     @Transactional
     public void readAndSaveCSV() {
-        log.info("readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
-        long startTime = System.currentTimeMillis();
+        log.info("##### readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
+        final StopWatch stopWatch = StopWatch.createStarted();
 
         try {
             // 1. csv 읽기
             List<CsvData> csvDataList = readAllFromCsv();
+            log.info("##### 1. csv read - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
+            stopWatch.reset();
+            stopWatch.start();
 
             // 2. DB 데이터 조회
             Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
                 .collect(Collectors.toMap(
                     Restaurant::getManagementNumber,
                     restaurant -> restaurant));
+
+            log.info("##### 2. db restaurant read - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
+            stopWatch.reset();
+            stopWatch.start();
 
             // 3. 데이터 처리 및 저장
             List<Restaurant> restaurantsToSave = new ArrayList<>();
@@ -65,15 +72,13 @@ public class CsvReaderService {
                     restaurantsToSave.clear();
                 }
             }
-
             if (!csvDataList.isEmpty()) {
                 restaurantRepository.saveAll(restaurantsToSave);
             }
-
+            log.info("##### 3. db restaurant update - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.info("걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
     }
 
     private List<CsvData> readAllFromCsv() throws IOException {
