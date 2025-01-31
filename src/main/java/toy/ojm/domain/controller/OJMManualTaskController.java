@@ -12,6 +12,7 @@ import toy.ojm.infrastructure.csv_parser.CsvReaderService;
 import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
 
 import java.nio.file.Path;
+import java.util.Date;
 
 @Slf4j
 @RestController
@@ -22,17 +23,17 @@ public class OJMManualTaskController {
     private final PublicDataDownloader publicDataDownloader;
     private final CsvReaderService csvReaderService;
 
-    @GetMapping("/restaurant/crawl")
+    @GetMapping("/crawl")
     public ResponseEntity<Path> saveRestaurantByCrawling() {
         Path path = publicDataDownloader.downloadCsvFile();
-        log.info("크롤링한 데이터 java로 불러와서 저장하기 | 저장위치  : {}", path.toString());
+        log.debug("##### 크롤링한 데이터 저장 완료 | 저장위치  : {}", path.toString());
         return ResponseEntity.ok(path);
     }
 
     @GetMapping("/csv")
     public ResponseEntity<ResponseDto<Void>> csvReadAndSave() {
         csvReaderService.readAndSaveCSV();
-        log.info("csv 읽어오기 완료");
+        log.info("##### csv 읽어오기 완료");
         return ResponseDto.of(HttpStatus.OK, null);
     }
 

@@ -16,6 +16,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -27,6 +28,7 @@ public class CsvReaderService {
     private final TransCoordination transCoordination;
     private final int BATCH_SIZE = 1000;
 
+
     @Transactional
     public void readAndSaveCSV() {
         log.debug("##### readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
@@ -37,10 +39,14 @@ public class CsvReaderService {
             List<CsvData> csvDataList = readAllFromCsv();
 
             // 2. DB 데이터 조회
+            // list로 할때
+//            List<Restaurant> existingRestaurant = restaurantRepository.findAll();
+            // Map으로 할때
             Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
                 .collect(Collectors.toMap(
                     Restaurant::getManagementNumber,
                     restaurant -> restaurant));
+
 
             // 3. 데이터 처리 및 저장
             List<Restaurant> restaurantsToSave = new ArrayList<>();
@@ -51,24 +57,38 @@ public class CsvReaderService {
                     continue;
                 }
 
+                // list로 할때
+//                Restaurant restaurant = existingRestaurant.stream()
+//                        .filter(r -> r.getManagementNumber().equals(csvdata.getManagementNumber()))
+//                        .findFirst()
+//                        .orElse(new Restaurant());
+                // Map으로 할때
                 Restaurant restaurant = existingRestaurant.getOrDefault(csvdata.getManagementNumber(), new Restaurant());
+
+
                 updateRestaurantInfo(restaurant, csvdata);
                 restaurantsToSave.add(restaurant);
 
                 // BATCH_SIZE 씩 저장
                 if (restaurantsToSave.size() >= BATCH_SIZE) {
                     restaurantRepository.saveAll(restaurantsToSave);
+                    log.debug("##### BATCH_SIZE 씩 저장 중");
                     restaurantsToSave.clear();
                 }
             }
 
             if (!csvDataList.isEmpty()) {
+                log.debug("##### 남은 식당들 저장 중 ");
                 restaurantRepository.saveAll(restaurantsToSave);
             }
 
+
         } catch (IOException e) {
+            log.error("##### CSV 파일을 읽는 도중 오류 발생", e);
             throw new RuntimeException(e);
         }
+
+        log.debug("##### readAndSaveCSV 진행 끝 | 현재 시간 : " + new Date().toString());
         log.debug("##### 걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
     }
 
@@ -104,7 +124,7 @@ public class CsvReaderService {
         } catch (Exception e) {
             log.error("readAndSaveCSV 중 오류 발생 : {}", e.getMessage());
         } finally {
-            log.debug("##### {} 라인까지 완료", progressCounter);
+            log.debug("##### {} 라인까지 읽기 완료", progressCounter);
         }
         return csvDataList;
     }
