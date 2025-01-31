@@ -29,7 +29,7 @@ public class CsvReaderService {
 
     @Transactional
     public void readAndSaveCSV() {
-        log.info("readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
+        log.debug("##### readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
         long startTime = System.currentTimeMillis();
 
         try {
@@ -45,13 +45,9 @@ public class CsvReaderService {
             // 3. 데이터 처리 및 저장
             List<Restaurant> restaurantsToSave = new ArrayList<>();
             for (CsvData csvdata : csvDataList) {
-                // 폐업한 가게는 skip
-                if (csvdata.isClosedBusiness()) {
-                    continue;
-                }
-
-                // 좌표가 없는 가게는 skip
-                if (csvdata.getLongitude() == null || csvdata.getLatitude() == null) {
+                if (csvdata.isClosedBusiness()||  // 폐업한 가게는 skip
+                        csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
+                        csvdata.getLatitude() == null) {
                     continue;
                 }
 
@@ -73,7 +69,7 @@ public class CsvReaderService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.info("걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
+        log.debug("##### 걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
     }
 
     private List<CsvData> readAllFromCsv() throws IOException {
@@ -85,7 +81,11 @@ public class CsvReaderService {
             );
 
             File csvFile = new File(csvFilePath.toString());
-            log.info("##### CSV 파일을 찾았습니다: {}", csvFile.getAbsolutePath());
+            if(csvFile.exists()){
+                log.debug("##### CSV 파일이 있습닌다.");
+            }else{
+                log.error("##### CSV 파일 찾기에 실패했습니다. .: {}", csvFile.getAbsolutePath());
+            }
 
             FileInputStream fis = new FileInputStream(csvFile);
             InputStreamReader isr = new InputStreamReader(fis, Charset.forName("EUC_KR"));
@@ -104,7 +104,7 @@ public class CsvReaderService {
         } catch (Exception e) {
             log.error("readAndSaveCSV 중 오류 발생 : {}", e.getMessage());
         } finally {
-            log.info("##### {} 라인까지 완료", progressCounter);
+            log.debug("##### {} 라인까지 완료", progressCounter);
         }
         return csvDataList;
     }
