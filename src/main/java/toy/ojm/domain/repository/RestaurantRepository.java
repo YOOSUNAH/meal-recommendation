@@ -13,8 +13,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     List<Restaurant> findAllByCategoryIn(List<String> categories);
 
-    Page<Restaurant> findAll(Specification<Restaurant> specification, Pageable pageable);
-
-    Optional<Restaurant> findByManagementNumber(String managementNumber);
 }
 
