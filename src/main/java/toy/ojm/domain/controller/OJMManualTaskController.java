@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import toy.ojm.infrastructure.csv_parser.CsvReaderService;
 import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
 
 import java.nio.file.Path;
@@ -17,12 +18,19 @@ import java.nio.file.Path;
 public class OJMManualTaskController {
 
     private final PublicDataDownloader publicDataDownloader;
+    private final CsvReaderService csvReaderService;
 
     @GetMapping("/crawl")
     public ResponseEntity<Path> saveRestaurantByCrawling() {
         Path path = publicDataDownloader.downloadCsvFile();
         log.debug("##### 크롤링한 데이터 저장 완료 | 저장위치  : {}", path.toString());
         return ResponseEntity.ok(path);
+    }
+
+    @GetMapping("/csv")
+    public void csvReadAndSave() {
+        csvReaderService.readAndSaveCSV();
+        log.info("##### csv 읽어오기 완료");
     }
 
 

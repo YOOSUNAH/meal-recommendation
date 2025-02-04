@@ -30,11 +30,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/${database.name}
     username: ${database.username}
-    password:
-      ${database.password}
+    password: ${database.password}
 
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
@@ -45,8 +44,8 @@ logging:
   level:
     root: INFO
     toy.ojm.infrastructure: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 ---
 

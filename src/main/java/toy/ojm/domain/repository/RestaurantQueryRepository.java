@@ -61,5 +61,22 @@ public class RestaurantQueryRepository {
 
         return PageableExecutionUtils.getPage(restaurants, pageable, () -> totalSize);
     }
+//
+//    public Page<Restaurant> getRestaurantListWithPage(  Pageable pageable, long id){
+//        QRestaurant restaurant = QRestaurant.restaurant;
+//
+//        List<Restaurant> restaurants = jpaQueryFactory
+//                .select(Projections.fields(Restaurant.class,
+//                        restaurant.name,
+//                        restaurant.category,
+//                        restaurant.address,
+//                        restaurant.number))
+//                .from(restaurant)
+//                .offset(pageable.getOffset())
+//                .limit(pageable.getPageSize())
+//                .fetch();
+//
+//    }
+
 }
 
