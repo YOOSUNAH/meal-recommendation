@@ -3,6 +3,7 @@ package toy.ojm.infrastructure.csv_parser;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.StopWatch;
 import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +18,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,18 +32,25 @@ public class CsvReaderService {
 
     @Transactional
     public void readAndSaveCSV() {
-        log.debug("##### readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
-        long startTime = System.currentTimeMillis();
+        log.info("##### readAndSaveCSV 진행 시작 | 현재 시간 : " + new Date().toString());
+        final StopWatch stopWatch = StopWatch.createStarted();
 
         try {
             // 1. csv 읽기
             List<CsvData> csvDataList = readAllFromCsv();
+            log.info("##### 1. csv read - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
+            stopWatch.reset();
+            stopWatch.start();
 
 //             2. DB 데이터 조회
 //            Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
 //                .collect(Collectors.toMap(
 //                    Restaurant::getManagementNumber,
 //                    restaurant -> restaurant));
+
+            log.info("##### 2. db restaurant read - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
+            stopWatch.reset();
+            stopWatch.start();
 
             long totalCount = restaurantRepository.count();
             int totalPages = (int) Math.ceil((double) totalCount / BATCH_SIZE);
@@ -65,14 +73,11 @@ public class CsvReaderService {
 //                log.debug("##### 남은 식당들 저장 중 ");
 //                restaurantRepository.saveAll(restaurantsToSave);
 //            }
-
+            log.info("##### 3. db restaurant update - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
         } catch (IOException e) {
             log.error("##### CSV 파일을 읽는 도중 오류 발생", e);
             throw new RuntimeException(e);
         }
-
-        log.debug("##### readAndSaveCSV 진행 끝 | 현재 시간 : " + new Date().toString());
-        log.debug("##### 걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
     }
 
     private List<CsvData> readAllFromCsv() throws IOException {
@@ -138,7 +143,7 @@ public class CsvReaderService {
         List<Restaurant> newRestaurant = restaurantRepository.findAll();
         for (Restaurant restaurant : newRestaurant) {
             ProjCoordinate coordinate = transCoordination.transformToWGS(restaurant.getLongitude(),
-                    restaurant.getLatitude());
+                restaurant.getLatitude());
             restaurant.setLongitude(coordinate.x);
             restaurant.setLatitude(coordinate.y);
         }
