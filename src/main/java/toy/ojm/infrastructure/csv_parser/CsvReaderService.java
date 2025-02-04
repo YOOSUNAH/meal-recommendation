@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.TransCoordination;
@@ -14,6 +17,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,38 +38,33 @@ public class CsvReaderService {
             // 1. csv 읽기
             List<CsvData> csvDataList = readAllFromCsv();
 
-            // 2. DB 데이터 조회
-            Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
-                .collect(Collectors.toMap(
-                    Restaurant::getManagementNumber,
-                    restaurant -> restaurant));
+//             2. DB 데이터 조회
+//            Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
+//                .collect(Collectors.toMap(
+//                    Restaurant::getManagementNumber,
+//                    restaurant -> restaurant));
 
-            // 3. 데이터 처리 및 저장
-            List<Restaurant> restaurantsToSave = new ArrayList<>();
-            for (CsvData csvdata : csvDataList) {
-                if (csvdata.isClosedBusiness()||  // 폐업한 가게는 skip
-                        csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
-                        csvdata.getLatitude() == null) {
-                    continue;
-                }
+            long totalCount = restaurantRepository.count();
+            int totalPages = (int) Math.ceil((double) totalCount / BATCH_SIZE);
+            int totalSize = csvDataList.size();
 
-                Restaurant restaurant = existingRestaurant.getOrDefault(csvdata.getManagementNumber(), new Restaurant());
+            for (int pageNo = 0; pageNo < totalPages; pageNo++) {
+                log.debug("##### 비동기 호출 준비 중 | 페이지 번호: {}", pageNo);
 
-                updateRestaurantInfo(restaurant, csvdata);
-                restaurantsToSave.add(restaurant);
+                int fromIndex = pageNo * BATCH_SIZE;
+                int toIndex = Math.min(fromIndex + BATCH_SIZE, totalSize);
+                List<CsvData> seperateCsvDataList = csvDataList.subList(fromIndex, toIndex);
 
-                // BATCH_SIZE 씩 저장
-                if (restaurantsToSave.size() >= BATCH_SIZE) {
-                    restaurantRepository.saveAll(restaurantsToSave);
-                    log.debug("##### BATCH_SIZE 씩 저장 중");
-                    restaurantsToSave.clear();
-                }
+                processPageAsync(pageNo, seperateCsvDataList);
+
+                fromIndex += BATCH_SIZE;
+                toIndex += BATCH_SIZE;
             }
 
-            if (!csvDataList.isEmpty()) {
-                log.debug("##### 남은 식당들 저장 중 ");
-                restaurantRepository.saveAll(restaurantsToSave);
-            }
+//            if (!csvDataList.isEmpty()) {
+//                log.debug("##### 남은 식당들 저장 중 ");
+//                restaurantRepository.saveAll(restaurantsToSave);
+//            }
 
         } catch (IOException e) {
             log.error("##### CSV 파일을 읽는 도중 오류 발생", e);
@@ -81,13 +80,13 @@ public class CsvReaderService {
         int progressCounter = 0;
         try {
             Path csvFilePath = PublicDataConstants.DESTINATION_DIRECTORY.resolve(
-                PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION
+                    PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION
             );
 
             File csvFile = new File(csvFilePath.toString());
-            if(csvFile.exists()){
+            if (csvFile.exists()) {
                 log.debug("##### CSV 파일이 있습닌다.");
-            }else{
+            } else {
                 log.error("##### CSV 파일 찾기에 실패했습니다. .: {}", csvFile.getAbsolutePath());
             }
 
@@ -139,11 +138,64 @@ public class CsvReaderService {
         List<Restaurant> newRestaurant = restaurantRepository.findAll();
         for (Restaurant restaurant : newRestaurant) {
             ProjCoordinate coordinate = transCoordination.transformToWGS(restaurant.getLongitude(),
-                restaurant.getLatitude());
+                    restaurant.getLatitude());
             restaurant.setLongitude(coordinate.x);
             restaurant.setLatitude(coordinate.y);
         }
         restaurantRepository.saveAll(newRestaurant);
     }
-}
 
+    @Async
+    public void processPageAsync(int page, List<CsvData> csvDataList) {
+        log.debug("##### === Async 실행 중 (Thread: {}) === ", Thread.currentThread().getName());
+        // 호출 스택트레이스 로깅 (async가 잘 되고 있는건지 확인을 위해 추가)
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        log.debug("##### Call stack:");
+        for (StackTraceElement element : stackTrace) {
+            log.debug(" -> {}", element);
+        }
+
+        try{
+            PageRequest pageRequest = PageRequest.of(page, BATCH_SIZE);
+            Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageRequest); // Todo : findByManagementNumberIn ?
+
+            Map<String, Restaurant> batchMap = restaurantPage.getContent()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            Restaurant::getManagementNumber,
+                            restaurant -> restaurant));
+
+            // 3. 데이터 처리 및 저장
+            List<Restaurant> restaurantsToSave = new ArrayList<>();
+            for (CsvData csvdata : csvDataList) {
+                if (csvdata.isClosedBusiness() ||  // 폐업한 가게는 skip
+                        csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
+                        csvdata.getLatitude() == null) {
+                    continue;
+                }
+
+                Restaurant restaurant = batchMap.getOrDefault(csvdata.getManagementNumber(), new Restaurant());
+
+                updateRestaurantInfo(restaurant, csvdata);
+                restaurantsToSave.add(restaurant);
+
+                // BATCH_SIZE 씩 저장
+                if (restaurantsToSave.size() >= BATCH_SIZE) {
+                    saveWithBatch(restaurantsToSave);
+
+                }
+            }
+        }
+        catch(Exception e){
+            log.error("#### Thread: {}, async 중 에러 발생 {}", Thread.currentThread().getName() ,e.getMessage());
+        }
+    }
+
+    @Transactional
+    private void saveWithBatch(List<Restaurant> restaurantsToSave) {
+        restaurantRepository.saveAll(restaurantsToSave);
+        log.debug("##### {}개 저장 완료", restaurantsToSave.size());
+        restaurantsToSave.clear();
+    }
+
+}
