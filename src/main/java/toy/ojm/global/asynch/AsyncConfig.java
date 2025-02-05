@@ -1,4 +1,4 @@
-package toy.ojm.asynch;
+package toy.ojm.global.asynch;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
