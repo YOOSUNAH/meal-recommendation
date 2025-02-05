@@ -30,7 +30,7 @@ public class OJMManualTaskController {
     @GetMapping("/csv")
     public void csvReadAndSave() {
         csvReaderService.readAndSaveCSV();
-        log.info("##### csv 읽어오기 완료");
+        log.debug("##### csv 읽어오기 완료");
     }
 
 

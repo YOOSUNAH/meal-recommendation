@@ -3,8 +3,6 @@ package toy.ojm.infrastructure.csv_parser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.locationtech.proj4j.ProjCoordinate;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -33,13 +31,17 @@ public class CsvToDBProcessService {
             List<CsvData> csvDataList
     ) {
         return CompletableFuture.runAsync(() -> {
-            log.debug("##### === Async 실행 중 (Thread: {}) === 난 {} page 야 ㅋㅋ ", Thread.currentThread().getName(), page);
+            log.debug("##### === Async 실행 중 (Thread: {}) page : {}  ", Thread.currentThread().getName(), page);
 
             try {
-                PageRequest pageRequest = PageRequest.of(page, CsvDataProcessConstants.BATCH_SIZE);
-                Page<Restaurant> restaurantPage = restaurantRepository.findAll(pageRequest); // Todo : findByManagementNumberIn ?
+                // 1. 현재 처리할 CSV 데이터의 managementNumber 목록 추출
+                List<String> managementNumbers = csvDataList
+                        .stream()
+                        .map(CsvData::getManagementNumber) // 람다 표현식 : csvData -> csvData.getManagementNumber()
+                        .collect(Collectors.toList());
 
-                Map<String, Restaurant> batchMap = restaurantPage.getContent()
+                // 2. 해당 managementNumber에 해당하는 Restaurant만 조회
+                Map<String, Restaurant> batchMap = restaurantRepository.findAllByManagementNumberIn(managementNumbers)
                         .stream()
                         .collect(Collectors.toMap(
                                 Restaurant::getManagementNumber,
@@ -48,29 +50,38 @@ public class CsvToDBProcessService {
                 // 3. 데이터 처리 및 저장
                 List<Restaurant> restaurantsToSave = new ArrayList<>();
                 for (CsvData csvdata : csvDataList) {
+                    // 필터링
                     if (csvdata.isClosedBusiness() ||  // 폐업한 가게는 skip
                             csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
                             csvdata.getLatitude() == null) {
                         continue;
                     }
 
+                    //  기존 데이터가 있으면 업데이트, 없으면 새로 생성
                     Restaurant restaurant = batchMap.getOrDefault(csvdata.getManagementNumber(), new Restaurant());
 
-                    updateRestaurantInfo(restaurant, csvdata);
+                    setRestaurantInfo(restaurant, csvdata);
                     restaurantsToSave.add(restaurant);
 
                     // BATCH_SIZE 씩 저장
                     if (restaurantsToSave.size() >= CsvDataProcessConstants.BATCH_SIZE) {
-                        execute(() -> saveWithBatch(restaurantsToSave));
+                        execute(() -> saveWithBatch(new ArrayList<>(restaurantsToSave))); // 복사본으로 전달
+                        log.debug("##### {}개 저장 완료", restaurantsToSave.size());
                     }
                 }
+
+                if (!restaurantsToSave.isEmpty()) {
+                    execute(() -> saveWithBatch(new ArrayList<>(restaurantsToSave)));
+                    log.debug("##### 남은 식당들 저장");
+                }
+
             } catch (Exception e) {
                 log.error("#### Thread: {}, async 중 에러 발생 {}", Thread.currentThread().getName(), e.getMessage());
             }
         });
     }
 
-    private void updateRestaurantInfo(Restaurant restaurant, CsvData csvdata) {
+    private void setRestaurantInfo(Restaurant restaurant, CsvData csvdata) {
         restaurant.setManagementNumber(csvdata.getManagementNumber());
         restaurant.setBusinessStatus(csvdata.getBusinessStatus());
         restaurant.setNumber(csvdata.getNumber());
@@ -98,7 +109,6 @@ public class CsvToDBProcessService {
 
     private void saveWithBatch(List<Restaurant> restaurantsToSave) {
         restaurantRepository.saveAll(restaurantsToSave);
-        log.debug("##### {}개 저장 완료", restaurantsToSave.size());
         restaurantsToSave.clear();
     }
 }
