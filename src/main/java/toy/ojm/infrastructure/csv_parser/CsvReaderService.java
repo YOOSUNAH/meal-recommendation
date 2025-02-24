@@ -6,10 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.StopWatch;
 import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.stereotype.Service;
-import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.location.TransCoordination;
 import toy.ojm.domain.repository.RestaurantRepository;
 import toy.ojm.infrastructure.PublicDataConstants;
+import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.location.TransCoordination;
 
 import java.io.*;
 import java.nio.charset.Charset;

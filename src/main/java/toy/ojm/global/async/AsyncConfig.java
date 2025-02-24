@@ -1,4 +1,4 @@
-package toy.ojm.global.asynch;
+package toy.ojm.global.async;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,17 @@ public class AsyncConfig implements AsyncConfigurer{
         // DiscardOldestPolicy: Queue 에 있는 오래된 작업들을 삭제하고 새로운 작업을 추가.
         executor.initialize();
         return executor;
+    }
 
+    @Bean(name = "errorMessengerExecutor")
+    public Executor errorMessengerExecutor(){
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(100);
+        executor.setQueueCapacity(200);
+        executor.setThreadNamePrefix("error-messenger-");
+        executor.initialize();
+        return executor;
     }
 
     @Override

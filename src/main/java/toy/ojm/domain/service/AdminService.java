@@ -8,10 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toy.ojm.domain.dto.RestaurantPageableResponseDto;
-import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.entity.Users;
 import toy.ojm.domain.repository.RestaurantQueryRepository;
 import toy.ojm.domain.repository.UserRepository;
+import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.entity.Users;
 
 
 @Service

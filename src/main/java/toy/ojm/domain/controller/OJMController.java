@@ -6,17 +6,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import toy.ojm.global.ResponseDto;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.service.OJMService;
-import toy.ojm.global.ResponseDto;
 import toy.ojm.infrastructure.csv_parser.CsvReaderService;
 import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
 
-import java.nio.file.Path;
 import java.util.List;
 
 @Slf4j

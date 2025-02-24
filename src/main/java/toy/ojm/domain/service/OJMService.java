@@ -7,12 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
-import toy.ojm.domain.entity.FoodCategory;
-import toy.ojm.domain.entity.FoodCategoryName;
-import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.Distance;
 import toy.ojm.domain.repository.CategoryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
+import toy.ojm.domain.entity.FoodCategory;
+import toy.ojm.domain.entity.FoodCategoryName;
+import toy.ojm.domain.entity.Restaurant;
+
 import java.util.Collections;
 import java.util.List;
 

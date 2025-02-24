@@ -6,9 +6,9 @@ import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.location.TransCoordination;
 import toy.ojm.domain.repository.RestaurantRepository;
+import toy.ojm.domain.entity.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;

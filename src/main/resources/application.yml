@@ -96,6 +96,9 @@ logging:
 ---
 
 spring:
+  main:
+    allow-circular-references: true
+
   config:
     activate:
       on-profile: live
