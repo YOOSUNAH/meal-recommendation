@@ -33,37 +33,33 @@ public class PublicDataDownloader {
 
     @Transactional
     public Path downloadCsvFile() {
-        log.info("downloadCsvFile 진행 - 현재 시간 : " + new Date().toString());
+        log.debug("########## downloadCsvFile 진행 - 현재 시간 : " + new Date().toString());
+        long startTime = System.currentTimeMillis();
 
         Path downloadPath = resolveDownloadPath();
         Path destinationPath = resolveDestinationPath();
+
         WebDriver driver = null;
 
-        log.debug("downloadPath : {}", downloadPath);
-        log.debug("destinationPath : {}", destinationPath);
+        log.debug("########## downloadPath : {}", downloadPath);
+        log.debug("########## destinationPath : {}", destinationPath);
 
         try {
             driver = createWebDriver();
-            log.debug("########## 1111111111111111111111111111");
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-            log.debug("########## 2222222222222222222222222222");
-            wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-                .executeScript("return document.readyState").equals("complete"));
 
-            log.debug("########## 3333333333333333333333333333");
+            wait.until(webDriver -> ((JavascriptExecutor) webDriver)
+                    .executeScript("return document.readyState").equals("complete"));
 
             download(driver);
-            log.debug("########## 4444444444444444444444444444");
             waitForFileDownload(downloadPath);
-            log.debug("########## 5555555555555555555555555555");
-
             deleteIfExists(destinationPath, downloadPath);
             moveFile(downloadPath, destinationPath);
-
+            log.debug("##### 다운로드 하는데 걸린 시간 : {} ms", System.currentTimeMillis() - startTime);
         } catch (SessionNotCreatedException e) {
-            log.error("fail to create browser session: ", e);
+            log.error("browser session 생성 실패 : ", e);
         } catch (IOException | InterruptedException e) {
-            log.error("Error downloading CSV file: ", e);
+            log.error("Error CSV file 다운로드: ", e);
         } catch (Exception e) {
             log.error("Unexpected Error: ", e);
         } finally {
@@ -73,7 +69,6 @@ public class PublicDataDownloader {
         }
         return destinationPath;
     }
-
 
     private Path resolveDownloadPath() {
         return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로;
@@ -86,13 +81,13 @@ public class PublicDataDownloader {
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
             }
-            log.debug("########## Resolved destination directory path: {}", directoryPath.toAbsolutePath());
+            log.debug("##########  destination directory path: {}", directoryPath.toAbsolutePath());
         } catch (IOException e) {
-            throw new RuntimeException("########## Failed to create directory", e);
+            throw new RuntimeException("########## directory 생성 실패 ", e);
         }
 
         Path destinationPath = directoryPath.resolve(destinationFilenameWithTime());
-        log.debug("########## Resolved destination path: {}", destinationPath.toAbsolutePath());
+        log.debug("##########  destination path: {}", destinationPath.toAbsolutePath());
 
         return destinationPath;   //directoryPath 특정 디렉토리의 경로를 나타내는 Path 객체, resolve() : 기존의 경로에 다른 경로를 결합하여 새로운 경로를 생성, destinationFilenameWithTime : 파일이름을 생성하는 메서드
         // csv-data 디렉토리 내에 시간을 포함한 고유한 파일 이름으로 새로운 파일 경로를 생성하고, 그 경로를 나타내는 Path 객체를 반환
@@ -133,8 +128,23 @@ public class PublicDataDownloader {
         }
     }
 
-    private void waitForFileDownload(Path downloadPath) throws InterruptedException, IOException {
-        int maxRetries = 100;
+//    private void waitForFileDownload(Path downloadPath) throws InterruptedException {
+//        int maxWaitTime = 200; // 최대 대기 시간
+//        int waitedTime = 0;
+//        while (!Files.exists(downloadPath) && waitedTime < maxWaitTime) {
+//            log.info("Waiting for file to download...");
+//            Thread.sleep(2000); // 2초 대기
+//            waitedTime += 2;
+//        }
+//        if (Files.exists(downloadPath)) {
+//            log.info("File downloaded successfully.");
+//        } else {
+//            log.warn("File download timed out.");
+//        }
+//    }
+
+        private void waitForFileDownload(Path downloadPath) throws InterruptedException, IOException {
+        int maxRetries = 500;
         int retryCount = 0;
 
         while (retryCount < maxRetries) {
@@ -142,10 +152,10 @@ public class PublicDataDownloader {
                 log.debug("########## 파일 다운로드 성공");
                 return;
             }
-            Thread.sleep(5000); // 5초 대기
+            log.debug("##### 다운로드 대기 중... 시도 횟수: {}/{}", retryCount + 1, maxRetries);
+            Thread.sleep(1000); // 1초 대기
             retryCount++;
         }
-
         throw new InterruptedException("########## 파일 다운로드 실패");
     }
 
@@ -153,7 +163,7 @@ public class PublicDataDownloader {
         File downloadFile = destinationPath.toFile();
         if (downloadFile.exists()) {
             downloadFile.delete();
-            log.debug("기존 다운로드 파일 삭제 완료: {}", downloadPath);
+            log.debug("##### 기존 다운로드 파일 삭제 완료: {}", downloadPath);
         }
     }
 
@@ -169,10 +179,10 @@ public class PublicDataDownloader {
 
         try {
             Files.move(sourcePath, destinationPath); // 파일 이동 시도
-            log.debug("Move operation executed.");
+            log.debug("##### 파일이동 작업 실행");
         } catch (IOException e) {
             log.error("IOException occurred while moving file from {} to {}: {}",
-                sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
+                    sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
             throw e; // 상위로 예외 전달
         } catch (Exception e) {
             log.error("Unexpected error occurred during file move: {}", e.getMessage(), e);
@@ -180,11 +190,10 @@ public class PublicDataDownloader {
         }
 
         if (Files.exists(destinationPath)) {
-            log.info("CSV file moved successfully to {}", destinationPath.toAbsolutePath());
+            log.debug("##### CSV file 이동 성공 {}", destinationPath.toAbsolutePath());
         } else {
             log.error("File move operation completed but destination file not found: {}", destinationPath.toAbsolutePath());
             throw new IOException("File move failed ");
         }
-
     }
 }

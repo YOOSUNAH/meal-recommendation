@@ -20,7 +20,7 @@ spring:
 #    root: DEBUG
 
 kakao:
-  appKey: ${KAKAO_REST_API_KEY:defaultDummyValue}
+  appKey: ${KAKAO_REST_API_KEY:defaultDummyValue}r
 ---
 spring:
   config:
@@ -30,8 +30,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/${database.name}
     username: ${database.username}
-    password:
-      ${database.password}
+    password: ${database.password}
 
   jpa:
     show-sql: true
@@ -39,12 +38,14 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-        use_sql_comments: true
+        format_sql: false
+        use_sql_comments: false
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    root: INFO
+    toy.ojm.infrastructure: DEBUG
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 ---
 
