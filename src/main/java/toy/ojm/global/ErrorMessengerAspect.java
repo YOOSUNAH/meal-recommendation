@@ -12,15 +12,15 @@ import toy.ojm.tool.ErrorMessenger;
 @RequiredArgsConstructor
 class ErrorMessengerAspect {
 
-    private final ErrorMessenger errorMessenger;
+	private final ErrorMessenger errorMessenger;
 
-    @Around("execution(* toy.ojm..*(..)) && !execution(* toy.ojm.tool.ErrorMessenger.*(..))")
-    public Object logExecutionTime(ProceedingJoinPoint joinPoint) {
-        try {
-            return joinPoint.proceed();
-        } catch (Throwable e) {
-            errorMessenger.alarm(e);
-            throw new RuntimeException(e);
-        }
-    }
+	@Around("execution(* toy.ojm..*(..)) && !execution(* toy.ojm.global.async..*(..))")
+	public Object logExecutionTime(ProceedingJoinPoint joinPoint) {
+		try {
+			return joinPoint.proceed();
+		} catch (Throwable e) {
+			errorMessenger.alarm(e);
+			throw new RuntimeException(e);
+		}
+	}
 }

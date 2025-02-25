@@ -37,8 +37,4 @@ public class OJMManualTaskController {
     public void throwError() {
         throw new RuntimeException("에러에렁레ㅓㅇㄹㅁㄴ이;라ㅓㅁㄴ아ㅣ러ㅏㅣ");
     }
-
-
-
-
 }
