@@ -35,6 +35,6 @@ public class OJMManualTaskController {
 
     @GetMapping("/throw-error")
     public void throwError() {
-        throw new RuntimeException("##### 에러!!");
+        throw new RuntimeException("##### throw 에러!! slack 알림 연동 test");
     }
 }

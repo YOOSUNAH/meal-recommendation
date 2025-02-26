@@ -1,6 +1,5 @@
-package toy.ojm.asynch;
+package toy.ojm.global.async;
 
-import org.springframework.boot.test.context.TestComponent;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
