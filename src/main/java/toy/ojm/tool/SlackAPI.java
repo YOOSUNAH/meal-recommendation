@@ -2,6 +2,7 @@ package toy.ojm.tool;
 
 import com.slack.api.Slack;
 import com.slack.api.webhook.WebhookResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -11,7 +12,9 @@ import static com.slack.api.webhook.WebhookPayloads.payload;
 @Component
 public class SlackAPI {
 
-    private static final String WEBHOOK_URL = "https://hooks.slack.com/services/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";
+    @Value("${webhook}")
+    private String WEBHOOK_URL;
+
     private final Slack slack = Slack.getInstance();
 
     /**
