@@ -25,7 +25,8 @@ spring:
 #  level:
 #    root: DEBUG
 
-webhook : ${webhook_url}
+slack:
+  webhook : ${webhook_url:foo}
 
 kakao:
   appKey: ${KAKAO_REST_API_KEY:defaultDummyValue}r

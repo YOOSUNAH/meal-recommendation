@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.service.OJMService;
+import toy.ojm.domain.service.RestaurantService;
 import toy.ojm.infra.RestaurantCsvReader;
-import toy.ojm.infra.RestaurantDataCrawler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,7 @@ import java.util.List;
 public class OJMController {
 
     private final OJMService ojmService;
-    private final RestaurantDataCrawler restaurantDataCrawler;
+    private final RestaurantService restaurantService;
     private final RestaurantCsvReader restaurantCsvReader;
 
     @PostMapping("/category")
@@ -38,23 +38,20 @@ public class OJMController {
     }
 
     @GetMapping("/category")
-    public FoodCategory getCategory(
-        HttpSession session
-    ) {
+    public FoodCategory getCategory() {
         return ojmService.getLastCategory();
     }
 
     @PostMapping("/transCoordinate")
-    public void transCoordinate(
-    ) {
+    public void transCoordinate() {
         restaurantCsvReader.transCoordinate();
-        log.info("좌표 변환 요청 API 성공!");
     }
 
     @GetMapping("/restaurant")
     public ResponseEntity<List<Restaurant>> saveRestaurant() {
-        List<Restaurant> restaurants = restaurantCsvReader.getAllRestaurants();
-        return ResponseEntity.ok(restaurants);
+        return ResponseEntity.ok(
+            restaurantService.getAllRestaurants()
+        );
     }
 
     @PostMapping("/nearbyRestaurant")

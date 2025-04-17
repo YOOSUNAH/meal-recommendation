@@ -49,7 +49,7 @@ public class RestaurantDataCrawler {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
 
             wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-                    .executeScript("return document.readyState").equals("complete"));
+                .executeScript("return document.readyState").equals("complete"));
 
             download(driver);
             waitForFileDownload(downloadPath);
@@ -71,11 +71,10 @@ public class RestaurantDataCrawler {
     }
 
     private Path resolveDownloadPath() {
-        return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);        // 홈디렉토리 밑에 Downloads 폴더에 DOWNLOAD_FILE_NAME 이름을 가진 파일의 경로;
+        return Paths.get(System.getProperty("user.home"), "Downloads", DOWNLOAD_FILE_NAME);
     }
 
     private Path resolveDestinationPath() {
-        // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
         Path directoryPath = CsvConstants.DESTINATION_DIRECTORY;
         try {
             if (!Files.exists(directoryPath)) {
@@ -89,8 +88,7 @@ public class RestaurantDataCrawler {
         Path destinationPath = directoryPath.resolve(destinationFilenameWithTime());
         log.debug("##########  destination path: {}", destinationPath.toAbsolutePath());
 
-        return destinationPath;   //directoryPath 특정 디렉토리의 경로를 나타내는 Path 객체, resolve() : 기존의 경로에 다른 경로를 결합하여 새로운 경로를 생성, destinationFilenameWithTime : 파일이름을 생성하는 메서드
-        // csv-data 디렉토리 내에 시간을 포함한 고유한 파일 이름으로 새로운 파일 경로를 생성하고, 그 경로를 나타내는 Path 객체를 반환
+        return destinationPath;
     }
 
     private WebDriver createWebDriver() throws IOException {
@@ -106,44 +104,19 @@ public class RestaurantDataCrawler {
         try {
             driver.get(SEOUL_PUBLIC_OPEN_DATA_URL);
 
-            // JavaScript 로드 대기 시간 확장
-//            driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-//
-//            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
-//
-//            // 페이지 완전 로드 대기
-//            wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-//                    .executeScript("return document.readyState")
-//                    .equals("complete"));
-
-//            WebElement csvButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("btnCsv")));
             WebElement csvButton = driver.findElement(By.id("btnCsv"));
             csvButton.click();
 
             // 파일 다운로드 대기
-            Thread.sleep(15000); // 15초 대기
+            Thread.sleep(15000);
         } catch (Exception e) {
             log.error("파일 다운로드 중 오류 발생", e);
             throw new RuntimeException("파일 다운로드 실패", e);
         }
     }
 
-//    private void waitForFileDownload(Path downloadPath) throws InterruptedException {
-//        int maxWaitTime = 200; // 최대 대기 시간
-//        int waitedTime = 0;
-//        while (!Files.exists(downloadPath) && waitedTime < maxWaitTime) {
-//            log.info("Waiting for file to download...");
-//            Thread.sleep(2000); // 2초 대기
-//            waitedTime += 2;
-//        }
-//        if (Files.exists(downloadPath)) {
-//            log.info("File downloaded successfully.");
-//        } else {
-//            log.warn("File download timed out.");
-//        }
-//    }
 
-        private void waitForFileDownload(Path downloadPath) throws InterruptedException, IOException {
+    private void waitForFileDownload(Path downloadPath) throws InterruptedException, IOException {
         int maxRetries = 500;
         int retryCount = 0;
 
@@ -153,7 +126,7 @@ public class RestaurantDataCrawler {
                 return;
             }
             log.debug("##### 다운로드 대기 중... 시도 횟수: {}/{}", retryCount + 1, maxRetries);
-            Thread.sleep(1000); // 1초 대기
+            Thread.sleep(1000);
             retryCount++;
         }
         throw new InterruptedException("########## 파일 다운로드 실패");
@@ -178,12 +151,12 @@ public class RestaurantDataCrawler {
         }
 
         try {
-            Files.move(sourcePath, destinationPath); // 파일 이동 시도
+            Files.move(sourcePath, destinationPath);
             log.debug("##### 파일이동 작업 실행");
         } catch (IOException e) {
             log.error("IOException occurred while moving file from {} to {}: {}",
-                    sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
-            throw e; // 상위로 예외 전달
+                sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
+            throw e;
         } catch (Exception e) {
             log.error("Unexpected error occurred during file move: {}", e.getMessage(), e);
             throw e;

@@ -12,7 +12,7 @@ import static com.slack.api.webhook.WebhookPayloads.payload;
 @Component
 public class SlackMessageSender {
 
-    @Value("${webhook}")
+    @Value("${slack.webhook}")
     private String WEBHOOK_URL;
 
     private final Slack slack = Slack.getInstance();

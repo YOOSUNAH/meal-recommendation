@@ -8,8 +8,8 @@ import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
-import toy.ojm.domain.repository.RestaurantRepository;
 import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.repository.RestaurantRepository;
 import toy.ojm.global.calculator.CoordinateConvertor;
 import toy.ojm.global.constants.CsvConstants;
 import toy.ojm.global.dto.CsvDataDto;
@@ -43,12 +43,7 @@ public class RestaurantCsvReader {
             stopWatch.reset();
             stopWatch.start();
 
-             // 2. DB 데이터 조회
-//            Map<String, Restaurant> existingRestaurant = restaurantRepository.findAll().stream()
-//                .collect(Collectors.toMap(
-//                    Restaurant::getManagementNumber,
-//                    restaurant -> restaurant));
-
+            // 2. DB 조회
             log.debug("##### 2. db restaurant read - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
             stopWatch.reset();
             stopWatch.start();
@@ -59,11 +54,11 @@ public class RestaurantCsvReader {
 
             List<CompletableFuture<Void>> futures = new ArrayList<>();
 
+            // 3. DB 청크 단위 비동기 업데이트
             for (int pageNo = 0; pageNo < totalPages; pageNo++) {
                 int fromIndex = pageNo * CsvConstants.BATCH_SIZE;
                 int toIndex = Math.min(fromIndex + CsvConstants.BATCH_SIZE, totalSize);
                 List<CsvDataDto> seperateCsvDataDtoList = csvDataDtoList.subList(fromIndex, toIndex);
-
                 futures.add(processPageAsync(pageNo, seperateCsvDataDtoList));
             }
 
@@ -80,7 +75,7 @@ public class RestaurantCsvReader {
         int progressCounter = 0;
         try {
             Path csvFilePath = CsvConstants.DESTINATION_DIRECTORY.resolve(
-                    CsvConstants.DESTINATION_FILE_NAME + "." + CsvConstants.DESTINATION_FILE_EXTENSION
+                CsvConstants.DESTINATION_FILE_NAME + "." + CsvConstants.DESTINATION_FILE_EXTENSION
             );
 
             File csvFile = new File(csvFilePath.toString());
@@ -112,18 +107,14 @@ public class RestaurantCsvReader {
         return csvDataDtoList;
     }
 
-    // api 용
-    public List<Restaurant> getAllRestaurants() {
-        return restaurantRepository.findAll();
-    }
-    // 좌표 변경하기
-
     @Transactional
     public void transCoordinate() {
         List<Restaurant> newRestaurant = restaurantRepository.findAll();
         for (Restaurant restaurant : newRestaurant) {
-            ProjCoordinate coordinate = coordinateConvertor.transformToWGS(restaurant.getLongitude(),
-                restaurant.getLatitude());
+            ProjCoordinate coordinate = coordinateConvertor.transformToWGS(
+                restaurant.getLongitude(),
+                restaurant.getLatitude()
+            );
             restaurant.setLongitude(coordinate.x);
             restaurant.setLatitude(coordinate.y);
         }
@@ -132,8 +123,8 @@ public class RestaurantCsvReader {
 
     @Async
     public CompletableFuture<Void> processPageAsync(
-            int page,
-            List<CsvDataDto> csvDataDtoList
+        int page,
+        List<CsvDataDto> csvDataDtoList
     ) {
         return CompletableFuture.runAsync(() -> {
             log.debug("##### === Async 실행 중 (Thread: {}) page : {}  ", Thread.currentThread().getName(), page);
@@ -141,24 +132,28 @@ public class RestaurantCsvReader {
             try {
                 // 1. 현재 처리할 CSV 데이터의 managementNumber 목록 추출
                 List<String> managementNumbers = csvDataDtoList
-                        .stream()
-                        .map(CsvDataDto::getManagementNumber) // 람다 표현식 : csvData -> csvData.getManagementNumber()
-                        .collect(Collectors.toList());
+                    .stream()
+                    .map(CsvDataDto::getManagementNumber) // 람다 표현식 : csvData -> csvData.getManagementNumber()
+                    .collect(Collectors.toList());
 
                 // 2. 해당 managementNumber에 해당하는 Restaurant만 조회
                 Map<String, Restaurant> batchMap = restaurantRepository.findAllByManagementNumberIn(managementNumbers)
-                        .stream()
-                        .collect(Collectors.toMap(
-                                Restaurant::getManagementNumber,
-                                restaurant -> restaurant));
+                    .stream()
+                    .collect(
+                        Collectors.toMap(
+                            Restaurant::getManagementNumber,
+                            restaurant -> restaurant
+                        )
+                    );
 
                 // 3. 데이터 처리 및 저장
                 List<Restaurant> restaurantsToSave = new ArrayList<>();
                 for (CsvDataDto csvdata : csvDataDtoList) {
                     // 필터링
                     if (csvdata.isClosedBusiness() ||  // 폐업한 가게는 skip
-                            csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
-                            csvdata.getLatitude() == null) {
+                        csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
+                        csvdata.getLatitude() == null
+                    ) {
                         continue;
                     }
 
@@ -186,7 +181,10 @@ public class RestaurantCsvReader {
         });
     }
 
-    private void setRestaurantInfo(Restaurant restaurant, CsvDataDto csvdata) {
+    private void setRestaurantInfo(
+        Restaurant restaurant,
+        CsvDataDto csvdata
+    ) {
         restaurant.setManagementNumber(csvdata.getManagementNumber());
         restaurant.setBusinessStatus(csvdata.getBusinessStatus());
         restaurant.setNumber(csvdata.getNumber());

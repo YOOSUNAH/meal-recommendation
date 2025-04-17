@@ -6,12 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import toy.ojm.domain.dto.LoginRequestDto;
 import toy.ojm.domain.dto.RestaurantPageableResponseDto;
 import toy.ojm.domain.service.AdminService;
@@ -30,8 +25,8 @@ public class AdminController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<Void>> login(
-        @RequestBody LoginRequestDto requestDto,
-        HttpServletRequest request
+        HttpServletRequest request,
+        @RequestBody LoginRequestDto requestDto
     ) {
         // id, pw 일치하는지 확인
         adminService.login(requestDto.getId(), requestDto.getPassword());
@@ -41,7 +36,10 @@ public class AdminController {
     }
 
     @GetMapping("/create-session")
-    public void createSession(HttpServletRequest request, String id) {
+    public void createSession(
+        HttpServletRequest request,
+        @RequestParam String id
+    ) {
         // 세션이 존재할 경우 세션 반환, 없을 경우 새로운 세션을 생성한 후 반환
         HttpSession session = request.getSession(true);
         // 세션에 저장될 정보 Name - Value 를 추가합니다.
@@ -63,7 +61,8 @@ public class AdminController {
 
     @PostMapping("/encodePassword")
     public ResponseEntity<ResponseDto<String>> encodePassword(
-        @RequestBody LoginRequestDto requestDto) {
+        @RequestBody LoginRequestDto requestDto
+    ) {
         adminService.encodePassword(requestDto.getId(), requestDto.getPassword());
         String resultAlram = "password 암호화 성공";
         return ResponseDto.of(HttpStatus.OK, resultAlram);

@@ -1,10 +1,12 @@
 package toy.ojm.domain.dto;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class LoginRequestDto {
 
-    private String id;
-    private String password;
+    private final String id;
+    private final String password;
 }
