@@ -1,8 +1,9 @@
 package toy.ojm.domain.repository;
 
 import java.util.List;
-import org.springframework.data.jpa.domain.Specification;
+
 import toy.ojm.domain.entity.Restaurant;
+import org.springframework.data.jpa.domain.Specification;
 
 public class RestaurantSpecifications {
 

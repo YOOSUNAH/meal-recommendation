@@ -1,4 +1,4 @@
-package toy.ojm.global;
+package toy.ojm.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

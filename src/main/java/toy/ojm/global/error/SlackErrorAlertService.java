@@ -1,4 +1,4 @@
-package toy.ojm.tool;
+package toy.ojm.global.error;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,14 +11,14 @@ import java.util.concurrent.Executor;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ErrorMessenger {
+public class SlackErrorAlertService {
 
     private final Executor errorMessengerExecutor;
-    private final SlackAPI slackAPI;
-    private final ThrottlingWindow throttlingWindow;
+    private final SlackMessageSender slackMessageSender;
+    private final ErrorAlertThrottler errorAlertThrottler;
 
     public void alarm(Throwable e) {
-        if (!throttlingWindow.shouldSendAlert(e.getClass().getSimpleName())) {
+        if (!errorAlertThrottler.shouldSendAlert(e.getClass().getSimpleName())) {
             return;
         }
         errorMessengerExecutor.execute(() -> sendErrorMessageToSlack(e));
@@ -27,7 +27,7 @@ public class ErrorMessenger {
     private void sendErrorMessageToSlack(Throwable e) {
         List<String> list = Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).toList().subList(0, 30);
         final String joined = String.join("\n", list);
-        slackAPI.sendToSimpleText(
+        slackMessageSender.sendToSimpleText(
                 """
                 ------------------------------------------------------------------------------------------------------------------------------------------------
                 %s : %s

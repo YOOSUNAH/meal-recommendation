@@ -3,13 +3,13 @@ package toy.ojm.global.tool;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import toy.ojm.tool.ErrorMessenger;
+import toy.ojm.global.error.SlackErrorAlertService;
 
 @SpringBootTest
-class ErrorMessengerTest {
+class SlackErrorAlertServiceTest {
 
     @Autowired
-    private ErrorMessenger sut;
+    private SlackErrorAlertService sut;
 
     @Test
     void test() throws InterruptedException {

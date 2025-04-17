@@ -4,15 +4,15 @@ import jakarta.servlet.http.HttpSession;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import toy.ojm.domain.entity.Restaurant;
 import org.springframework.stereotype.Service;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
-import toy.ojm.domain.location.Distance;
+import toy.ojm.global.calculator.GeoDistanceCalculator;
 import toy.ojm.domain.repository.CategoryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
 import toy.ojm.domain.entity.FoodCategory;
 import toy.ojm.domain.entity.FoodCategoryName;
-import toy.ojm.domain.entity.Restaurant;
 
 import java.util.Collections;
 import java.util.List;
@@ -83,8 +83,8 @@ public class OJMService {
         // 거리 순으로 정렬
         recommendRestaurants.sort((r1, r2) ->
             {
-                double distance1 = Distance.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
-                double distance2 = Distance.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
+                double distance1 = GeoDistanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
+                double distance2 = GeoDistanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
                 return Double.compare(distance1, distance2);
             }
         );
@@ -105,7 +105,7 @@ public class OJMService {
             categories);
 
         return restaurants.stream()
-            .filter(restaurant -> Distance.distance(
+            .filter(restaurant -> GeoDistanceCalculator.distance(
                 currentLat,
                 currentLon,
                 restaurant.getLatitude(),

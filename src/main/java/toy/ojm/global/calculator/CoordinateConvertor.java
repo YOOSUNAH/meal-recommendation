@@ -1,4 +1,4 @@
-package toy.ojm.domain.location;
+package toy.ojm.global.calculator;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,11 +11,11 @@ import org.springframework.stereotype.Component;
 // 중부원점 TM(EPSG:2097)좌표 → WGS84(EPSG:4326) 좌표 로 변환
 @Component
 @Slf4j
-public class TransCoordination {
+public class CoordinateConvertor {
 
     private final BasicCoordinateTransform transformer;
 
-    public TransCoordination(){
+    public CoordinateConvertor(){
         // CRS 객체 생성
         final CRSFactory factory = new CRSFactory();
         // 중부원점 좌표계 정의
@@ -36,3 +36,5 @@ public class TransCoordination {
         return afterCoord;
     }
 }
+
+

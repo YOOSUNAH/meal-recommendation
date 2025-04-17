@@ -15,6 +15,35 @@ repositories {
 	}
 }
 
+
+// QueryDSL Q클래스 생성 경로 설정
+def querydslDir = "$buildDir/generated/querydsl"
+
+// 소스 디렉토리 설정
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslDir]
+		}
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+// 중복 생성 방지를 위한 명확한 설정
+tasks.withType(JavaCompile) {
+	options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
+
+// clean 태스크 개선
+clean {
+	delete file(querydslDir)
+}
+
 dependencies {
 	// Spring AOP
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
@@ -72,6 +101,7 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-core:5.8.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()

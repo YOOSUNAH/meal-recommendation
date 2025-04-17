@@ -5,12 +5,12 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Wildcard;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import toy.ojm.domain.entity.Restaurant;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import toy.ojm.domain.entity.QRestaurant;
-import toy.ojm.domain.entity.Restaurant;
 
 import java.util.List;
 
@@ -62,22 +62,5 @@ public class RestaurantQueryRepository {
 
         return PageableExecutionUtils.getPage(restaurants, pageable, () -> totalSize);
     }
-//
-//    public Page<Restaurant> getRestaurantListWithPage(  Pageable pageable, long id){
-//        QRestaurant restaurant = QRestaurant.restaurant;
-//
-//        List<Restaurant> restaurants = jpaQueryFactory
-//                .select(Projections.fields(Restaurant.class,
-//                        restaurant.name,
-//                        restaurant.category,
-//                        restaurant.address,
-//                        restaurant.number))
-//                .from(restaurant)
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//
-//    }
-
 }
 

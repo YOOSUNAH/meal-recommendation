@@ -1,10 +1,11 @@
-package toy.ojm.infrastructure.restaurant_openapi;
+package toy.ojm.infra.downloader;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import toy.ojm.infra.RestaurantDataCrawler;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,12 +13,12 @@ import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({PublicDataDownloader.class})
+@Import({RestaurantDataCrawler.class})
 @ExtendWith(SpringExtension.class)
-class PublicDataDownloaderTest {
+class RestaurantDataCrawlerTest {
 
     @Autowired
-    PublicDataDownloader sut;
+    RestaurantDataCrawler sut;
 
     @Test
     void test() throws IOException {

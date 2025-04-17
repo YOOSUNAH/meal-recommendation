@@ -1,11 +1,11 @@
-package toy.ojm.infrastructure.csv_parser;
+package toy.ojm.global.dto;
 
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-public class CsvData {
+public class CsvDataDto {
     private final String managementNumber;
     private final String businessStatus;
     private final String number;
@@ -16,7 +16,7 @@ public class CsvData {
     private final Double longitude;
     private final Double latitude;
 
-    public CsvData(List<String> columns) {
+    public CsvDataDto(List<String> columns) {
         this.managementNumber = removeDoubleQuote(columns.get(1));
         this.businessStatus = removeDoubleQuote(columns.get(7));
         this.number = removeDoubleQuote(columns.get(12));
@@ -47,6 +47,5 @@ public class CsvData {
     public boolean isClosedBusiness() {
         return businessStatus != null && businessStatus.contains("폐업");
     }
-
 
 }

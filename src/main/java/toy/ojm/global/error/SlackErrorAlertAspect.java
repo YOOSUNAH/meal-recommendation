@@ -1,25 +1,24 @@
-package toy.ojm.global;
+package toy.ojm.global.error;
 
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import toy.ojm.tool.ErrorMessenger;
 
 @Aspect
 @Component
 @RequiredArgsConstructor
-class ErrorMessengerAspect {
+class SlackErrorAlertAspect {
 
-	private final ErrorMessenger errorMessenger;
+	private final SlackErrorAlertService slackErrorAlertService;
 
 	@Around("execution(* toy.ojm..*(..)) && !execution(* toy.ojm.global.async..*(..))")
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) {
 		try {
 			return joinPoint.proceed();
 		} catch (Throwable e) {
-			errorMessenger.alarm(e);
+			slackErrorAlertService.alarm(e);
 			throw new RuntimeException(e);
 		}
 	}

@@ -1,6 +1,6 @@
-package toy.ojm.domain.location;
+package toy.ojm.global.calculator;
 
-public class Distance {
+public class GeoDistanceCalculator {
 
     //  Haversine 공식 사용
     public static Double distance(double lat1, double lon1, double lat2, double lon2) {
@@ -26,3 +26,4 @@ public class Distance {
         return rad * 180 / Math.PI;
     }
 }
+

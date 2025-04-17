@@ -3,18 +3,18 @@ package toy.ojm.domain.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.service.OJMService;
+import toy.ojm.infra.RestaurantCsvReader;
+import toy.ojm.infra.RestaurantDataCrawler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import toy.ojm.global.ResponseDto;
+import toy.ojm.global.dto.ResponseDto;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
-import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.service.OJMService;
-import toy.ojm.infrastructure.csv_parser.CsvReaderService;
-import toy.ojm.infrastructure.restaurant_openapi.PublicDataDownloader;
 
 import java.util.List;
 
@@ -25,8 +25,8 @@ import java.util.List;
 public class OJMController {
 
     private final OJMService ojmService;
-    private final PublicDataDownloader publicDataDownloader;
-    private final CsvReaderService csvReaderService;
+    private final RestaurantDataCrawler restaurantDataCrawler;
+    private final RestaurantCsvReader restaurantCsvReader;
 
     @PostMapping("/category")
     public ResponseEntity<ResponseDto<Void>> getRecommendation(
@@ -47,13 +47,13 @@ public class OJMController {
     @PostMapping("/transCoordinate")
     public void transCoordinate(
     ) {
-        csvReaderService.transCoordinate();
+        restaurantCsvReader.transCoordinate();
         log.info("좌표 변환 요청 API 성공!");
     }
 
     @GetMapping("/restaurant")
     public ResponseEntity<List<Restaurant>> saveRestaurant() {
-        List<Restaurant> restaurants = csvReaderService.getAllRestaurants();
+        List<Restaurant> restaurants = restaurantCsvReader.getAllRestaurants();
         return ResponseEntity.ok(restaurants);
     }
 

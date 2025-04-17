@@ -1,4 +1,4 @@
-package toy.ojm.tool;
+package toy.ojm.global.error;
 
 import com.slack.api.Slack;
 import com.slack.api.webhook.WebhookResponse;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import static com.slack.api.webhook.WebhookPayloads.payload;
 
 @Component
-public class SlackAPI {
+public class SlackMessageSender {
 
     @Value("${webhook}")
     private String WEBHOOK_URL;

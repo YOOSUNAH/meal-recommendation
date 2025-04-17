@@ -1,4 +1,4 @@
-package toy.ojm.global;
+package toy.ojm.global.util;
 
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;

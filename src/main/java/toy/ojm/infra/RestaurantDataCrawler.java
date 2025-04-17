@@ -1,4 +1,4 @@
-package toy.ojm.infrastructure.restaurant_openapi;
+package toy.ojm.infra;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.transaction.Transactional;
@@ -9,7 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
-import toy.ojm.infrastructure.PublicDataConstants;
+import toy.ojm.global.constants.CsvConstants;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +22,7 @@ import java.util.Date;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PublicDataDownloader {
+public class RestaurantDataCrawler {
 
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
@@ -76,7 +76,7 @@ public class PublicDataDownloader {
 
     private Path resolveDestinationPath() {
         // user.dir: 현재 작업 디렉토리에, "현재실행디렉토리/csv-data" 경로를 생성
-        Path directoryPath = PublicDataConstants.DESTINATION_DIRECTORY;
+        Path directoryPath = CsvConstants.DESTINATION_DIRECTORY;
         try {
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath);
@@ -168,7 +168,7 @@ public class PublicDataDownloader {
     }
 
     private String destinationFilenameWithTime() {
-        return PublicDataConstants.DESTINATION_FILE_NAME + "." + PublicDataConstants.DESTINATION_FILE_EXTENSION;  // 파일이름을 생성
+        return CsvConstants.DESTINATION_FILE_NAME + "." + CsvConstants.DESTINATION_FILE_EXTENSION;  // 파일이름을 생성
     }
 
     private void moveFile(Path sourcePath, Path destinationPath) throws IOException {

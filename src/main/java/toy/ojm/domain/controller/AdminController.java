@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import toy.ojm.domain.dto.LoginRequestDto;
 import toy.ojm.domain.dto.RestaurantPageableResponseDto;
 import toy.ojm.domain.service.AdminService;
-import toy.ojm.global.ResponseDto;
-import toy.ojm.global.SessionManager;
+import toy.ojm.global.dto.ResponseDto;
+import toy.ojm.global.util.SessionManager;
 
 @Slf4j
 @RestController

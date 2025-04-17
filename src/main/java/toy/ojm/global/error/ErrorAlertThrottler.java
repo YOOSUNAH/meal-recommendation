@@ -1,4 +1,4 @@
-package toy.ojm.tool;
+package toy.ojm.global.error;
 
 import org.springframework.stereotype.Component;
 
@@ -6,10 +6,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class ThrottlingWindow {
+public class ErrorAlertThrottler {
     private static final long WINDOW_MILLIS = 1 * 1000;
     private final Map<String, Long> lastAlertTimestamps = new ConcurrentHashMap<>();
-//    private final Map<String, Long> lastAlertTimestamps = new HashMap<>();
 
     /**
      * 해당 에러 타입에 대해 알림을 보낼 수 있는지 체크한다.
@@ -25,3 +24,4 @@ public class ThrottlingWindow {
         return false;
     }
 }
+

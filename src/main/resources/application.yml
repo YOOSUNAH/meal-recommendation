@@ -1,7 +1,13 @@
+
+
+
 server:
   port: 8081
 
 spring:
+  main:
+    main-class=ojm:
+      OjmApplication:
   jpa:
     open-in-view: false
     hibernate:

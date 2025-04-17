@@ -1,4 +1,4 @@
-package toy.ojm.global;
+package toy.ojm.global.util;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
