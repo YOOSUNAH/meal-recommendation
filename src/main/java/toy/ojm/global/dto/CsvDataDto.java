@@ -41,11 +41,10 @@ public class CsvDataDto {
         if (value == null || value.isBlank()) {
             return "";
         }
-        return value.replaceAll("\"", "");
+        return value.replace("\"", "");
     }
 
     public boolean isClosedBusiness() {
         return businessStatus != null && businessStatus.contains("폐업");
     }
-
 }

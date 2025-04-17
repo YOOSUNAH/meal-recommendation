@@ -9,13 +9,10 @@ import lombok.Getter;
 @Entity
 @Getter
 public class Users {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
     private String id;
-
     private String password;
 
     public void updatePassword(String encodedPassword) {

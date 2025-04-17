@@ -3,13 +3,13 @@ package toy.ojm.global.util;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import javax.crypto.Cipher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RsaUtil {
-
     static Logger log = LoggerFactory.getLogger(RsaUtil.class);
 
     private KeyPairGenerator generator;

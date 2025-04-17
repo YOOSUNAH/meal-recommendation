@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @Slf4j
 public class PageController implements ErrorController {
-
     @Value("${kakao.appkey}")
     private String kakaoAppKey;
 

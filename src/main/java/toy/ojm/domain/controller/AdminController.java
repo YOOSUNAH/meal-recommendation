@@ -18,16 +18,14 @@ import toy.ojm.global.util.SessionManager;
 @RequiredArgsConstructor
 @RequestMapping("v1/admin")
 public class AdminController {
-
     public static final String AUTHORIZATION_HEADER = "Authorization";
     private final AdminService adminService;
     private final SessionManager sessionManager;
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<Void>> login(
-        HttpServletRequest request,
-        @RequestBody LoginRequestDto requestDto
-    ) {
+            HttpServletRequest request,
+            @RequestBody LoginRequestDto requestDto) {
         // id, pw 일치하는지 확인
         adminService.login(requestDto.getId(), requestDto.getPassword());
         // session 만들기
@@ -37,9 +35,8 @@ public class AdminController {
 
     @GetMapping("/create-session")
     public void createSession(
-        HttpServletRequest request,
-        @RequestParam String id
-    ) {
+            HttpServletRequest request,
+            @RequestParam String id) {
         // 세션이 존재할 경우 세션 반환, 없을 경우 새로운 세션을 생성한 후 반환
         HttpSession session = request.getSession(true);
         // 세션에 저장될 정보 Name - Value 를 추가합니다.
@@ -55,14 +52,12 @@ public class AdminController {
         HttpSession session = request.getSession(false);
 
         String value = (String) session.getAttribute(
-            AUTHORIZATION_HEADER); // 가져온 세션에 저장된 Value 를 Name 을 사용하여 가져옵니다.
+                AUTHORIZATION_HEADER); // 가져온 세션에 저장된 Value 를 Name 을 사용하여 가져옵니다.
         return ResponseDto.of(HttpStatus.OK, value);
     }
 
     @PostMapping("/encodePassword")
-    public ResponseEntity<ResponseDto<String>> encodePassword(
-        @RequestBody LoginRequestDto requestDto
-    ) {
+    public ResponseEntity<ResponseDto<String>> encodePassword(@RequestBody LoginRequestDto requestDto) {
         adminService.encodePassword(requestDto.getId(), requestDto.getPassword());
         String resultAlram = "password 암호화 성공";
         return ResponseDto.of(HttpStatus.OK, resultAlram);
@@ -70,12 +65,11 @@ public class AdminController {
 
     @GetMapping("/restaurants")
     public ResponseEntity<ResponseDto<RestaurantPageableResponseDto>> getAllRestaurants(
-        HttpServletRequest request,
-        @RequestParam("page") int page,
-        @RequestParam("size") int size,
-        @RequestParam(required = false) String category,
-        @RequestParam(required = false) String keyword
-    ) {
+            HttpServletRequest request,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String keyword) {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("Id") == null) {
             throw new IllegalArgumentException("로그인 필요");
@@ -83,15 +77,14 @@ public class AdminController {
         String userId = (String) session.getAttribute("Id");
 
         RestaurantPageableResponseDto allRestaurants = adminService.getAllRestaurants(
-            userId,
-            page,
-            size,
-            category,
-            keyword
+                userId,
+                page,
+                size,
+                category,
+                keyword
         );
         return ResponseDto.of(HttpStatus.OK, allRestaurants);
     }
-
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {

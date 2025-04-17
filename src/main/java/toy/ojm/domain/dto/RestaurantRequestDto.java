@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class RestaurantRequestDto {
-
     private final double currentLat;
     private final double currentLon;
     private final List<String> selectedCategories;

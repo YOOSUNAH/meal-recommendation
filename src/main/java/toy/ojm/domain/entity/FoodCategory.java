@@ -9,11 +9,9 @@ import lombok.Getter;
 @Entity
 @Getter
 public class FoodCategory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
-
     private FoodCategoryName category;
 
     public void setCategory(String categoryName) {

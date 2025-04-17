@@ -23,16 +23,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("v1/ojm")
 public class OJMController {
-
     private final OJMService ojmService;
     private final RestaurantService restaurantService;
     private final RestaurantCsvReader restaurantCsvReader;
 
     @PostMapping("/category")
     public ResponseEntity<ResponseDto<Void>> getRecommendation(
-        @RequestBody CategoryRequestDto request,
-        HttpSession session
-    ) {
+            @RequestBody CategoryRequestDto request,
+            HttpSession session) {
         ojmService.recommend(request, session);
         return ResponseDto.of(HttpStatus.OK, null);
     }
@@ -49,20 +47,16 @@ public class OJMController {
 
     @GetMapping("/restaurant")
     public ResponseEntity<List<Restaurant>> saveRestaurant() {
-        return ResponseEntity.ok(
-            restaurantService.getAllRestaurants()
-        );
+        return ResponseEntity.ok(restaurantService.getAllRestaurants());
     }
 
     @PostMapping("/nearbyRestaurant")
-    public ResponseEntity<ResponseDto<List<RestaurantResponseDto>>> AroundRestaurants(
-        @RequestBody RestaurantRequestDto restaurantRequestDto
-    ) {
+    public ResponseEntity<ResponseDto<List<RestaurantResponseDto>>> aroundRestaurants(
+            @RequestBody RestaurantRequestDto restaurantRequestDto) {
         List<RestaurantResponseDto> restaurants = ojmService.getRandomRestaurants(
-            restaurantRequestDto.getCurrentLat(),
-            restaurantRequestDto.getCurrentLon(),
-            restaurantRequestDto.getSelectedCategories()
-        );
+                restaurantRequestDto.getCurrentLat(),
+                restaurantRequestDto.getCurrentLon(),
+                restaurantRequestDto.getSelectedCategories());
 
         if (restaurants == null || restaurants.isEmpty()) {
             return ResponseDto.notFound("근처에 식당이 없습니다.");
@@ -70,17 +64,14 @@ public class OJMController {
         return ResponseDto.of(HttpStatus.OK, restaurants);
     }
 
-
     // Todo 실제 거리와 도보상 거리가 차이가 나서 , 결과가 상이함.
     @PostMapping("/closeRestaurant")
     public ResponseEntity<ResponseDto<List<RestaurantResponseDto>>> getClosestRestaurants(
-        @RequestBody RestaurantRequestDto restaurantRequestDto
-    ) {
+            @RequestBody RestaurantRequestDto restaurantRequestDto) {
         List<RestaurantResponseDto> restaurants = ojmService.getClosestRestaurants(
-            restaurantRequestDto.getCurrentLat(),
-            restaurantRequestDto.getCurrentLon(),
-            restaurantRequestDto.getSelectedCategories()
-        );
+                restaurantRequestDto.getCurrentLat(),
+                restaurantRequestDto.getCurrentLon(),
+                restaurantRequestDto.getSelectedCategories());
 
         if (restaurants == null || restaurants.isEmpty()) {
             return ResponseDto.notFound("근처에 식당이 없습니다.");

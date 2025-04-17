@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @Table(name = "restaurants")
 public class Restaurant {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,5 +31,4 @@ public class Restaurant {
     private Double longitude; //좌표정보(X) 경도
 
     private Double latitude; //좌표정보(Y) 위도
-
 }

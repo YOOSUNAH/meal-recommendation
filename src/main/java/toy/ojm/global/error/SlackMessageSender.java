@@ -11,7 +11,6 @@ import static com.slack.api.webhook.WebhookPayloads.payload;
 
 @Component
 public class SlackMessageSender {
-
     @Value("${slack.webhook}")
     private String WEBHOOK_URL;
 
@@ -26,8 +25,8 @@ public class SlackMessageSender {
     public WebhookResponse sendToSimpleText(String paramText) {
         try {
             return this.slack.send(
-                WEBHOOK_URL,
-                payload(p -> p.text(paramText)));
+                    WEBHOOK_URL,
+                    payload(p -> p.text(paramText)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

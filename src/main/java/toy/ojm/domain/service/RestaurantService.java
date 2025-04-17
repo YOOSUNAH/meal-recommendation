@@ -10,7 +10,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
-
     private final RestaurantRepository restaurantRepository;
 
     // api 용

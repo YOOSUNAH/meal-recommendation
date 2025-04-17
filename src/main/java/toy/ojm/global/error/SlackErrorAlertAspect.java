@@ -10,16 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 class SlackErrorAlertAspect {
+    private final SlackErrorAlertService slackErrorAlertService;
 
-	private final SlackErrorAlertService slackErrorAlertService;
-
-	@Around("execution(* toy.ojm..*(..)) && !execution(* toy.ojm.global.async..*(..))")
-	public Object logExecutionTime(ProceedingJoinPoint joinPoint) {
-		try {
-			return joinPoint.proceed();
-		} catch (Throwable e) {
-			slackErrorAlertService.alarm(e);
-			throw new RuntimeException(e);
-		}
-	}
+    @Around("execution(* toy.ojm..*(..)) && !execution(* toy.ojm.global.async..*(..))")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) {
+        try {
+            return joinPoint.proceed();
+        } catch (Throwable e) {
+            slackErrorAlertService.alarm(e);
+            throw new RuntimeException(e);
+        }
+    }
 }

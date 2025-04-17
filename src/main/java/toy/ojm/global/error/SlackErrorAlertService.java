@@ -12,16 +12,14 @@ import java.util.concurrent.Executor;
 @Component
 @RequiredArgsConstructor
 public class SlackErrorAlertService {
-
     private final Executor errorMessengerExecutor;
     private final SlackMessageSender slackMessageSender;
     private final ErrorAlertThrottler errorAlertThrottler;
 
     public void alarm(Throwable e) {
-        if (!errorAlertThrottler.shouldSendAlert(e.getClass().getSimpleName())) {
-            return;
+        if (errorAlertThrottler.shouldSendAlert(e.getClass().getSimpleName())) {
+            errorMessengerExecutor.execute(() -> sendErrorMessageToSlack(e));
         }
-        errorMessengerExecutor.execute(() -> sendErrorMessageToSlack(e));
     }
 
     private void sendErrorMessageToSlack(Throwable e) {
@@ -29,16 +27,16 @@ public class SlackErrorAlertService {
         final String joined = String.join("\n", list);
         slackMessageSender.sendToSimpleText(
                 """
-                ------------------------------------------------------------------------------------------------------------------------------------------------
-                %s : %s
-                
-                %s
-                ------------------------------------------------------------------------------------------------------------------------------------------------
-                """.formatted(
-                e.getClass().getSimpleName(),
-                e.getMessage(),
-                joined
-            )
+                        ------------------------------------------------------------------------------------------------------------------------------------------------
+                        %s : %s
+                                        
+                        %s
+                        ------------------------------------------------------------------------------------------------------------------------------------------------
+                        """.formatted(
+                        e.getClass().getSimpleName(),
+                        e.getMessage(),
+                        joined
+                )
         );
     }
 }

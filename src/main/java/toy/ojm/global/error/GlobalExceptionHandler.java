@@ -8,10 +8,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handle404(NoHandlerFoundException exception) {
-
         String requestURL = exception.getRequestURL();
 
         // 무한 루프를 방지

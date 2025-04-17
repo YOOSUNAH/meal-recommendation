@@ -10,7 +10,6 @@ import toy.ojm.infra.RestaurantDataCrawler;
 @Service
 @RequiredArgsConstructor
 public class Scheduling {
-
     private final RestaurantDataCrawler restaurantDataCrawler;
     private final RestaurantCsvReader restaurantCsvReader;
 
@@ -20,5 +19,4 @@ public class Scheduling {
         restaurantDataCrawler.downloadCsvFile();
         restaurantCsvReader.readAndSaveCSV();
     }
-
 }

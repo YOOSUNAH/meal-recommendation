@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RestaurantCsvReader {
-
     private final RestaurantRepository restaurantRepository;
     private final CoordinateConvertor coordinateConvertor;
     private final TransactionTemplate txTemplate;
@@ -75,12 +74,12 @@ public class RestaurantCsvReader {
         int progressCounter = 0;
         try {
             Path csvFilePath = CsvConstants.DESTINATION_DIRECTORY.resolve(
-                CsvConstants.DESTINATION_FILE_NAME + "." + CsvConstants.DESTINATION_FILE_EXTENSION
+                    CsvConstants.DESTINATION_FILE_NAME + "." + CsvConstants.DESTINATION_FILE_EXTENSION
             );
 
             File csvFile = new File(csvFilePath.toString());
             if (csvFile.exists()) {
-                log.debug("##### CSV 파일이 있습닌다.");
+                log.debug("##### CSV 파일이 존재합니다.");
             } else {
                 log.error("##### CSV 파일 찾기에 실패했습니다. .: {}", csvFile.getAbsolutePath());
             }
@@ -98,9 +97,9 @@ public class RestaurantCsvReader {
                 List<String> columns = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
                 csvDataDtoList.add(new CsvDataDto(columns));
             }
-
         } catch (Exception e) {
             log.error("##### readAndSaveCSV 중 오류 발생 : {}", e.getMessage());
+            throw new RuntimeException("CSV 읽기 실패", e);
         } finally {
             log.debug("##### {} 라인까지 읽기 완료", progressCounter);
         }
@@ -112,8 +111,8 @@ public class RestaurantCsvReader {
         List<Restaurant> newRestaurant = restaurantRepository.findAll();
         for (Restaurant restaurant : newRestaurant) {
             ProjCoordinate coordinate = coordinateConvertor.transformToWGS(
-                restaurant.getLongitude(),
-                restaurant.getLatitude()
+                    restaurant.getLongitude(),
+                    restaurant.getLatitude()
             );
             restaurant.setLongitude(coordinate.x);
             restaurant.setLatitude(coordinate.y);
@@ -123,8 +122,8 @@ public class RestaurantCsvReader {
 
     @Async
     public CompletableFuture<Void> processPageAsync(
-        int page,
-        List<CsvDataDto> csvDataDtoList
+            int page,
+            List<CsvDataDto> csvDataDtoList
     ) {
         return CompletableFuture.runAsync(() -> {
             log.debug("##### === Async 실행 중 (Thread: {}) page : {}  ", Thread.currentThread().getName(), page);
@@ -132,27 +131,27 @@ public class RestaurantCsvReader {
             try {
                 // 1. 현재 처리할 CSV 데이터의 managementNumber 목록 추출
                 List<String> managementNumbers = csvDataDtoList
-                    .stream()
-                    .map(CsvDataDto::getManagementNumber) // 람다 표현식 : csvData -> csvData.getManagementNumber()
-                    .collect(Collectors.toList());
+                        .stream()
+                        .map(CsvDataDto::getManagementNumber) // 람다 표현식 : csvData -> csvData.getManagementNumber()
+                        .collect(Collectors.toList());
 
                 // 2. 해당 managementNumber에 해당하는 Restaurant만 조회
                 Map<String, Restaurant> batchMap = restaurantRepository.findAllByManagementNumberIn(managementNumbers)
-                    .stream()
-                    .collect(
-                        Collectors.toMap(
-                            Restaurant::getManagementNumber,
-                            restaurant -> restaurant
-                        )
-                    );
+                        .stream()
+                        .collect(
+                                Collectors.toMap(
+                                        Restaurant::getManagementNumber,
+                                        restaurant -> restaurant
+                                )
+                        );
 
                 // 3. 데이터 처리 및 저장
                 List<Restaurant> restaurantsToSave = new ArrayList<>();
                 for (CsvDataDto csvdata : csvDataDtoList) {
                     // 필터링
                     if (csvdata.isClosedBusiness() ||  // 폐업한 가게는 skip
-                        csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
-                        csvdata.getLatitude() == null
+                            csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
+                            csvdata.getLatitude() == null
                     ) {
                         continue;
                     }
@@ -182,8 +181,8 @@ public class RestaurantCsvReader {
     }
 
     private void setRestaurantInfo(
-        Restaurant restaurant,
-        CsvDataDto csvdata
+            Restaurant restaurant,
+            CsvDataDto csvdata
     ) {
         restaurant.setManagementNumber(csvdata.getManagementNumber());
         restaurant.setBusinessStatus(csvdata.getBusinessStatus());
@@ -214,5 +213,4 @@ public class RestaurantCsvReader {
         restaurantRepository.saveAll(restaurantsToSave);
         restaurantsToSave.clear();
     }
-
 }

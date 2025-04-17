@@ -17,16 +17,14 @@ import toy.ojm.domain.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-
     private final UserRepository userRepository;
     private final RestaurantQueryRepository restaurantQueryRepository;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Transactional
     public void login(
-        String id,
-        String password
-    ) {
+            String id,
+            String password) {
         Users user = validateUser(id);
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
@@ -35,21 +33,19 @@ public class AdminService {
 
     @Transactional
     public void encodePassword(
-        String id,
-        String password
-    ) {
+            String id,
+            String password) {
         Users user = validateUser(id);
         user.updatePassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
 
     public RestaurantPageableResponseDto getAllRestaurants(
-        String id,
-        int page,
-        int size,
-        String category,
-        String keyword
-    ) {
+            String id,
+            int page,
+            int size,
+            String category,
+            String keyword) {
         validateUser(id);
         Pageable pageable = PageRequest.of(page, size);
 
@@ -59,17 +55,17 @@ public class AdminService {
         int totalElements = (int) responseDtoPage.getTotalElements();
 
         return new RestaurantPageableResponseDto(
-            responseDtoPage.getContent(),
-            size,
-            page + 1,
-            totalPage,
-            totalElements
+                responseDtoPage.getContent(),
+                size,
+                page + 1,
+                totalPage,
+                totalElements
         );
     }
 
     private Users validateUser(String id) {
         return userRepository.findById(id).orElseThrow(
-            () -> new IllegalArgumentException("admin user 가 존재하지 않습니다."));
+                () -> new IllegalArgumentException("admin user 가 존재하지 않습니다."));
     }
 }
 

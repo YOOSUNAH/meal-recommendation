@@ -28,9 +28,8 @@ public class OJMService {
     private final RestaurantRepository restaurantRepository;
 
     public void recommend(
-        CategoryRequestDto request,
-        HttpSession session
-    ) {
+            CategoryRequestDto request,
+            HttpSession session) {
         List<String> categoryNames = request.getCategoryList();
         final FoodCategory category = createLastSelectedCategory(categoryNames);
         categoryRepository.save(category);
@@ -58,77 +57,73 @@ public class OJMService {
     }
 
     public List<RestaurantResponseDto> getRandomRestaurants(
-        double currentLat,
-        double currentLon,
-        List<String> selectedCategories
-    ) {
+            double currentLat,
+            double currentLon,
+            List<String> selectedCategories) {
         List<Restaurant> recommendRestaurants = getRecommendRestaurants(
-            currentLat,
-            currentLon,
-            selectedCategories,
-            300
+                currentLat,
+                currentLon,
+                selectedCategories,
+                300
         );
 
         Collections.shuffle(recommendRestaurants);
         List<Restaurant> randomRestaurants = recommendRestaurants.stream()
-            .limit(10)
-            .toList();
+                .limit(10)
+                .toList();
 
         return randomRestaurants.stream()
-            .map(r -> new RestaurantResponseDto(
-                r.getName(),
-                r.getCategory(),
-                r.getAddress(),
-                r.getNumber()))
-            .toList();
+                .map(r -> new RestaurantResponseDto(
+                        r.getName(),
+                        r.getCategory(),
+                        r.getAddress(),
+                        r.getNumber()))
+                .toList();
     }
 
     public List<RestaurantResponseDto> getClosestRestaurants(
-        double currentLat,
-        double currentLon,
-        List<String> selectedCategories
-    ) {
+            double currentLat,
+            double currentLon,
+            List<String> selectedCategories) {
         List<Restaurant> recommendRestaurants = getRecommendRestaurants(
-            currentLat,
-            currentLon,
-            selectedCategories,
-            200
+                currentLat,
+                currentLon,
+                selectedCategories,
+                200
         );
 
         // 거리 순으로 정렬
         recommendRestaurants.sort((r1, r2) -> {
-                double distance1 = GeoDistanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
-                double distance2 = GeoDistanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
-                return Double.compare(distance1, distance2);
-            }
+                    double distance1 = GeoDistanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
+                    double distance2 = GeoDistanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
+                    return Double.compare(distance1, distance2);
+                }
         );
 
         return recommendRestaurants.stream()
-            .map(r -> new RestaurantResponseDto(
-                    r.getName(),
-                    r.getCategory(),
-                    r.getAddress(),
-                    r.getNumber()
+                .map(r -> new RestaurantResponseDto(
+                        r.getName(),
+                        r.getCategory(),
+                        r.getAddress(),
+                        r.getNumber()
                 ))
-            .toList();
+                .toList();
     }
 
-
     public List<Restaurant> getRecommendRestaurants(
-        double currentLat,
-        double currentLon,
-        List<String> categories,
-        double maxDistance
-    ) {
+            double currentLat,
+            double currentLon,
+            List<String> categories,
+            double maxDistance) {
         List<Restaurant> restaurants = restaurantRepository.findAllByCategoryIn(categories);
 
         return restaurants.stream()
-            .filter(restaurant -> GeoDistanceCalculator.distance(
-                currentLat,
-                currentLon,
-                restaurant.getLatitude(),
-                restaurant.getLongitude()) <= maxDistance)
-            .collect(Collectors.toList());
+                .filter(restaurant -> GeoDistanceCalculator.distance(
+                        currentLat,
+                        currentLon,
+                        restaurant.getLatitude(),
+                        restaurant.getLongitude()) <= maxDistance)
+                .collect(Collectors.toList());
     }
 }
 

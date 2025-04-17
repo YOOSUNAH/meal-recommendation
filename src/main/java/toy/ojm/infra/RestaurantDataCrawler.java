@@ -23,7 +23,6 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class RestaurantDataCrawler {
-
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
 
@@ -49,7 +48,7 @@ public class RestaurantDataCrawler {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(60));
 
             wait.until(webDriver -> ((JavascriptExecutor) webDriver)
-                .executeScript("return document.readyState").equals("complete"));
+                    .executeScript("return document.readyState").equals("complete"));
 
             download(driver);
             waitForFileDownload(downloadPath);
@@ -115,7 +114,6 @@ public class RestaurantDataCrawler {
         }
     }
 
-
     private void waitForFileDownload(Path downloadPath) throws InterruptedException, IOException {
         int maxRetries = 500;
         int retryCount = 0;
@@ -155,7 +153,7 @@ public class RestaurantDataCrawler {
             log.debug("##### 파일이동 작업 실행");
         } catch (IOException e) {
             log.error("IOException occurred while moving file from {} to {}: {}",
-                sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
+                    sourcePath.toAbsolutePath(), destinationPath.toAbsolutePath(), e.getMessage(), e);
             throw e;
         } catch (Exception e) {
             log.error("Unexpected error occurred during file move: {}", e.getMessage(), e);

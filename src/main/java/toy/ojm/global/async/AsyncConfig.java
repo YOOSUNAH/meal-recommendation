@@ -11,10 +11,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 @EnableAsync
 @Configuration
-public class AsyncConfig implements AsyncConfigurer{
-
+public class AsyncConfig implements AsyncConfigurer {
     @Bean(name = "taskExecutor")
-    public Executor taskExecutor(){
+    public Executor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10); // thread pool 에서 기본적으로 유지되는 스레드의 갯수 (기본값: 1 (SpringBoot 에서는 AutoConfiguration 으로 인해 8로 설정됨))
         executor.setMaxPoolSize(100); // thread pool 에서 사용할 수 있는 최대 thread 갯수
@@ -30,7 +29,7 @@ public class AsyncConfig implements AsyncConfigurer{
     }
 
     @Bean(name = "errorMessengerExecutor")
-    public Executor errorMessengerExecutor(){
+    public Executor errorMessengerExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(100);
@@ -41,8 +40,7 @@ public class AsyncConfig implements AsyncConfigurer{
     }
 
     @Override
-    public Executor getAsyncExecutor(){
+    public Executor getAsyncExecutor() {
         return taskExecutor();
     }
-
 }

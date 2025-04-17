@@ -16,7 +16,6 @@ import java.nio.file.Path;
 @RequiredArgsConstructor
 @RequestMapping("v1/ojm/manual")
 public class DataCrawlController {
-
     private final RestaurantDataCrawler restaurantDataCrawler;
     private final RestaurantCsvReader restaurantCsvReader;
 

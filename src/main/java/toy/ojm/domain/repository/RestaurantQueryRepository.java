@@ -17,14 +17,12 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class RestaurantQueryRepository {
-
     private final JPAQueryFactory jpaQueryFactory;
 
     public Page<Restaurant> findByCategoryAndKeyword(
-        Pageable pageable,
-        String category,
-        String keyword
-    ) {
+            Pageable pageable,
+            String category,
+            String keyword) {
         QRestaurant restaurant = QRestaurant.restaurant;
         BooleanBuilder whereClause = new BooleanBuilder();
 
@@ -43,22 +41,22 @@ public class RestaurantQueryRepository {
         }
 
         Long totalSize = jpaQueryFactory
-            .select(Wildcard.count)
-            .from(restaurant)
-            .where(whereClause)
-            .fetchOne();
+                .select(Wildcard.count)
+                .from(restaurant)
+                .where(whereClause)
+                .fetchOne();
 
         List<Restaurant> restaurants = jpaQueryFactory
-            .select(Projections.fields(Restaurant.class,
-                restaurant.name,
-                restaurant.category,
-                restaurant.address,
-                restaurant.number))
-            .from(restaurant)
-            .where(whereClause)
-            .offset(pageable.getOffset())
-            .limit(pageable.getPageSize())
-            .fetch();
+                .select(Projections.fields(Restaurant.class,
+                        restaurant.name,
+                        restaurant.category,
+                        restaurant.address,
+                        restaurant.number))
+                .from(restaurant)
+                .where(whereClause)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
 
         return PageableExecutionUtils.getPage(restaurants, pageable, () -> totalSize);
     }
