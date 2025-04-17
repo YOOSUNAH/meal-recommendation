@@ -1,4 +1,4 @@
-package toy.ojm.infra;
+package toy.ojm.csv;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.repository.RestaurantRepository;
-import toy.ojm.global.calculator.CoordinateConvertor;
-import toy.ojm.global.constants.CsvConstants;
-import toy.ojm.global.dto.CsvDataDto;
 
 import java.io.*;
 import java.nio.charset.Charset;

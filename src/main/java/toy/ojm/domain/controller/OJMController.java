@@ -3,18 +3,17 @@ package toy.ojm.domain.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import toy.ojm.domain.entity.Restaurant;
-import toy.ojm.domain.service.OJMService;
-import toy.ojm.domain.service.RestaurantService;
-import toy.ojm.infra.RestaurantCsvReader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import toy.ojm.global.dto.ResponseDto;
+import toy.ojm.csv.RestaurantCsvReader;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
 import toy.ojm.domain.entity.FoodCategory;
+import toy.ojm.domain.entity.Restaurant;
+import toy.ojm.domain.service.OJMService;
+import toy.ojm.global.dto.ResponseDto;
 
 import java.util.List;
 
@@ -24,7 +23,6 @@ import java.util.List;
 @RequestMapping("v1/ojm")
 public class OJMController {
     private final OJMService ojmService;
-    private final RestaurantService restaurantService;
     private final RestaurantCsvReader restaurantCsvReader;
 
     @PostMapping("/category")
@@ -47,7 +45,7 @@ public class OJMController {
 
     @GetMapping("/restaurant")
     public ResponseEntity<List<Restaurant>> saveRestaurant() {
-        return ResponseEntity.ok(restaurantService.getAllRestaurants());
+        return ResponseEntity.ok(ojmService.getAllRestaurants());
     }
 
     @PostMapping("/nearbyRestaurant")

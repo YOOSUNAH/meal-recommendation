@@ -1,4 +1,4 @@
-package toy.ojm.infra;
+package toy.ojm.csv;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import jakarta.transaction.Transactional;
@@ -9,7 +9,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.stereotype.Component;
-import toy.ojm.global.constants.CsvConstants;
 
 import java.io.File;
 import java.io.IOException;

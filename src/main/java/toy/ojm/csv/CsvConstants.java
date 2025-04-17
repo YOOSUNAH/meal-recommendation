@@ -1,4 +1,4 @@
-package toy.ojm.global.constants;
+package toy.ojm.csv;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

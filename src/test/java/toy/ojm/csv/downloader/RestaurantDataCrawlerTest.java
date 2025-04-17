@@ -1,11 +1,11 @@
-package toy.ojm.infra.downloader;
+package toy.ojm.csv.downloader;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import toy.ojm.infra.RestaurantDataCrawler;
+import toy.ojm.csv.RestaurantDataCrawler;
 
 import java.io.IOException;
 import java.nio.file.Files;

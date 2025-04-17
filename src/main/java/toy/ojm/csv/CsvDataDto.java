@@ -1,4 +1,4 @@
-package toy.ojm.global.dto;
+package toy.ojm.csv;
 
 import lombok.Getter;
 

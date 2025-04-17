@@ -1,10 +1,10 @@
-package toy.ojm.global.calculator;
+package toy.ojm.domain.service;
 
-public class GeoDistanceCalculator {
+public class RestaurantDistanceCalculator {
     //  Haversine 공식 사용
     public static Double distance(double lat1, double lon1, double lat2, double lon2) {
-        Double theta = lon1 - lon2; // 경도 차이
-        Double dist =
+        double theta = lon1 - lon2; // 경도 차이
+        double dist =
                 Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2))
                         + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
 

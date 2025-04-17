@@ -12,7 +12,6 @@ import toy.ojm.domain.entity.FoodCategoryName;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.repository.CategoryRepository;
 import toy.ojm.domain.repository.RestaurantRepository;
-import toy.ojm.global.calculator.GeoDistanceCalculator;
 
 import java.util.Collections;
 import java.util.List;
@@ -94,8 +93,8 @@ public class OJMService {
 
         // 거리 순으로 정렬
         recommendRestaurants.sort((r1, r2) -> {
-                    double distance1 = GeoDistanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
-                    double distance2 = GeoDistanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
+                    double distance1 = RestaurantDistanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
+                    double distance2 = RestaurantDistanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
                     return Double.compare(distance1, distance2);
                 }
         );
@@ -118,12 +117,17 @@ public class OJMService {
         List<Restaurant> restaurants = restaurantRepository.findAllByCategoryIn(categories);
 
         return restaurants.stream()
-                .filter(restaurant -> GeoDistanceCalculator.distance(
+                .filter(restaurant -> RestaurantDistanceCalculator.distance(
                         currentLat,
                         currentLon,
                         restaurant.getLatitude(),
                         restaurant.getLongitude()) <= maxDistance)
                 .collect(Collectors.toList());
+    }
+
+    // api 용
+    public List<Restaurant> getAllRestaurants() {
+        return restaurantRepository.findAll();
     }
 }
 
