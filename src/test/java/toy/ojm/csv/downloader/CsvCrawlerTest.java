@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import toy.ojm.csv.RestaurantDataCrawler;
+import toy.ojm.csv.CsvCrawler;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -13,12 +13,12 @@ import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Import({RestaurantDataCrawler.class})
+@Import({CsvCrawler.class})
 @ExtendWith(SpringExtension.class)
-class RestaurantDataCrawlerTest {
+class CsvCrawlerTest {
 
     @Autowired
-    RestaurantDataCrawler sut;
+    CsvCrawler sut;
 
     @Test
     void test() throws IOException {

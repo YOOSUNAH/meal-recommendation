@@ -8,6 +8,7 @@ import org.locationtech.proj4j.ProjCoordinate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
+import toy.ojm.csv.dto.CsvDto;
 import toy.ojm.domain.entity.Restaurant;
 import toy.ojm.domain.repository.RestaurantRepository;
 
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RestaurantCsvReader {
+public class CsvProcessor {
     private final RestaurantRepository restaurantRepository;
     private final CoordinateConvertor coordinateConvertor;
     private final TransactionTemplate txTemplate;
@@ -34,7 +35,7 @@ public class RestaurantCsvReader {
 
         try {
             // 1. csv 읽기
-            List<CsvDataDto> csvDataDtoList = readAllFromCsv();
+            List<CsvDto> csvDtoList = readAllFromCsv();
             log.debug("##### 1. csv read - {} ", stopWatch.getTime(TimeUnit.MILLISECONDS));
             stopWatch.reset();
             stopWatch.start();
@@ -46,7 +47,7 @@ public class RestaurantCsvReader {
 
             long totalCount = restaurantRepository.count();
             int totalPages = (int) Math.ceil((double) totalCount / CsvConstants.BATCH_SIZE);
-            int totalSize = csvDataDtoList.size();
+            int totalSize = csvDtoList.size();
 
             List<CompletableFuture<Void>> futures = new ArrayList<>();
 
@@ -54,8 +55,8 @@ public class RestaurantCsvReader {
             for (int pageNo = 0; pageNo < totalPages; pageNo++) {
                 int fromIndex = pageNo * CsvConstants.BATCH_SIZE;
                 int toIndex = Math.min(fromIndex + CsvConstants.BATCH_SIZE, totalSize);
-                List<CsvDataDto> seperateCsvDataDtoList = csvDataDtoList.subList(fromIndex, toIndex);
-                futures.add(processPageAsync(pageNo, seperateCsvDataDtoList));
+                List<CsvDto> seperateCsvDtoList = csvDtoList.subList(fromIndex, toIndex);
+                futures.add(processPageAsync(pageNo, seperateCsvDtoList));
             }
 
             CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
@@ -66,8 +67,8 @@ public class RestaurantCsvReader {
         }
     }
 
-    private List<CsvDataDto> readAllFromCsv() throws IOException {
-        List<CsvDataDto> csvDataDtoList = new ArrayList<>();
+    private List<CsvDto> readAllFromCsv() throws IOException {
+        List<CsvDto> csvDtoList = new ArrayList<>();
         int progressCounter = 0;
         try {
             Path csvFilePath = CsvConstants.DESTINATION_DIRECTORY.resolve(
@@ -92,7 +93,7 @@ public class RestaurantCsvReader {
             while ((line = br.readLine()) != null) {
                 progressCounter++;
                 List<String> columns = Arrays.asList(line.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1));
-                csvDataDtoList.add(new CsvDataDto(columns));
+                csvDtoList.add(new CsvDto(columns));
             }
         } catch (Exception e) {
             log.error("##### readAndSaveCSV 중 오류 발생 : {}", e.getMessage());
@@ -100,7 +101,7 @@ public class RestaurantCsvReader {
         } finally {
             log.debug("##### {} 라인까지 읽기 완료", progressCounter);
         }
-        return csvDataDtoList;
+        return csvDtoList;
     }
 
     @Transactional
@@ -120,16 +121,16 @@ public class RestaurantCsvReader {
     @Async
     public CompletableFuture<Void> processPageAsync(
             int page,
-            List<CsvDataDto> csvDataDtoList
+            List<CsvDto> csvDtoList
     ) {
         return CompletableFuture.runAsync(() -> {
             log.debug("##### === Async 실행 중 (Thread: {}) page : {}  ", Thread.currentThread().getName(), page);
 
             try {
                 // 1. 현재 처리할 CSV 데이터의 managementNumber 목록 추출
-                List<String> managementNumbers = csvDataDtoList
+                List<String> managementNumbers = csvDtoList
                         .stream()
-                        .map(CsvDataDto::getManagementNumber) // 람다 표현식 : csvData -> csvData.getManagementNumber()
+                        .map(CsvDto::getManagementNumber) // 람다 표현식 : csvData -> csvData.getManagementNumber()
                         .collect(Collectors.toList());
 
                 // 2. 해당 managementNumber에 해당하는 Restaurant만 조회
@@ -144,7 +145,7 @@ public class RestaurantCsvReader {
 
                 // 3. 데이터 처리 및 저장
                 List<Restaurant> restaurantsToSave = new ArrayList<>();
-                for (CsvDataDto csvdata : csvDataDtoList) {
+                for (CsvDto csvdata : csvDtoList) {
                     // 필터링
                     if (csvdata.isClosedBusiness() ||  // 폐업한 가게는 skip
                             csvdata.getLongitude() == null ||   // 좌표가 없는 가게는 skip
@@ -179,7 +180,7 @@ public class RestaurantCsvReader {
 
     private void setRestaurantInfo(
             Restaurant restaurant,
-            CsvDataDto csvdata
+            CsvDto csvdata
     ) {
         restaurant.setManagementNumber(csvdata.getManagementNumber());
         restaurant.setBusinessStatus(csvdata.getBusinessStatus());

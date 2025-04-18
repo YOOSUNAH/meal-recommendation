@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import toy.ojm.csv.RestaurantCsvReader;
+import toy.ojm.csv.CsvProcessor;
 import toy.ojm.domain.dto.CategoryRequestDto;
 import toy.ojm.domain.dto.RestaurantRequestDto;
 import toy.ojm.domain.dto.RestaurantResponseDto;
@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("v1/ojm")
 public class OJMController {
     private final OJMService ojmService;
-    private final RestaurantCsvReader restaurantCsvReader;
+    private final CsvProcessor csvProcessor;
 
     @PostMapping("/category")
     public ResponseEntity<ResponseDto<Void>> getRecommendation(
@@ -40,7 +40,7 @@ public class OJMController {
 
     @PostMapping("/transCoordinate")
     public void transCoordinate() {
-        restaurantCsvReader.transCoordinate();
+        csvProcessor.transCoordinate();
     }
 
     @GetMapping("/restaurant")

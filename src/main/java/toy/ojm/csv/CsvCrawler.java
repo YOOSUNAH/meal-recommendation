@@ -21,7 +21,7 @@ import java.util.Date;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RestaurantDataCrawler {
+public class CsvCrawler {
     private static final String SEOUL_PUBLIC_OPEN_DATA_URL = "https://data.seoul.go.kr/dataList/OA-16094/S/1/datasetView.do";
     private static final String DOWNLOAD_FILE_NAME = "서울시 일반음식점 인허가 정보.csv";
 

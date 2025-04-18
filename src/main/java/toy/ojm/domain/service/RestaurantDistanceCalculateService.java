@@ -1,6 +1,6 @@
 package toy.ojm.domain.service;
 
-public class RestaurantDistanceCalculator {
+public class RestaurantDistanceCalculateService {
     //  Haversine 공식 사용
     public static Double distance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2; // 경도 차이

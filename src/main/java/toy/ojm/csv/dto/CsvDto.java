@@ -1,11 +1,11 @@
-package toy.ojm.csv;
+package toy.ojm.csv.dto;
 
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-public class CsvDataDto {
+public class CsvDto {
     private final String managementNumber;
     private final String businessStatus;
     private final String number;
@@ -16,7 +16,7 @@ public class CsvDataDto {
     private final Double longitude;
     private final Double latitude;
 
-    public CsvDataDto(List<String> columns) {
+    public CsvDto(List<String> columns) {
         this.managementNumber = removeDoubleQuote(columns.get(1));
         this.businessStatus = removeDoubleQuote(columns.get(7));
         this.number = removeDoubleQuote(columns.get(12));

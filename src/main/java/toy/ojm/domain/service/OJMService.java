@@ -93,8 +93,8 @@ public class OJMService {
 
         // 거리 순으로 정렬
         recommendRestaurants.sort((r1, r2) -> {
-                    double distance1 = RestaurantDistanceCalculator.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
-                    double distance2 = RestaurantDistanceCalculator.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
+                    double distance1 = RestaurantDistanceCalculateService.distance(currentLat, currentLon, r1.getLatitude(), r1.getLongitude());
+                    double distance2 = RestaurantDistanceCalculateService.distance(currentLat, currentLon, r2.getLatitude(), r2.getLongitude());
                     return Double.compare(distance1, distance2);
                 }
         );
@@ -117,7 +117,7 @@ public class OJMService {
         List<Restaurant> restaurants = restaurantRepository.findAllByCategoryIn(categories);
 
         return restaurants.stream()
-                .filter(restaurant -> RestaurantDistanceCalculator.distance(
+                .filter(restaurant -> RestaurantDistanceCalculateService.distance(
                         currentLat,
                         currentLon,
                         restaurant.getLatitude(),
