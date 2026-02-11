@@ -5,9 +5,6 @@ server:
   port: 8081
 
 spring:
-  main:
-    main-class=ojm:
-      OjmApplication:
   jpa:
     open-in-view: false
     hibernate:
@@ -29,7 +26,7 @@ slack:
   webhook : ${webhook_url:foo}
 
 kakao:
-  appKey: ${KAKAO_REST_API_KEY:defaultDummyValue}r
+  appKey: ${KAKAO_REST_API_KEY:defaultDummyValue}
 ---
 spring:
   config:
@@ -104,6 +101,9 @@ logging:
 
 ---
 
+server:
+  forward-headers-strategy: native
+
 spring:
   main:
     allow-circular-references: true
@@ -125,5 +125,15 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
         show_sql: false
         format_sql: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: when-authorized
+
 logging:
   config: classpath:log/logback-live.xml
