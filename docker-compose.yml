@@ -19,7 +19,7 @@ services:
 
   spring-app:
     build:
-      context: ./spring-project
+      context: .
       dockerfile: Dockerfile
     container_name: homeserver-spring
     expose:

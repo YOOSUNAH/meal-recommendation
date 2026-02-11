@@ -72,14 +72,14 @@ RUN useradd -m -u 1000 appuser && \
 USER appuser
 
 # 컨테이너 외부에 공개할 포트
-EXPOSE 8081
+EXPOSE 8080
 
 # JVM 옵션
 ENV JAVA_OPTS="-Xmx512m -Xms256m -XX:+UseG1GC -Dfile.encoding=UTF-8"
 
 # 컨테이너 헬스체크
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8081/ || exit 1
+    CMD curl -f http://localhost:8080/ || exit 1
 
 # 컨테이너 실행 명령
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
