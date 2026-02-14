@@ -114,9 +114,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${database.url}/${database.name}
-    username: ${database.username}
-    password: ${database.password}
+    url: jdbc:mysql://${DATABASE_URL}/${DATABASE_DBNAME}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: none
