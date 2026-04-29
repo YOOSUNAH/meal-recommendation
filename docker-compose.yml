@@ -18,9 +18,7 @@ services:
       - homeserver-net
 
   spring-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/yoosunah/meal-recommendation:latest
     container_name: homeserver-spring
     expose:
       - "8080"
